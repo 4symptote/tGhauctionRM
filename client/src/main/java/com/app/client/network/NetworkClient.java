@@ -1,4 +1,4 @@
-package com.app.client.netowrk;
+package com.app.client.network;
 
 public class NetworkClient {
 }
