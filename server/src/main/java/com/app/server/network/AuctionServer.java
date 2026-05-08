@@ -3,7 +3,6 @@ package com.app.server.network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
