@@ -16,15 +16,14 @@ public class AuctionServer {
         // Put try-with-resources here để đóng socket tự động
         // Tạo socket server
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-        // If successful:
-            System.out.println("Server started on port " + port);
+            logger.info("Server started on port {}", port);
             isRunning = true;
 
             while (isRunning) {
                 // Luôn đợi client mới kết nối
                 Socket client = serverSocket.accept();
                 // In ra nếu client mới kết nối
-                System.out.println("Client connected: " + client.getInetAddress());
+                logger.info("Client connected: {}", client.getInetAddress());
             }
 
         } catch (Exception e) {

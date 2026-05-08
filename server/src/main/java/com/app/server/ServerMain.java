@@ -5,9 +5,9 @@ import com.app.server.network.AuctionServer;
 public class ServerMain {
 
     public static void main(String[] args) {
-        System.setProperty("slf4j.internal.verbosity", "WARN");
+        System.setProperty("slf4j.internal.verbosity", "ERROR");
 
-        int port = 8080;
+        int port = 6767;
         AuctionServer server = new AuctionServer();
         server.startServer(port);
     }
