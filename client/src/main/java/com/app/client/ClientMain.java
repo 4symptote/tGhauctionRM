@@ -13,7 +13,7 @@ import java.net.Socket;
 import java.net.URL;
 
 public class ClientMain extends Application {
-
+    // Logger
     private static final Logger logger = LoggerFactory.getLogger(ClientMain.class);
 
     @Override
@@ -21,7 +21,6 @@ public class ClientMain extends Application {
 
         try { // Try to connect to server
             connect("localhost", 8080);
-            logger.info("Info: Connected to server successfully");
         } catch (Exception e) {
             logger.error("Error: Failed to connect to server: {}", e.getMessage());
         }
@@ -29,7 +28,6 @@ public class ClientMain extends Application {
         // Setup simple scene for testing
         URL fxmlFile = getClass().getResource("/view/fxml/HellowScreen.fxml");
         assert fxmlFile != null;
-
         try {
             FXMLLoader loader = new FXMLLoader(fxmlFile);
             Parent root = loader.load();
@@ -40,8 +38,11 @@ public class ClientMain extends Application {
         }
     }
 
+
     public static void connect(String host, int port) throws Exception {
+        // Tạo kết nối đến server
         Socket socket = new Socket(host, port);
+        logger.info("Info: Connected to server successfully");
     }
 
     public static void main(String[] args) {
