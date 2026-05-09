@@ -8,4 +8,6 @@ public class Launcher {
 
         ClientMain.main(args);
     }
+
+    // Gọi main của ClientMain -> gọi launch() của Application Javafx -> Kết nối socket và hiển thị scene
 }
