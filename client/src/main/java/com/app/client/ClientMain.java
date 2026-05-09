@@ -19,14 +19,14 @@ public class ClientMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        try { // Try to connect to server
+        try { // Try to connect to the server
             connect("localhost", 8080);
             logger.info("Info: Connected to server successfully");
         } catch (Exception e) {
             logger.error("Error: Failed to connect to server: {}", e.getMessage());
         }
 
-        // Setup simple scene for testing
+        // Set up a simple scene for testing
         URL fxmlFile = getClass().getResource("/view/fxml/HellowScreen.fxml");
         assert fxmlFile != null;
 
