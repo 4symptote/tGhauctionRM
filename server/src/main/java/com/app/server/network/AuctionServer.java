@@ -12,14 +12,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AuctionServer {
     private static final Logger logger = LoggerFactory.getLogger(AuctionServer.class);
-
+    private boolean isRunning;
 
     private static final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
 
     public AuctionServer() {}
 
     public void startServer(int port) {
-        boolean isRunning;
         // Put try-with-resources here để đóng socket tự động
         // Tạo socket server
         try (ServerSocket serverSocket = new ServerSocket(port)) {
