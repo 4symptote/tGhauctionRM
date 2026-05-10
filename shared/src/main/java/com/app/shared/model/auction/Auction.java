@@ -45,7 +45,7 @@ public class Auction extends Entity {
 
     public Item getItem() { return item; } // Returns the actual Item (Electronics, Art, etc.)
     public long getStartTime() { return startTime; }
-    public long getEndTime() { return endTime; }
+    public long getEndTimeMillis() { return endTime; }
     public double getCurrentPrice() { return currentPrice; }
     public String getHighestBidderId() { return highestBidderId; }
     public List<BidTransaction> getBids() { return bids; }
@@ -69,7 +69,7 @@ public class Auction extends Entity {
 
     public void setItem(Item item) { this.item = item; }
     public void setStartTime(long startTime) { this.startTime = startTime; }
-    public void setEndTime(long endTime) { this.endTime = endTime; }
+    public void setEndTimeMillis(long endTime) { this.endTime = endTime; }
     public void setCurrentPrice(double currentPrice) { this.currentPrice = currentPrice; }
     public void setStatus(Status status) { this.status = status; }
     public void setHighestBidderId(String highestBidderId) { this.highestBidderId = highestBidderId; }
