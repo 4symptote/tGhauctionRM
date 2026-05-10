@@ -70,7 +70,7 @@ public class BidService {
             }
 
             // todo:
-            return new Response(true);
+            return new Response(true, "Null", null);
 
         } finally { // Luon unlock neu co crash hay loi
             auctionLock.unlock();
