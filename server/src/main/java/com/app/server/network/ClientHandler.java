@@ -83,4 +83,12 @@ public class ClientHandler implements Runnable {
             logger.error("Error: error occurred while trying to disconnect: {}", e.getMessage());
         }
     }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public java.net.InetAddress getInetAddress() {
+        return socket.getInetAddress();
+    }
 }

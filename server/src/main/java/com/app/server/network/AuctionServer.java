@@ -1,5 +1,6 @@
 package com.app.server.network;
 
+import com.app.shared.network.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,13 +12,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AuctionServer {
     private static final Logger logger = LoggerFactory.getLogger(AuctionServer.class);
-    private boolean isRunning;
+
 
     private static final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
 
     public AuctionServer() {}
 
     public void startServer(int port) {
+        boolean isRunning;
         // Put try-with-resources here để đóng socket tự động
         // Tạo socket server
         try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -43,5 +45,11 @@ public class AuctionServer {
 
     public static void removeClient(ClientHandler clientHandler) {
         clients.remove(clientHandler);
+    }
+
+    public static void broadcast(Response response) {
+        for (ClientHandler client : clients) {
+            client.sendResponse(response);
+        }
     }
 }

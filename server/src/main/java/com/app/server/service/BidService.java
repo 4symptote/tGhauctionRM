@@ -35,8 +35,6 @@ public class BidService {
         ReentrantLock auctionLock = auctionLocks.computeIfAbsent(auctionId, k -> new ReentrantLock());
         auctionLock.lock();
 
-
-
         try {
 
             Auction auction = auctionManager.getAuction(auctionId);
@@ -69,8 +67,8 @@ public class BidService {
                 auction.setEndTimeMillis(System.currentTimeMillis() + EXTENSION_TIME);
             }
 
-            // todo:
-            return new Response(true, "Null", null);
+            // todo: done, now explain
+            return new Response(true, "Successfully placed new bid", auction);
 
         } finally { // Luon unlock neu co crash hay loi
             auctionLock.unlock();
