@@ -20,6 +20,7 @@ public class ClientHandler implements Runnable {
     private ObjectInputStream in;
     private boolean isRunning;
 
+    private final RequestRouter requestRouter = new RequestRouter();
     // the User with this connection
     private User currentUser;
 
@@ -33,6 +34,7 @@ public class ClientHandler implements Runnable {
             out = new ObjectOutputStream(socket.getOutputStream());
             out.flush();
             in = new ObjectInputStream(socket.getInputStream());
+
             isRunning = true;
 
             logger.info("Info: New client connected: {}", socket.getInetAddress());
@@ -40,7 +42,12 @@ public class ClientHandler implements Runnable {
             // listen to client's requests
             while (isRunning) {
                 Request request = (Request) in.readObject();
-                routeRequest(request);
+
+                // and handle them
+                Response response = requestRouter.route(request, this);
+                if (response != null) {
+                    sendResponse(response);
+                }
             }
 
         } catch (EOFException e) {
@@ -49,21 +56,6 @@ public class ClientHandler implements Runnable {
             logger.error("Error: Connection error: {}", e.getMessage());
         } finally {
             disconnect();
-        }
-    }
-
-    // -Router
-    private void routeRequest(Request request) {
-        switch (request.type()) {
-            case LOGIN:
-                //handleLogin(request);
-                break;
-            case PLACE_BID:
-                //handlePlaceBid(request);
-                break;
-            // Add other cases
-            default:
-                sendResponse(new Response(false, "UNKNOWN", null));
         }
     }
 

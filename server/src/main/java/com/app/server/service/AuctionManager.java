@@ -53,7 +53,7 @@ public class AuctionManager {
     }
 
     private void concludeAuction(String auctionId) {
-        // Remove it from the active map (returns the auction, or null if already removed)
+
         Auction finishedAuction = activeAuctions.remove(auctionId);
 
         if (finishedAuction != null) {

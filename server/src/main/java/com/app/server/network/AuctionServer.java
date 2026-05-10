@@ -24,18 +24,6 @@ public class AuctionServer {
             logger.info("Server started on port {}", port);
             isRunning = true;
 
-            new Thread(() -> {
-
-                while (isRunning) {
-                    try {
-                        Thread.sleep(1000);
-                        logger.info("Client size: {}", clients.size());
-                    } catch (InterruptedException e) {
-                        logger.error("Error: {}", e.getMessage(), e);
-                    }
-                }
-            }).start();
-
             while (isRunning) {
                 // Luôn đợi client mới kết nối
                 Socket clientSocket = serverSocket.accept();
