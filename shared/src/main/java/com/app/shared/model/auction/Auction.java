@@ -13,6 +13,7 @@ public class Auction extends Entity {
     }
 
     private Item item;
+    private String sellerId;
 
     private long startTime;
     private long endTime;
@@ -43,6 +44,7 @@ public class Auction extends Entity {
     }
 
 
+    public String getSellerId() { return sellerId; }
     public Item getItem() { return item; } // Returns the actual Item (Electronics, Art, etc.)
     public long getStartTime() { return startTime; }
     public long getEndTimeMillis() { return endTime; }

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import com.app.shared.model.auction.Auction;
 
 public class AuctionManager {
-    private static AuctionManager instance = new AuctionManager();  // Eager initialization
+    private static final AuctionManager instance = new AuctionManager();  // Eager initialization
     private final Map<String, Auction> activeAuctions;
     private final ScheduledExecutorService scheduler;
     
@@ -61,6 +61,7 @@ public class AuctionManager {
 
             System.out.println("Auction " + auctionId + " concluded - Winner: " + finishedAuction.getHighestBidderId());
 
+            BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
             // TODO: save the FINAL state to database
             // TODO: broadcast winner
         }
