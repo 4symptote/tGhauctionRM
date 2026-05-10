@@ -21,9 +21,9 @@ public class AuctionServer {
 
             while (isRunning) {
                 // Luôn đợi client mới kết nối
-                Socket client = serverSocket.accept();
+                Socket clientSocket = serverSocket.accept();
                 // In ra nếu client mới kết nối
-                logger.info("Client connected: {}", client.getInetAddress());
+                logger.info("Client connected: {}", clientSocket.getInetAddress());
             }
 
         } catch (Exception e) {
