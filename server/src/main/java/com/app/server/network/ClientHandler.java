@@ -20,6 +20,7 @@ public class ClientHandler implements Runnable {
     private ObjectInputStream in;
     private boolean isRunning;
 
+    private final RequestRouter requestRouter = new RequestRouter();
     // the User with this connection
     private User currentUser;
 
@@ -38,6 +39,15 @@ public class ClientHandler implements Runnable {
 
             logger.info("Info: New client connected: {}", socket.getInetAddress());
 
+            // listen to client's requests
+            while (isRunning) {
+                Request request = (Request) in.readObject();
+                // and handle them
+                Response response = requestRouter.route(request, this);
+                if (response != null) {
+                    sendResponse(response);
+                }
+            }
         } catch (EOFException e) {
             logger.info("Info: Client disconnected gracefully: {}", socket.getInetAddress());
         } catch (Exception e) {
@@ -65,6 +75,7 @@ public class ClientHandler implements Runnable {
             if (in != null) in.close();
             if (out != null) out.close();
             socket.close();
+            AuctionServer.removeClient(this);
             logger.info("Info: Client disconnected elegantly: {}", clientAddress);
         } catch (IOException e) {
             logger.error("Error: error occurred while trying to disconnect: {}", e.getMessage());
