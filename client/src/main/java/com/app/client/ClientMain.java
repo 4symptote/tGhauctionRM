@@ -20,12 +20,15 @@ public class ClientMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        NetworkClient.getInstance().connect("localhost", port);
-        NetworkClient.getInstance().startListener();
+        NetworkClient networkClient = NetworkClient.getInstance();
+        SceneManager sceneManager = SceneManager.getInstance();
+
+        networkClient.connect("localhost", port);
+        networkClient.startListener();
 
         primaryStage.setTitle("tGhauctionRM");
-        SceneManager.getInstance().setPrimaryStage(primaryStage);
-        SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
+        sceneManager.setPrimaryStage(primaryStage);
+        sceneManager.switchScene("/view/fxml/LoginView.fxml");
     }
 
     public static void main(String[] args) {
