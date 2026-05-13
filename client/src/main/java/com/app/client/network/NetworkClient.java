@@ -44,24 +44,24 @@ public class NetworkClient {
             out.flush();
             in = new ObjectInputStream(socket.getInputStream());
 
-            logger.info("Info: Connected to server");
+            logger.info("Connected to server");
         } catch (Exception e) {
-            logger.error("Error: Failed to connect to server: {}", e.getMessage());
+            logger.error("Failed to connect to server: {}", e.getMessage());
         }
     }
 
 
     public void sendRequest(com.app.shared.network.Request request) {
         if (!isConnected()) {
-            logger.error("Error: Not connected to server.");
+            logger.error("Not connected to server.");
             return;
         }
         try {
             out.writeObject(request);
             out.flush();
-            logger.info("Info: Sent {}", request.type());
+            logger.info("Sent {}", request.type());
         } catch (IOException e) {
-            logger.error("Error: Failed to send request: {}", e.getMessage());
+            logger.error("Failed to send request: {}", e.getMessage());
             disconnect();
         }
     }
@@ -75,7 +75,7 @@ public class NetworkClient {
                     handleResponse(response);
                 } catch (Exception e) {
                     if (!isConnected()) {
-                        logger.error("Error: Connection lost: {}", e.getMessage());
+                        logger.error("Connection lost: {}", e.getMessage());
                         disconnect();
                     }
                 }
@@ -115,9 +115,9 @@ public class NetworkClient {
             if (in != null) in.close();
             if (out != null) out.close();
             if (socket != null) socket.close();
-            logger.info("Info: Disconnected from server.");
+            logger.info("Disconnected from server.");
         } catch (IOException e) {
-            logger.error("Error: Error while disconnecting: {}", e.getMessage());
+            logger.error("Error while disconnecting: {}", e.getMessage());
         }
     }
 }

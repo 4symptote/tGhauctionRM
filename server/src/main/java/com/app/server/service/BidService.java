@@ -69,7 +69,6 @@ public class BidService {
                 auction.setEndTimeMillis(System.currentTimeMillis() + EXTENSION_TIME);
             }
 
-            // todo: done, now explain
             return new Response(true, "Successfully placed new bid", auction);
 
         } finally { // Luon unlock neu co crash hay loi
