@@ -3,14 +3,12 @@ package com.app.server.dao;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DatabaseConnection {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
-
-    private static final String CONNECTION_STRING = "mongodb+srv://4symptote:tghauctionrm@tghauction.bvst4bh.mongodb.net/?appName=tGhauction";
-    private static final String DATABASE_NAME = "tGhauctionRM";
 
     private static DatabaseConnection instance;
     /**
@@ -21,6 +19,10 @@ public class DatabaseConnection {
 
     private DatabaseConnection() {
         try {
+            Dotenv dotenv = Dotenv.configure().load();
+            String CONNECTION_STRING = dotenv.get("MONGO_URI");
+            String DATABASE_NAME = dotenv.get("DATABASE_NAME");
+
             logger.info("Connecting to MongoDB Atlas...");
             mongoClient = MongoClients.create(CONNECTION_STRING);
             database = mongoClient.getDatabase(DATABASE_NAME);
