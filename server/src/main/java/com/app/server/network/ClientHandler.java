@@ -54,7 +54,7 @@ public class ClientHandler implements Runnable {
         } catch (EOFException e) {
             logger.info("Info: Client disconnected gracefully: {}", socket.getInetAddress());
         } catch (Exception e) {
-            logger.error("Error: Connection error: {}", e.getMessage());
+            logger.error("Error: {}", e.getMessage());
         } finally {
             disconnect();
         }

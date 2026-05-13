@@ -29,7 +29,8 @@ public class UserDaoImpl implements UserDao {
         }
 
         // object -> document
-        Document doc = new Document("username", user.getUsername())
+        Document doc = new Document("_id", user.getId())
+                .append("username", user.getUsername())
                 .append("passwordHash", user.getPassword())
                 .append("email", user.getEmail())
                 .append("role", role)
@@ -48,12 +49,13 @@ public class UserDaoImpl implements UserDao {
         }
 
         // MongoDB Document -> Java Object
+        String dbId = doc.getString("_id");
         String fetchedUsername = doc.getString("username");
         String passwordHash = doc.getString("passwordHash");
         String email = doc.getString("email");
         String role = doc.getString("role");
 
-        return switch (role) {
+        User user = switch (role) {
             case "ADMIN" -> new Admin(fetchedUsername, passwordHash, email);
             case "SELLER" -> new Seller(fetchedUsername, passwordHash, email);
             default -> {
@@ -61,6 +63,10 @@ public class UserDaoImpl implements UserDao {
                 yield new Bidder(fetchedUsername, passwordHash, email, balance);
             }
         };
+
+        user.setId(dbId);
+
+        return user;
     }
 
     @Override

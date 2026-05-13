@@ -32,12 +32,14 @@ public class LoginHandler implements RequestHandler {
 
             logger.info("{} logged from: {}",
                     authenticatedUser.getUsername(), client.getInetAddress());
+            logger.info("Id: {}", authenticatedUser.getId());
 
             // return success response + tk User
             return new Response(true, "Logged in successfully", authenticatedUser);
 
         } catch (ClassCastException e) {
-            logger.error("Error: Payload casting error");
+            logger.error("Error: Payload casting error:");
+            e.printStackTrace();
             return new Response(false, "Loi du lieu", null);
 
         } catch (IllegalArgumentException e) {
