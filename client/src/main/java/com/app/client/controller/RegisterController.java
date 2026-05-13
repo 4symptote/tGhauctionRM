@@ -58,6 +58,7 @@ public class RegisterController implements ResponseListener {
     @FXML
     private void switchToLogin(ActionEvent event) {
         logger.info("switching to login");
+        NetworkClient.getInstance().removeListener(this);
         SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
     }
 
