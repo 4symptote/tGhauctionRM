@@ -10,6 +10,8 @@ import com.app.shared.network.payload.RegisterPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -44,7 +46,7 @@ public class UserService {
         User user = tempDatabase.get(username);
 
         // 2. BCrypt safely verifies the password against the stored hash
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !BCrypt.checkpw(password, user.getPassword())) {
             throw new IllegalArgumentException("Sai ten dang nhap hoac mat khau");
         }
 
@@ -65,7 +67,9 @@ public class UserService {
             throw new IllegalArgumentException("Username already exists");
         }
 
-        User user = createUser(username, password, email, role);
+        String hashedPassword = BCrypt.hashpw(payload.password(), BCrypt.gensalt());
+
+        User user = createUser(username, hashedPassword, email, role);
         tempDatabase.put(username, user);
 
         logger.info("New user registered: {}", username);
@@ -78,7 +82,10 @@ public class UserService {
         if (username.isBlank() || username.length() < 3) {
             throw new IllegalArgumentException("Username it nhat 3 ky tu");
         }
-        // todo : more validation
+        if (password == null || password.length() < 8) {
+            throw new IllegalArgumentException("Password it nhat 8 ky tu");
+        }
+        // todo : more validations
     }
 
 
@@ -88,6 +95,14 @@ public class UserService {
             case "ADMIN"  -> new Admin(username, passwordHash, email);
             default       -> new Bidder(username, passwordHash, email, 1000000);
         };
+    }
+
+    private void seedAdmin() {
+        if (!tempDatabase.containsKey("admin")) {
+            String adminHash = BCrypt.hashpw("admin", BCrypt.gensalt());
+            User admin = new Admin("admin", adminHash, "admin@tghauction.local");
+            tempDatabase.put("admin", admin);
+        }
     }
 
     private String normalizeString(String input) {
