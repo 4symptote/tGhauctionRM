@@ -74,10 +74,6 @@ public class RegisterController implements ResponseListener {
             errorLabel.setStyle("-fx-text-fill: green;");
             errorLabel.setText("Account created! Logging you in...");
 
-            // Clean up?
-            // NetworkClient.getInstance().removeListener(this);
-
-
             System.out.println("Switching to Dashboard...");
             SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
         }
