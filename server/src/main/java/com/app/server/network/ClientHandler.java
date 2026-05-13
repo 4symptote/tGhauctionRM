@@ -43,12 +43,14 @@ public class ClientHandler implements Runnable {
             // listen to client's requests
             while (isRunning) {
                 Request request = (Request) in.readObject();
+
                 // and handle them
                 Response response = requestRouter.route(request, this);
                 if (response != null) {
                     sendResponse(response);
                 }
             }
+
         } catch (EOFException e) {
             logger.info("Info: Client disconnected gracefully: {}", socket.getInetAddress());
         } catch (Exception e) {

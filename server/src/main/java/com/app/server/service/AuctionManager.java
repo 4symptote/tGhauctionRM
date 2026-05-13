@@ -12,7 +12,7 @@ public class AuctionManager {
     private static final AuctionManager instance = new AuctionManager();  // Eager initialization
     private final Map<String, Auction> activeAuctions;
     private final ScheduledExecutorService scheduler;
-
+    
     private AuctionManager() {
         activeAuctions = new ConcurrentHashMap<>();
         scheduler = Executors.newScheduledThreadPool(8);  // 8 threads for auction management

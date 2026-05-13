@@ -25,7 +25,7 @@ public class ArtCreator implements ItemCreator {
         các giá trị custom có thể có hoặc không -> more linh hoạt
         vd. có thể ng dùng ko nhập năm (1503 như trên), thuộc tính sẽ được bỏ qua hoặc gán giá trị mặc đinh (qua payload)
 
-        Và vì nhìn rất đẹp. <-- Important.
+        Và vì nhìn rất đẹp.
 
         Ngoài ra, nhúng trực tiếp Payload vào vì
         cách truyền thống: `createItem(name, price, artist, year)`, khi thêm loại

@@ -39,9 +39,9 @@ public class UserService {
         return instance;
     }
 
-    // Synchronized boi vi imagine 2 nguoi regis va dat cung 1 ten
+    // Synchronized boi vi imagine 2 tk ngu regis va dat cung 1 ten
     /* ca 2 check database va deu ko thay ten nay
-    the la 2 nguoi regis va dat cung 1 ten -> nat
+    the la 2 tk ngu regis va dat cung 1 ten -> nat
     synchronized lm sure chi co 1 thread run cai ham nay tai 1 thoi diem -> 1 trong 2 tk cook va phai dat ten khac
      */
     // xem them ReentrantLock ben placeBid() trong BidService*
@@ -74,7 +74,7 @@ public class UserService {
         // todo: validations
         validateRegistration(username, password, email, role);
 
-        //        if (tempDatabase.containsKey(username)) {
+//        if (tempDatabase.containsKey(username)) {
 //            throw new IllegalArgumentException("Username already exists");
 //        }
         if (userDao.userExists(username)) {
@@ -104,6 +104,7 @@ public class UserService {
         // todo : more validations
     }
 
+
     private User createUser(String username, String passwordHash, String email, String role) {
         return switch (role) {
             case "SELLER" -> new Seller(username, passwordHash, email);
@@ -111,6 +112,7 @@ public class UserService {
             default       -> new Bidder(username, passwordHash, email, 1000000);
         };
     }
+
 
     private void seedAdmin() {
         if (!userDao.userExists("admin")) {

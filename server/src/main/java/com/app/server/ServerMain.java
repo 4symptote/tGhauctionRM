@@ -19,7 +19,10 @@ public class ServerMain {
         }));
 
         int port = 6767;
+
         AuctionServer server = new AuctionServer();
         server.startServer(port);
+
+
     }
 }

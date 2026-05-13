@@ -25,7 +25,6 @@ public class PlaceBidHandler implements RequestHandler {
         }
 
         try {
-
             BidPayload payload = (BidPayload) request.payload();
 
             String auctionId = payload.auctionId();
