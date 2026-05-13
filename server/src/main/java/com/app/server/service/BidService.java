@@ -29,7 +29,9 @@ public class BidService {
         return instance;
     }
 
-    // TODO: hàm này nên trả về 1 Response, sửa sau
+    // Khong dung synchronized, vi no se lock tat ca cac auction, nhieu nguoi bid cung luc nhieu auction se wait tung ng 1 mot
+    // thay vi vay dung ReentrantLock, notice tao 1 lock cho moi auction tuc la chi synchronize trong 1 auction moi lock
+    // ko phai nguyen cai ham (tat ca auction) (mac du app ko den muc nhieu ng bid cung luc nhu v de co the thay su khac biet)
     public Response placeBid(String auctionId, User bidder, double amount) {
         // Theem lock vao auctionId nay neu chua co va lock()
         ReentrantLock auctionLock = auctionLocks.computeIfAbsent(auctionId, k -> new ReentrantLock());
