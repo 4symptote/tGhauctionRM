@@ -1,8 +1,11 @@
 package com.app.client.controller;
 
 import com.app.client.network.NetworkClient;
+import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
+import com.app.shared.model.user.User;
 import com.app.shared.network.Request;
+import com.app.shared.network.Response;
 import com.app.shared.network.payload.RegisterPayload;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +19,7 @@ import org.slf4j.LoggerFactory;
 // import com.app.client.network.NetworkClient;
 // import com.app.shared.network.payload.RegisterPayload;
 
-public class RegisterController {
+public class RegisterController implements ResponseListener {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
     @FXML private TextField usernameField;
@@ -25,6 +28,11 @@ public class RegisterController {
     @FXML private ComboBox<String> roleComboBox;
     @FXML private Label errorLabel;
     @FXML private Button registerButton;
+
+    @FXML
+    public void initialize() {
+        NetworkClient.getInstance().addListener(this);
+    }
 
     @FXML
     private void handleRegister(ActionEvent event) {
@@ -45,13 +53,33 @@ public class RegisterController {
         RegisterPayload payload = new RegisterPayload(username, password, email, role);
         Request request = new Request(Request.RequestType.REGISTER, payload);
         NetworkClient.getInstance().sendRequest(request);
-
-//        SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
     }
 
     @FXML
     private void switchToLogin(ActionEvent event) {
         logger.info("switching to login");
         SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
+    }
+
+    @Override
+    public void onResponseReceived(Response response) {
+        if (!response.success()) {
+            errorLabel.setStyle("-fx-text-fill: red;");
+            errorLabel.setText(response.message());
+            return;
+        }
+
+        //
+        if (response.payload() instanceof User newUser) {
+            errorLabel.setStyle("-fx-text-fill: green;");
+            errorLabel.setText("Account created! Logging you in...");
+
+            // Clean up?
+            // NetworkClient.getInstance().removeListener(this);
+
+
+            System.out.println("Switching to Dashboard...");
+            SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
+        }
     }
 }

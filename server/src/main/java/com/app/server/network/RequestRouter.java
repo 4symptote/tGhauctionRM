@@ -14,6 +14,7 @@ public class RequestRouter {
         handlers.put(Request.RequestType.CREATE_AUCTION, new CreateAuctionHandler());
         handlers.put(Request.RequestType.PLACE_BID, new PlaceBidHandler());
         handlers.put(Request.RequestType.LOGIN, new LoginHandler());
+        handlers.put(Request.RequestType.REGISTER, new RegisterHandler());
     }
 
     public Response route(Request request, ClientHandler client) {
