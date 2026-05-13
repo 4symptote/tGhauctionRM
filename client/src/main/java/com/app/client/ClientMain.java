@@ -21,6 +21,7 @@ public class ClientMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         NetworkClient.getInstance().connect("localhost", port);
+        NetworkClient.getInstance().startListener();
 
         primaryStage.setTitle("tGhauctionRM");
         SceneManager.getInstance().setPrimaryStage(primaryStage);
