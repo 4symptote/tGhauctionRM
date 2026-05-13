@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.app.client.controller.DashboardController"
+            prefHeight="600.0" prefWidth="900.0">
+
+    <left>
+        <VBox spacing="15" style="-fx-background-color: #2c3e50; -fx-min-width: 200;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Text text="TGH Auction" style="-fx-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Separator/>
+
+            <Label fx:id="welcomeLabel" text="Welcome, User" style="-fx-text-fill: #ecf0f1; -fx-font-size: 14px;"/>
+            <Label fx:id="balanceLabel" text="Balance: $0.00" style="-fx-text-fill: #27ae60; -fx-font-weight: bold;"/>
+            <Label fx:id="roleLabel" text="Role: BIDDER" style="-fx-text-fill: #bdc3c7; -fx-font-size: 12px;"/>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button text="Create Auction" onAction="#handleCreateAuction" maxWidth="Infinity" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+            <Button text="Logout" onAction="#handleLogout" maxWidth="Infinity" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Text text="Live Auctions" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Refresh" onAction="#refreshAuctions"/>
+            </HBox>
+
+            <TableView fx:id="auctionTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="titleColumn" text="Item Name" prefWidth="250"/>
+                    <TableColumn fx:id="priceColumn" text="Current Price" prefWidth="150"/>
+                    <TableColumn fx:id="endTimeColumn" text="Time Remaining" prefWidth="150"/>
+                    <TableColumn fx:id="actionColumn" text="Action" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>
