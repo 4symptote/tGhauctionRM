@@ -19,7 +19,7 @@ public class DatabaseConnection {
 
     private DatabaseConnection() {
         try {
-            Dotenv dotenv = Dotenv.configure().load();
+            Dotenv dotenv = Dotenv.configure().directory("./server").load();
             String CONNECTION_STRING = dotenv.get("MONGO_URI");
             String DATABASE_NAME = dotenv.get("DATABASE_NAME");
 
