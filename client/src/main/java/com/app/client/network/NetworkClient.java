@@ -46,7 +46,7 @@ public class NetworkClient {
 
             logger.info("Connected to server");
         } catch (Exception e) {
-            logger.error("Failed to connect to server: {}", e.getMessage());
+            logger.error("Failed to connect to server");
         }
     }
 

@@ -1,5 +1,6 @@
 package com.app.client.controller;
 
+import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 
@@ -77,6 +78,8 @@ public class LoginController implements ResponseListener {
 
             // Clean up? ko can observe nx
             // NetworkClient.getInstance().removeListener(this);
+
+            SessionModel.getInstance().setCurrentUser(loggedInUser);
 
             // TODO: Switch to auction list (make da auction list view)
             SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");

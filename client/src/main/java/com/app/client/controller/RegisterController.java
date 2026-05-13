@@ -1,5 +1,6 @@
 package com.app.client.controller;
 
+import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
@@ -74,6 +75,8 @@ public class RegisterController implements ResponseListener {
         if (response.payload() instanceof User newUser) {
             errorLabel.setStyle("-fx-text-fill: green;");
             errorLabel.setText("Account created! Logging you in...");
+
+            SessionModel.getInstance().setCurrentUser(newUser);
 
             System.out.println("Switching to Dashboard...");
             SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
