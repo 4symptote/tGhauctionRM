@@ -8,7 +8,9 @@ import java.util.Map;
 
 public final class ItemFactory {
     private static final Map<String, ItemCreator> CREATORS = Map.of(
-            "art", new ArtCreator()
+            "art", new ArtCreator(),
+            "vehicle", new VehicleCreator(),
+            "electronics", new ElectronicsCreator()
     );
 
     private ItemFactory() {}

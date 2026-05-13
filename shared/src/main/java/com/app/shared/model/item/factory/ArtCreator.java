@@ -16,7 +16,15 @@ public class ArtCreator implements ItemCreator {
 
         // dùng Builder - xem Art
         return new Art.Builder() // cách dòng nhìn cho đẹp
-                .name("payload.name()") // name() vì payload là record class
+                .name(payload.name())
+                .desc(payload.description())
+                .sellerId(payload.sellerId())
+                .startingPrice(payload.startingPrice())
+
+                .artist((String) attrs.get("artist"))
+                .medium((String) attrs.get("medium"))
+                .year((int) attrs.get("year"))
+
                 .build();
         /*
         Thay vì phải căng mắt viết một hàm khởi tạo khổng lồ và dễ truyền nhầm vị trí
