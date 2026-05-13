@@ -22,6 +22,7 @@ public class ClientHandler implements Runnable {
 
     private final RequestRouter requestRouter = new RequestRouter();
     // the User with this connection
+    // dang nhap xong or register xong se cap nhat vao currentUser
     private User currentUser;
 
     public ClientHandler(Socket socket) {
@@ -80,6 +81,10 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             logger.error("Error: error occurred while trying to disconnect: {}", e.getMessage());
         }
+    }
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
     }
 
     public User getCurrentUser() {
