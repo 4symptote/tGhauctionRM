@@ -22,13 +22,9 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private static UserService instance;
 
-    // temp db
-    private final Map<String, User> tempDatabase = new HashMap<>();
-
     private final UserDao userDao = new UserDaoImpl();
 
     private UserService() {
-        //todo: prob seed admin
         seedAdmin();
     }
 
@@ -54,7 +50,6 @@ public class UserService {
             throw new IllegalArgumentException("Khong de trong username va password");
         }
 
-        //User user = tempDatabase.get(username);
         User user = userDao.getUserByUsername(username);
 
         if (user == null || !BCrypt.checkpw(password, user.getPassword())) {
@@ -71,12 +66,8 @@ public class UserService {
         String email = payload.email().trim();
         String password = payload.password();
 
-        // todo: validations
         validateRegistration(username, password, email, role);
 
-//        if (tempDatabase.containsKey(username)) {
-//            throw new IllegalArgumentException("Username already exists");
-//        }
         if (userDao.userExists(username)) {
             throw new IllegalArgumentException("Username already exists");
         }
@@ -85,7 +76,6 @@ public class UserService {
 
         User user = createUser(username, hashedPassword, email, role);
 
-        //tempDatabase.put(username, user);
         userDao.saveUser(user);
 
         logger.info("New user registered: {}", username);
