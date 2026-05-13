@@ -12,7 +12,9 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
-<VBox alignment="CENTER" spacing="12.0" prefHeight="500.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.RegisterController">
+<VBox alignment="CENTER" spacing="12.0" prefHeight="500.0" prefWidth="350.0"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.app.client.controller.RegisterController">
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
     </padding>
