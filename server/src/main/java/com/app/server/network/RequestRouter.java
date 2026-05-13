@@ -13,6 +13,7 @@ public class RequestRouter {
     public RequestRouter() {
         handlers.put(Request.RequestType.CREATE_AUCTION, new CreateAuctionHandler());
         handlers.put(Request.RequestType.PLACE_BID, new PlaceBidHandler());
+        handlers.put(Request.RequestType.LOGIN, new LoginHandler());
     }
 
     public Response route(Request request, ClientHandler client) {

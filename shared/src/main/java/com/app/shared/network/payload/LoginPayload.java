@@ -1,4 +1,5 @@
 package com.app.shared.network.payload;
+
 import java.io.Serial;
 import java.io.Serializable;
 
