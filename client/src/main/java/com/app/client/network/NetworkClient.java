@@ -42,6 +42,23 @@ public class NetworkClient {
             logger.error("Error: Failed to connect to server: {}", e.getMessage());
         }
     }
+
+
+    public void sendRequest(com.app.shared.network.Request request) {
+        if (!isConnected()) {
+            logger.error("Error: Not connected to server.");
+            return;
+        }
+        try {
+            out.writeObject(request);
+            out.flush();
+            logger.info("Info: Sent {}", request.type());
+        } catch (IOException e) {
+            logger.error("Error: Failed to send request: {}", e.getMessage());
+            disconnect();
+        }
+    }
+
     public void startListener() {
         Thread listenerThread = new Thread(() -> {
             while (isConnected()) {
