@@ -1,6 +1,7 @@
 package com.app.client;
 
 import com.app.client.network.NetworkClient;
+import com.app.client.util.SceneManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,19 +21,11 @@ public class ClientMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         NetworkClient.getInstance().connect("localhost", port);
+        NetworkClient.getInstance().startListener();
 
-        // Setup simple scene for testing
-        URL fxmlFile = getClass().getResource("/view/fxml/HellowScreen.fxml");
-        assert fxmlFile != null;
-
-        try {
-            FXMLLoader loader = new FXMLLoader(fxmlFile);
-            Parent root = loader.load();
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
-        } catch (IOException e) {
-            logger.error("Error: Failed to load FXML: {}", e.getMessage());
-        }
+        primaryStage.setTitle("tGhauctionRM");
+        SceneManager.getInstance().setPrimaryStage(primaryStage);
+        SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
     }
 
     public static void main(String[] args) {

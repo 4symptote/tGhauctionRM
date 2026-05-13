@@ -1,6 +1,7 @@
 package com.app.client.network;
 
 import com.app.shared.network.Response;
+import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NetworkClient {
     private static final Logger logger = LoggerFactory.getLogger(NetworkClient.class);
@@ -16,6 +19,10 @@ public class NetworkClient {
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+
+    // listeners = observers:
+    // List of observers that implements the ResponseListener interface:
+    private final List<ResponseListener> listeners = new CopyOnWriteArrayList<>();
 
     private NetworkClient() {}
 
@@ -42,6 +49,23 @@ public class NetworkClient {
             logger.error("Error: Failed to connect to server: {}", e.getMessage());
         }
     }
+
+
+    public void sendRequest(com.app.shared.network.Request request) {
+        if (!isConnected()) {
+            logger.error("Error: Not connected to server.");
+            return;
+        }
+        try {
+            out.writeObject(request);
+            out.flush();
+            logger.info("Info: Sent {}", request.type());
+        } catch (IOException e) {
+            logger.error("Error: Failed to send request: {}", e.getMessage());
+            disconnect();
+        }
+    }
+
     public void startListener() {
         Thread listenerThread = new Thread(() -> {
             while (isConnected()) {
@@ -61,6 +85,30 @@ public class NetworkClient {
         listenerThread.setDaemon(true);
         listenerThread.start();
     }
+
+
+    public void addListener(ResponseListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    public void removeListener(ResponseListener listener) {
+        listeners.remove(listener);
+    }
+
+    // listen = observe
+    // Broadcasting = Notifying to all observers:
+    private void handleResponse(Response response) {
+        // todo: xemthem Platform.runLater()
+        Platform.runLater(() -> {
+            // Notify all observers
+            for (ResponseListener listener : listeners) {
+                listener.onResponseReceived(response);
+            }
+        });
+    }
+
 
     public void disconnect() {
         try {
