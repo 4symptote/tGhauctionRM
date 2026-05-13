@@ -29,7 +29,8 @@ public class UserDaoImpl implements UserDao {
         }
 
         // object -> document
-        Document doc = new Document("username", user.getUsername())
+        Document doc = new Document("_id", user.getId())
+                .append("username", user.getUsername())
                 .append("passwordHash", user.getPassword())
                 .append("email", user.getEmail())
                 .append("role", role)
