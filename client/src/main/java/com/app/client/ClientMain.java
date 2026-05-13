@@ -22,7 +22,7 @@ public class ClientMain extends Application {
         NetworkClient.getInstance().connect("localhost", port);
 
         // Setup simple scene for testing
-        URL fxmlFile = getClass().getResource("/view/fxml/HellowScreen.fxml");
+        URL fxmlFile = getClass().getResource("/view/fxml/LoginView.fxml");
         assert fxmlFile != null;
 
         try {
