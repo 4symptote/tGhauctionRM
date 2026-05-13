@@ -16,6 +16,7 @@ public class RequestRouter {
     }
 
     public Response route(Request request, ClientHandler client) {
+
         RequestHandler handler = handlers.get(request.type());
 
         if (handler == null) {
