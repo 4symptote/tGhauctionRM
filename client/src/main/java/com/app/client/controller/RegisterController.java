@@ -1,6 +1,9 @@
 package com.app.client.controller;
 
+import com.app.client.network.NetworkClient;
 import com.app.client.util.SceneManager;
+import com.app.shared.network.Request;
+import com.app.shared.network.payload.RegisterPayload;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,14 +38,15 @@ public class RegisterController {
             return;
         }
 
-        // TODO: Send RegisterPayload to server
-        // NetworkClient.getInstance().sendRegisterRequest(new RegisterPayload(username, password, email, role));
-
         System.out.println("Attempting to register: " + username + " as " + role);
         errorLabel.setStyle("-fx-text-fill: green;");
         errorLabel.setText("Sending registration...");
 
-        SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
+        RegisterPayload payload = new RegisterPayload(username, password, email, role);
+        Request request = new Request(Request.RequestType.REGISTER, payload);
+        NetworkClient.getInstance().sendRequest(request);
+
+//        SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
     }
 
     @FXML
