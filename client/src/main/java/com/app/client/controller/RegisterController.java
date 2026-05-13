@@ -1,5 +1,6 @@
 package com.app.client.controller;
 
+import com.app.client.util.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,10 +8,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 // import com.app.client.network.NetworkClient;
 // import com.app.shared.network.payload.RegisterPayload;
 
 public class RegisterController {
+    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
     @FXML private TextField usernameField;
     @FXML private TextField emailField;
@@ -37,11 +41,13 @@ public class RegisterController {
         System.out.println("Attempting to register: " + username + " as " + role);
         errorLabel.setStyle("-fx-text-fill: green;");
         errorLabel.setText("Sending registration...");
+
+        SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
     }
 
     @FXML
     private void switchToLogin(ActionEvent event) {
-        System.out.println("Switching back to Login Scene...");
-        // TODO: Use FXMLLoader to load LoginView.fxml
+        logger.info("switching to login");
+        SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
     }
 }
