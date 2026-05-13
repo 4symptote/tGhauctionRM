@@ -25,6 +25,7 @@ public class UserService {
 
     private UserService() {
         //todo: prob seed admin
+        seedAdmin();
     }
 
     public static synchronized UserService getInstance() {
@@ -51,7 +52,6 @@ public class UserService {
 
         User user = tempDatabase.get(username);
 
-        // 2. BCrypt safely verifies the password against the stored hash
         if (user == null || !BCrypt.checkpw(password, user.getPassword())) {
             throw new IllegalArgumentException("Sai ten dang nhap hoac mat khau");
         }

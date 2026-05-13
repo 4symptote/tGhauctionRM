@@ -78,6 +78,7 @@ public class LoginController implements ResponseListener {
             // NetworkClient.getInstance().removeListener(this);
 
             // TODO: Switch to auction list (make da auction list view)
+            SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
             System.out.println("Switching to Dashboard...");
         }
     }
