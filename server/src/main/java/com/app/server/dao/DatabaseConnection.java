@@ -1,0 +1,51 @@
+package com.app.server.dao;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class DatabaseConnection {
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
+
+    private static final String CONNECTION_STRING = "mongodb+srv://4symptote:tghauctionrm@tghauction.bvst4bh.mongodb.net/?appName=tGhauction";
+    private static final String DATABASE_NAME = "tGhauctionRM";
+
+    private static DatabaseConnection instance;
+    /**
+     *
+     */
+    private MongoClient mongoClient;
+    private MongoDatabase database;
+
+    private DatabaseConnection() {
+        try {
+            logger.info("Connecting to MongoDB Atlas...");
+            mongoClient = MongoClients.create(CONNECTION_STRING);
+            database = mongoClient.getDatabase(DATABASE_NAME);
+            logger.info("Successfully connected to database: {}", DATABASE_NAME);
+        } catch (Exception e) {
+            logger.error("Failed to connect to MongoDB: {}", e.getMessage());
+            System.exit(1); // Crash the server if the DB is down
+        }
+    }
+
+    public static synchronized DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
+    public MongoDatabase getDatabase() {
+        return database;
+    }
+
+    public void close() {
+        if (mongoClient != null) {
+            mongoClient.close();
+            logger.info("MongoDB connection closed");
+        }
+    }
+}
