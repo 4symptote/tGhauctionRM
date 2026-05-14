@@ -5,30 +5,35 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="350.0" spacing="15.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.LoginController">
-    <padding>
-        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
-    </padding>
+<StackPane style="-fx-background-color: #f4f6f8;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.LoginController">
 
-    <Label text="Not Enough Login View">
-        <font>
-            <Font name="System Bold" size="24.0" />
-        </font>
-    </Label>
+    <VBox alignment="CENTER" maxHeight="450.0" maxWidth="400.0" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+        <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+        </padding>
 
-    <Label fx:id="errorLabel" textFill="RED" wrapText="true" />
+        <Label text="not enought LoginView">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
 
-    <VBox spacing="5.0">
-        <Label text="Username" />
-        <TextField fx:id="usernameField" promptText="Enter username..." />
+        <Label fx:id="errorLabel" textFill="RED" wrapText="true" />
+
+        <VBox spacing="5.0">
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Username" />
+            <TextField fx:id="usernameField" promptText="Enter username..." style="-fx-padding: 10; -fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4; -fx-background-color: #f8f9fa;" />
+        </VBox>
+
+        <VBox spacing="5.0">
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Password" />
+            <PasswordField fx:id="passwordField" promptText="Enter password..." style="-fx-padding: 10; -fx-background-radius: 4; -fx-border-color: #bdc3c7; -fx-border-radius: 4; -fx-background-color: #f8f9fa;" />
+        </VBox>
+
+        <Region prefHeight="10" />
+
+        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" prefWidth="Infinity" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12px; -fx-background-radius: 4; -fx-cursor: hand;" text="Login" />
+
+        <Hyperlink onAction="#switchToRegister" style="-fx-text-fill: #7f8c8d;" text="register..." />
     </VBox>
-
-    <VBox spacing="5.0">
-        <Label text="Password" />
-        <PasswordField fx:id="passwordField" promptText="Enter password..." />
-    </VBox>
-
-    <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" prefWidth="Infinity" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px;" text="Login" />
-
-    <Hyperlink onAction="#switchToRegister" text="register" />
-</VBox>
+</StackPane>

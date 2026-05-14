@@ -32,20 +32,32 @@ public class SceneManager {
 
     public void switchScene(String fxmlPath) {
         try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+//            Parent root = loader.load();
+//
+//            Scene scene = new Scene(root);
+//
+//            boolean wasMaximized = primaryStage.isMaximized();
+//
+//            primaryStage.setScene(scene);
+//            primaryStage.setMaximized(wasMaximized);
+//            primaryStage.show();
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
 
-            Scene scene = new Scene(root);
+            if (primaryStage.getScene() == null) {
+                // First time launch
+                Scene scene = new Scene(root);
+                primaryStage.setScene(scene);
+            } else {
+                primaryStage.getScene().setRoot(root);
+            }
 
-            boolean wasMaximized = primaryStage.isMaximized();
-
-            primaryStage.setScene(scene);
-            primaryStage.setMaximized(wasMaximized);
             primaryStage.show();
 
         } catch (IOException e) {
             logger.error("Error: Failed to load FXML: {}", e.getMessage());
-            e.printStackTrace();
         }
     }
 }

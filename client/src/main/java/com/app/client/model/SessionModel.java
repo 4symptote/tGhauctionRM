@@ -30,6 +30,7 @@ public class SessionModel {
     }
 
     public void logout() {
+
         this.currentUser = null;
     }
 }
