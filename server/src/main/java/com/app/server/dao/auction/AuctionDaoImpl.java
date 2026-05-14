@@ -16,10 +16,15 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 public class AuctionDaoImpl implements AuctionDao {
+    private static final AuctionDaoImpl instance = new AuctionDaoImpl();
     private final MongoCollection<Document> collection;
 
-    public AuctionDaoImpl() {
+    private AuctionDaoImpl() {
         this.collection = DatabaseConnection.getInstance().getDatabase().getCollection("auctions");
+    }
+
+    public static AuctionDaoImpl getInstance() {
+        return instance;
     }
 
     @Override

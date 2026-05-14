@@ -1,5 +1,6 @@
 package com.app.server.network.handler;
 
+import com.app.server.dao.auction.AuctionDao;
 import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.server.network.AuctionServer;
 import com.app.server.network.ClientHandler;
@@ -27,7 +28,7 @@ public class PlaceBidHandler implements RequestHandler {
         }
 
         try {
-            AuctionDaoImpl auctionDao = new AuctionDaoImpl();
+            AuctionDao auctionDao = AuctionDaoImpl.getInstance();
             BidPayload payload = (BidPayload) request.payload();
 
             String auctionId = payload.auctionId();

@@ -22,7 +22,7 @@ public class AuctionManager {
     private final Map<String, Auction> activeAuctions;
     private final ScheduledExecutorService scheduler;
 
-    private final AuctionDao auctionDao = new AuctionDaoImpl();
+    private final AuctionDao auctionDao = AuctionDaoImpl.getInstance();
     
     private AuctionManager() {
         activeAuctions = new ConcurrentHashMap<>();
