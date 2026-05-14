@@ -89,7 +89,7 @@ public class DashboardController implements ResponseListener {
                 // FORCE THE CARD TO STRETCH TO FULL WIDTH
                 card.setMaxWidth(Double.MAX_VALUE);
 
-                // 2. Left Side: Name and Seller
+                // Left Side: Name and Seller
                 VBox infoBox = new VBox(8); // Slight spacing between title and seller
                 HBox.setHgrow(infoBox, Priority.ALWAYS); // This pushes the right-side box all the way to the edge
 
@@ -102,7 +102,7 @@ public class DashboardController implements ResponseListener {
 
                 infoBox.getChildren().addAll(nameLabel, sellerLabel);
 
-                // 3. Right Side: Price and Status Badge
+                // Right Side: Price and Status Badge
                 VBox priceBox = new VBox(10); // Spacing between price and badge
                 priceBox.setAlignment(Pos.CENTER_RIGHT);
 
@@ -114,12 +114,11 @@ public class DashboardController implements ResponseListener {
 
                 priceBox.getChildren().addAll(priceLabel, statusLabel);
 
-                // 4. Combine and add to layout
+                // Combine and add to layout
                 card.getChildren().addAll(infoBox, priceBox);
 
                 // Add click effect
                 card.setOnMouseClicked(e -> {
-                    System.out.println("Card Clicked! Auction ID: " + auction.getId());
                     // Here you would navigate to the Auction Details View
                 });
 
@@ -156,7 +155,6 @@ public class DashboardController implements ResponseListener {
                     // 100% sure that the payload is a List<Auction>
                     @SuppressWarnings("unchecked")
                     List<Auction> fetchedAuctions = (List<Auction>) response.payload();
-                    System.out.println("Fetched auctions count: " + fetchedAuctions.size());
                     // update UI
                     updateAuctionList(fetchedAuctions);
 

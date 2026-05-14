@@ -1,5 +1,6 @@
 package com.app.server.network;
 
+import com.app.server.service.AuctionManager;
 import com.app.shared.network.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class AuctionServer {
         // Tạo socket server
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("Server started on port {}", port);
+            AuctionManager auctionManager = AuctionManager.getInstance(); // instantiate auction manager
             isRunning = true;
 
             while (isRunning) {

@@ -39,11 +39,11 @@ public class LoginHandler implements RequestHandler {
 
         } catch (IllegalArgumentException e) {
             // catch exception khi UserService.login() nem
-            logger.warn("Failed login attempt from IP {}: {}", client.getInetAddress(), e.getMessage());
+            //logger.warn("Failed login attempt from IP {}: {}", client.getInetAddress(), e.getMessage());
             return new Response(false, e.getMessage(), null);
 
         } catch (Exception e) {
-            logger.error("Unexpected error during login: ", e);
+            //logger.error("Unexpected error during login: ", e);
             return new Response(false, "?? Error", null);
         }
     }

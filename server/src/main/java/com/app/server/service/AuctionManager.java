@@ -12,8 +12,13 @@ import com.app.server.dao.auction.AuctionDao;
 import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.shared.model.auction.Auction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AuctionManager {
-    private static final AuctionManager instance = new AuctionManager();  // Eager initialization
+    private static final Logger logger = LoggerFactory.getLogger(AuctionManager.class);
+
+    private static AuctionManager instance;  // Eager initialization
     private final Map<String, Auction> activeAuctions;
     private final ScheduledExecutorService scheduler;
 
@@ -26,7 +31,9 @@ public class AuctionManager {
     }
 
     public static AuctionManager getInstance() {
-        // Khong can check null nua vi dung Eager initialization
+        if (instance == null) {
+            instance = new AuctionManager();
+        }
         return instance;
     }
 
@@ -61,7 +68,7 @@ public class AuctionManager {
                 concludeAuction(auction.getId());
             }
         }
-        System.out.println("Loaded " + savedAuctions.size() + " active auctions from the database.");
+        logger.info("Loaded {} active auctions from the database.", savedAuctions.size());
     }
 
 
@@ -92,7 +99,7 @@ public class AuctionManager {
             System.out.println("Auction " + auctionId + " concluded - Winner: " + finishedAuction.getHighestBidderId());
 
             BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
-            // TODO: save the FINAL state to database
+
             auctionDao.updateAuction(finishedAuction);
             // TODO: broadcast winner
         }
