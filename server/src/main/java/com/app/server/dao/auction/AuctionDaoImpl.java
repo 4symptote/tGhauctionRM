@@ -41,7 +41,7 @@ public class AuctionDaoImpl implements AuctionDao {
 
     @Override
     public Auction getAuctionById(String id) {
-        // todo:
+        // todo: implement this / when needed
         return null;
     }
 
@@ -57,16 +57,31 @@ public class AuctionDaoImpl implements AuctionDao {
             Document itemDoc = (Document) doc.get("item");
             String type = itemDoc.getString("type");
 
+            String name = itemDoc.getString("name");
+            String desc = itemDoc.getString("description");
+            double price = itemDoc.getDouble("startingPrice");
+
             Item item;
             switch (type) {
-                case "Art" -> item = new Art.Builder().build();
-                case "Vehicle" -> item = new Vehicle.Builder().build();
-                default -> item = new Electronics.Builder().build();
-            }
+                case "Art" -> item = new Art.Builder()
+                            .name(name).desc(desc).startingPrice(price)
+                            .artist(itemDoc.getString("artist"))
+                            .medium(itemDoc.getString("medium"))
+                            .year(itemDoc.getInteger("year") != null ? itemDoc.getInteger("year") : 0)
+                            .build();
 
-            item.setName(itemDoc.getString("name"));
-            item.setDescription(itemDoc.getString("description"));
-            item.setStartingPrice(itemDoc.getDouble("startingPrice"));
+                case "Vehicle" -> item = new Vehicle.Builder()
+                            .name(name).desc(desc).startingPrice(price)
+                            .model(itemDoc.getString("model"))
+                            .build();
+
+                case "Electronics" -> item = new Electronics.Builder()
+                            .name(name).desc(desc).startingPrice(price)
+                            .brand(itemDoc.getString("brand"))
+                            .build();
+
+                default -> throw new IllegalArgumentException("Unknown item type: " + type);
+            }
 
             // 2. Rebuild the Auction
             long startTime = doc.getLong("startTime");
@@ -90,14 +105,31 @@ public class AuctionDaoImpl implements AuctionDao {
     private Document auctionToDocument(Auction auction) {
         Item item = auction.getItem();
 
-        // Map the nested Item object
+        // Map the base Item fields
         Document itemDoc = new Document("name", item.getName())
                 .append("description", item.getDescription())
                 .append("startingPrice", item.getStartingPrice())
                 .append("type", item.getClass().getSimpleName());
 
+        // Map the custom attributes based on the exact Subclass
+        switch (item) {
+            case Art art ->
+                    itemDoc.append("artist", art.getArtist())
+                           .append("medium", art.getMedium())
+                           .append("year", art.getYear());
+
+            case Electronics elec ->
+                    itemDoc.append("brand", elec.getBrand());
+
+            case Vehicle veh ->
+                    itemDoc.append("brand", veh.getBrand())
+                           .append("model", veh.getModel());
+            default -> {
+            }
+        }
+
         // Map the main Auction object
-        return new Document("_id", auction.getId()) // UUID
+        return new Document("_id", auction.getId())
                 .append("sellerName", auction.getSellerName())
                 .append("sellerId", auction.getSellerId())
                 .append("item", itemDoc)
