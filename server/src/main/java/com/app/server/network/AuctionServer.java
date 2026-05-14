@@ -5,6 +5,7 @@ import com.app.shared.network.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AuctionServer {
     private static final Logger logger = LoggerFactory.getLogger(AuctionServer.class);
+    @SuppressWarnings("FieldCanBeLocal")
     private boolean isRunning;
 
     private static final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
@@ -28,7 +30,7 @@ public class AuctionServer {
             isRunning = true;
 
             while (isRunning) {
-                // Luôn đợi client mới kết nối
+                // Luôn đợi client mới ('new') kết nối
                 Socket clientSocket = serverSocket.accept();
 
                 // cơ bản là chỉ định 1 nhân viên (handler) để xử lý client
@@ -39,7 +41,7 @@ public class AuctionServer {
                 new Thread(clientHandler).start();
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             logger.error("Error: {}", e.getMessage(), e);
         }
     }
