@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class AuctionManager {
     private static final Logger logger = LoggerFactory.getLogger(AuctionManager.class);
 
-    private static AuctionManager instance = AuctionManager.getInstance();  // Eager initialization
+    private static AuctionManager instance;// = AuctionManager.getInstance();  // Eager initialization
     private final Map<String, Auction> activeAuctions;
     private final ScheduledExecutorService scheduler;
 
@@ -59,16 +59,18 @@ public class AuctionManager {
         for (Auction auction : savedAuctions) {
             activeAuctions.put(auction.getId(), auction);
 
-            long deltaWaitTime = auction.getEndTimeMillis() - currentTime;
+            checkAndClose(auction);
 
-            if (deltaWaitTime > 0) {
-                scheduler.schedule(() -> checkAndClose(auction), deltaWaitTime, TimeUnit.MILLISECONDS);
-            } else {
-                // The auction expired while the server was offline -> conclude
-                concludeAuction(auction.getId());
-            }
+//            long deltaWaitTime = auction.getEndTimeMillis() - currentTime;
+//
+//            if (deltaWaitTime > 0) {
+//                scheduler.schedule(() -> checkAndClose(auction), deltaWaitTime, TimeUnit.MILLISECONDS);
+//            } else {
+//                // The auction expired while the server was offline -> conclude
+//                concludeAuction(auction.getId());
+//            }
         }
-        logger.info("Loaded {} active auctions from the database.", savedAuctions.size());
+        logger.info("Loaded {} active auctions from the database.", activeAuctions.size());
     }
 
 
@@ -96,11 +98,11 @@ public class AuctionManager {
         if (finishedAuction != null) {
             finishedAuction.setStatus(Auction.Status.FINISHED);
 
-            System.out.println("Auction " + auctionId + " concluded - Winner: " + finishedAuction.getHighestBidderId());
-
-            BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
+            logger.info("Auction {} concluded - Winner: {}", auctionId, finishedAuction.getHighestBidderId());
 
             auctionDao.updateAuction(finishedAuction);
+            BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
+
             // TODO: broadcast winner
         }
     }

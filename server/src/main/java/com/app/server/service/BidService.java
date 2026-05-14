@@ -25,7 +25,6 @@ public class BidService {
     }
 
     public static BidService getInstance() {
-        AuctionManager.getInstance();
         return instance;
     }
 
