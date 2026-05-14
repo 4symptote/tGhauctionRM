@@ -79,7 +79,7 @@ public class RegisterController implements ResponseListener {
             SessionModel.getInstance().setCurrentUser(newUser);
 
             System.out.println("Switching to Dashboard...");
-            SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
+            SceneManager.getInstance().switchScene("/view/fxml/testView.fxml");
         }
     }
 }

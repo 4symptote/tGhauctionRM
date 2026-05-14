@@ -6,12 +6,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.app.server.dao.auction.AuctionDao;
+import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.shared.model.auction.Auction;
 
 public class AuctionManager {
     private static final AuctionManager instance = new AuctionManager();  // Eager initialization
     private final Map<String, Auction> activeAuctions;
     private final ScheduledExecutorService scheduler;
+
+    private final AuctionDao auctionDao = new AuctionDaoImpl();
     
     private AuctionManager() {
         activeAuctions = new ConcurrentHashMap<>();
@@ -31,6 +35,7 @@ public class AuctionManager {
         auction.setEndTimeMillis(endTime);
 
         // TODO: Save initial state to MongoDB / Database
+        auctionDao.saveAuction(auction);
 
         // Đặt lịch kiểm tra auction sau durationMillis
         scheduler.schedule(() -> checkAndClose(auction), durationMillis, TimeUnit.MILLISECONDS);
@@ -63,6 +68,7 @@ public class AuctionManager {
 
             BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
             // TODO: save the FINAL state to database
+            auctionDao.updateAuction(finishedAuction);
             // TODO: broadcast winner
         }
     }

@@ -82,7 +82,7 @@ public class LoginController implements ResponseListener {
             SessionModel.getInstance().setCurrentUser(loggedInUser);
 
             // TODO: Switch to auction list (make da auction list view)
-            SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
+            SceneManager.getInstance().switchScene("/view/fxml/testView.fxml");
             System.out.println("Switching to Dashboard...");
         }
     }

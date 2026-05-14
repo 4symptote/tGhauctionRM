@@ -68,7 +68,7 @@ public class Auction extends Entity {
         return status;
     }
 
-
+    public void setSellerId(String sellerId) { this.sellerId = sellerId; }
     public void setItem(Item item) { this.item = item; }
     public void setStartTime(long startTime) { this.startTime = startTime; }
     public void setEndTimeMillis(long endTime) { this.endTime = endTime; }

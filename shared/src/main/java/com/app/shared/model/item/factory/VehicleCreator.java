@@ -20,7 +20,7 @@ public class VehicleCreator implements ItemCreator {
                 .sellerId(payload.sellerId())
                 .startingPrice(payload.startingPrice())
 
-                .brand((String) attrs.get("brand"))
+                .brand((String) attrs.getOrDefault("brand", "Unknown"))
 
                 .build();
 

@@ -12,6 +12,9 @@ public class ElectronicsCreator implements ItemCreator {
     public Item createItem(CreateAuctionPayload payload) {
 
         Map<String, Object> attrs = payload.customAttributes();
+        if (attrs == null) {
+            attrs = Map.of();
+        }
 
         return new Electronics.Builder()
                 .name(payload.name())
@@ -19,7 +22,7 @@ public class ElectronicsCreator implements ItemCreator {
                 .sellerId(payload.sellerId())
                 .startingPrice(payload.startingPrice())
 
-                .brand((String) attrs.get("brand"))
+                .brand((String) attrs.getOrDefault("brand", "Unknown"))
 
                 .build();
 
