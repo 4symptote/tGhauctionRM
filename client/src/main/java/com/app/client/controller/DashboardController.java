@@ -10,6 +10,7 @@ import com.app.shared.model.item.Electronics;
 import com.app.shared.model.item.factory.ItemFactory;
 import com.app.shared.model.user.Admin;
 import com.app.shared.model.user.Bidder;
+import com.app.shared.model.user.Seller;
 import com.app.shared.model.user.User;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.CreateAuctionPayload;
@@ -37,21 +38,24 @@ public class DashboardController implements ResponseListener {
         NetworkClient.getInstance().addListener(this);
 
         // Load user data if available
-        Bidder currentUser = (Bidder) SessionModel.getInstance().getCurrentUser();
+        User currentUser = SessionModel.getInstance().getCurrentUser();
         if (currentUser != null) {
             welcomeLabel.setText(currentUser.getUsername());
             roleLabel.setText(currentUser.getClass().getSimpleName().toUpperCase());
-            balanceLabel.setText(String.format("Balance: $%,.2f", currentUser.getBalance()));
+
+            if (currentUser instanceof Bidder bidder) {
+                balanceLabel.setText(String.format("Balance: $%,.2f", bidder.getBalance()));
+            } else if (currentUser instanceof Seller seller) {
+                balanceLabel.setText(String.format("Revenue: $%,.2f", seller.getTotalRevenue()));
+            } else if (currentUser instanceof Admin admin) {
+                balanceLabel.setText("System Administrator");
+            }
         }
 
-        // --- INJECT MOCK DATA FOR UI TESTING ---
+        // inject mock data
         injectMockCards();
     }
 
-    /**
-     * Generates fake data to test the UI layout.
-     * You can delete this method once the server is connected.
-     */
     private void injectMockCards() {
         List<Auction> mockAuctions = new ArrayList<>();
 
@@ -120,7 +124,7 @@ public class DashboardController implements ResponseListener {
 
     @FXML
     private void handleCreateAuction(ActionEvent event) {
-        // SceneManager.getInstance().switchScene("/view/fxml/testView.fxml");
+        SceneManager.getInstance().switchScene("/view/fxml/CreateAuctionView.fxml");
     }
 
     @FXML
@@ -138,6 +142,6 @@ public class DashboardController implements ResponseListener {
 
     @Override
     public void onResponseReceived(Response response) {
-        // Handle server responses here (e.g., getting the real list of auctions)
+        //updateAuctionList(new ArrayList<>());
     }
 }
