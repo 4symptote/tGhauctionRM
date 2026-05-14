@@ -9,6 +9,7 @@ public record Request(RequestType type, Object payload) implements Serializable 
 
     public enum RequestType {
         LOGIN,
+        LOGOUT,
         REGISTER,
         PLACE_BID,
         CREATE_AUCTION,

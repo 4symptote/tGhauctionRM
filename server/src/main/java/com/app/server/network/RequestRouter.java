@@ -16,6 +16,7 @@ public class RequestRouter {
         handlers.put(Request.RequestType.LOGIN, new LoginHandler());
         handlers.put(Request.RequestType.REGISTER, new RegisterHandler());
         handlers.put(Request.RequestType.GET_AUCTIONS, new GetAuctionsHandler());
+        handlers.put(Request.RequestType.LOGOUT, new LogoutHandler());
     }
 
     public Response route(Request request, ClientHandler client) {

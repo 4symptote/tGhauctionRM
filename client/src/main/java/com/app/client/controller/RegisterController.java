@@ -60,7 +60,7 @@ public class RegisterController implements ResponseListener {
     private void switchToLogin(ActionEvent event) {
         logger.info("switching to login");
         NetworkClient.getInstance().removeListener(this);
-        SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
+        SceneManager.getInstance().switchScene("/view/fxml/Dashboard.fxml");
     }
 
     @Override

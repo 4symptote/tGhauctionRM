@@ -5,16 +5,12 @@ import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
 import com.app.shared.model.auction.Auction;
-import com.app.shared.model.item.Art;
-import com.app.shared.model.item.Electronics;
-import com.app.shared.model.item.factory.ItemFactory;
 import com.app.shared.model.user.Admin;
 import com.app.shared.model.user.Bidder;
 import com.app.shared.model.user.Seller;
 import com.app.shared.model.user.User;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
-import com.app.shared.network.payload.CreateAuctionPayload;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +22,6 @@ import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardController implements ResponseListener {
@@ -36,10 +31,19 @@ public class DashboardController implements ResponseListener {
     @FXML private Label balanceLabel;
     @FXML private Label roleLabel;
     @FXML private VBox auctionListContainer; // The container from our FXML
+    @FXML private VBox mainContentVBox;
 
     @FXML
     public void initialize() {
         NetworkClient.getInstance().addListener(this);
+
+        mainContentVBox.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double currentWidth = newVal.doubleValue();
+            double horizontalPadding = currentWidth * 0.12;
+
+            horizontalPadding = Math.max(40, Math.min(250, horizontalPadding));
+            mainContentVBox.setPadding(new javafx.geometry.Insets(30, horizontalPadding, 30, horizontalPadding));
+        });
 
         // Load user data if available
         User currentUser = SessionModel.getInstance().getCurrentUser();
@@ -47,35 +51,18 @@ public class DashboardController implements ResponseListener {
             welcomeLabel.setText(currentUser.getUsername());
             roleLabel.setText(currentUser.getClass().getSimpleName().toUpperCase());
 
-            if (currentUser instanceof Bidder bidder) {
-                balanceLabel.setText(String.format("Balance: $%,.2f", bidder.getBalance()));
-            } else if (currentUser instanceof Seller seller) {
-                balanceLabel.setText(String.format("Revenue: $%,.2f", seller.getTotalRevenue()));
-            } else if (currentUser instanceof Admin admin) {
-                balanceLabel.setText("System Administrator");
+            switch (currentUser) {
+                case Bidder bidder -> balanceLabel.setText(String.format("Balance: $%,.2f", bidder.getBalance()));
+                case Seller seller -> balanceLabel.setText(String.format("Revenue: $%,.2f", seller.getTotalRevenue()));
+                case Admin admin -> balanceLabel.setText("System Administrator");
+                default -> {
+                }
             }
         }
-
-        // inject mock data
-        injectMockCards();
-    }
-
-    private void injectMockCards() {
-        List<Auction> mockAuctions = new ArrayList<>();
-
-        // Mock 1: A running art auction
-        Art painting = (Art) ItemFactory.createItem(new CreateAuctionPayload("Art", "Sunset", "nothing", 1000, "01249d091d0awd", 10000, null));
-        Auction auction1 = new Auction(painting, 10000); // 24 hours
-
-        mockAuctions.add(auction1);
-        // Push to UI
-        //updateAuctionList(mockAuctions);
         refreshAuctions();
+
     }
 
-    /**
-     * Dynamically builds the horizontal UI cards for the given auctions.
-     */
     public void updateAuctionList(List<Auction> auctions) {
         Platform.runLater(() -> {
             auctionListContainer.getChildren().clear();
@@ -86,8 +73,9 @@ public class DashboardController implements ResponseListener {
                 card.getStyleClass().add("auction-card");
                 card.setAlignment(Pos.CENTER_LEFT);
 
-                // FORCE THE CARD TO STRETCH TO FULL WIDTH
-                card.setMaxWidth(Double.MAX_VALUE);
+                card.prefWidthProperty().bind(auctionListContainer.widthProperty().multiply(0.95));
+                card.setMaxWidth(1100.0);
+                card.setMinWidth(450.0);
 
                 // Left Side: Name and Seller
                 VBox infoBox = new VBox(8); // Slight spacing between title and seller
@@ -95,6 +83,7 @@ public class DashboardController implements ResponseListener {
 
                 Label nameLabel = new Label(auction.getItem().getName());
                 nameLabel.getStyleClass().add("card-item-name");
+                nameLabel.setWrapText(true);
 
 
                 Label sellerLabel = new Label("Seller: " + auction.getSellerName());
@@ -119,7 +108,7 @@ public class DashboardController implements ResponseListener {
 
                 // Add click effect
                 card.setOnMouseClicked(e -> {
-                    // Here you would navigate to the Auction Details View
+                    // todo: Auction Details View
                 });
 
                 auctionListContainer.getChildren().add(card);
@@ -140,6 +129,7 @@ public class DashboardController implements ResponseListener {
 
     @FXML
     private void handleLogout(ActionEvent event) {
+        NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.LOGOUT, null));
         SessionModel.getInstance().logout();
         NetworkClient.getInstance().removeListener(this);
         SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
