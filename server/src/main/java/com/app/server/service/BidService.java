@@ -5,7 +5,6 @@ import com.app.shared.exception.AuctionNotFoundException;
 import com.app.shared.exception.InvalidBidException;
 import com.app.shared.model.auction.Auction;
 import com.app.shared.model.user.User;
-import com.app.shared.network.Response;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BidService {
     private static final BidService instance = new BidService();
-    private final AuctionManager auctionManager;
+    private AuctionManager auctionManager;
     // Lock map (auctionId: lock)
     private final Map<String, ReentrantLock> auctionLocks = new ConcurrentHashMap<>();
 
@@ -22,7 +21,7 @@ public class BidService {
     private static final long EXTENSION_TIME = 60*1000 * 5;         // Thời gian thêm vào
 
     private BidService() {
-        this.auctionManager = AuctionManager.getInstance();
+
     }
 
     public static BidService getInstance() {
@@ -38,8 +37,7 @@ public class BidService {
         auctionLock.lock();
 
         try {
-
-            Auction auction = auctionManager.getAuction(auctionId);
+            Auction auction = AuctionManager.getInstance().getAuction(auctionId);
 
             // Logic nghiep vu
             if (auction == null) {
@@ -50,7 +48,7 @@ public class BidService {
             }
             // Không thể tự Bid item mình sell (prob k bao h xảy ra trừ khi là admin mfa đã là admin thì phải lm j cx dc)
             if (auction.getSellerId().equals(bidder.getId())) {
-                throw new InvalidBidException("Không thể tự Bid item của bản thân?!.");
+                throw new InvalidBidException("Không thể tự Bid item của bản thân?!?.");
             }
             if (amount <= auction.getCurrentPrice()) {
                 throw new InvalidBidException("Bid phải lớn hơn: " + auction.getCurrentPrice() + "$.");

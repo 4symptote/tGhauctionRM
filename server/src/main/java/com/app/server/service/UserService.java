@@ -20,7 +20,7 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private static UserService instance;
 
-    private final UserDao userDao = new UserDaoImpl();
+    private final UserDao userDao = UserDaoImpl.getInstance();
 
     private UserService() {
         seedAdmin();

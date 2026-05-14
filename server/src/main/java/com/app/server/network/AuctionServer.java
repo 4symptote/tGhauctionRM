@@ -26,7 +26,7 @@ public class AuctionServer {
         // Tạo socket server
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("Server started on port {}", port);
-            AuctionManager auctionManager = AuctionManager.getInstance(); // instantiate auction manager
+            AuctionManager.getInstance(); // instantiate auction manager
             isRunning = true;
 
             while (isRunning) {

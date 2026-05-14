@@ -127,7 +127,7 @@ public class DashboardController implements ResponseListener {
 
     @FXML
     private void refreshAuctions() {
-        System.out.println("Requesting updated auction list from server...");
+        //System.out.println("Requesting updated auction list from server...");
         NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_AUCTIONS, null));
     }
 
@@ -141,7 +141,6 @@ public class DashboardController implements ResponseListener {
 
     @Override
     public void onResponseReceived(Response response) {
-        System.out.println("Response received: " + response);
         // veri important Platform.runLater
         Platform.runLater(() -> {
             if (response.success() && response.payload() instanceof List) {

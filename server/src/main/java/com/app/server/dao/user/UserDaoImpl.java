@@ -9,10 +9,16 @@ import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
 public class UserDaoImpl implements UserDao {
+    private static final UserDaoImpl instance = new UserDaoImpl();
+
     private final MongoCollection<Document> usersCollection;
 
-    public UserDaoImpl() {
+    private UserDaoImpl() {
         this.usersCollection = DatabaseConnection.getInstance().getDatabase().getCollection("users");
+    }
+
+    public static UserDaoImpl getInstance() {
+        return instance;
     }
 
     @Override
