@@ -73,7 +73,6 @@ public class UserService {
         String hashedPassword = BCrypt.hashpw(payload.password(), BCrypt.gensalt());
 
         User user = createUser(username, hashedPassword, email, role);
-
         userDao.saveUser(user);
 
         logger.info("New user registered: {}", username);

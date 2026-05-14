@@ -1,0 +1,155 @@
+/* Globals */
+.root-pane {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-background-color: #f4f6f8; /* Soft light gray background */
+}
+
+/* TOP BAR  */
+.top-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0; /* Only bottom border */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
+}
+
+.brand-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50; /* Dark slate */
+}
+
+.user-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.user-role {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.user-balance {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60; /* Green for money */
+}
+
+/* ================= BUTTONS ================= */
+.action-btn {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.create-btn {
+    -fx-background-color: #3498db; /* Bright blue */
+    -fx-text-fill: white;
+}
+.create-btn:hover { -fx-background-color: #2980b9; }
+
+.logout-btn {
+    -fx-background-color: #ecf0f1;
+    -fx-text-fill: #e74c3c; /* Red text */
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4px;
+}
+.logout-btn:hover { -fx-background-color: #fcebeb; }
+
+.refresh-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #3498db;
+    -fx-border-color: #3498db;
+    -fx-border-radius: 4px;
+    -fx-padding: 6px 12px;
+    -fx-cursor: hand;
+}
+.refresh-btn:hover {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+/* main content */
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* TABLE VIEW (Kept as fallback for other views) */
+.custom-table {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+.custom-table .column-header-background {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+.custom-table .column-header { -fx-background-color: transparent; }
+.custom-table .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding: 10px;
+}
+.custom-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: #f4f6f8;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 45px;
+}
+.custom-table .table-row-cell:odd { -fx-background-color: #fafbfc; }
+.custom-table .table-row-cell:hover { -fx-background-color: #ebf5fb; }
+
+
+/* ================= NEW CARD LIST STYLES ================= */
+/* ================= NEW CARD LIST STYLES ================= */
+.auction-card {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 25 35; /* Increased padding to make the card taller and wider internally */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0, 0, 4);
+    -fx-cursor: hand;
+}
+
+.auction-card:hover {
+    -fx-border-color: #3498db;
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.1), 10, 0, 0, 4);
+}
+
+.card-item-name {
+    -fx-font-size: 22px; /* Bumped from 18px */
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.card-seller-label {
+    -fx-font-size: 14px; /* Bumped from 12px */
+    -fx-text-fill: #95a5a6;
+    -fx-padding: 4 0 0 0; /* Add slight spacing below the title */
+}
+
+.card-bid-value {
+    -fx-font-size: 28px; /* Bumped from 20px */
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+.card-status-badge {
+    -fx-padding: 6 14; /* Larger badge */
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-text-fill: white;
+}
+
+.status-OPEN { -fx-background-color: #3498db; }
+.status-RUNNING { -fx-background-color: #f39c12; }
+.status-FINISHED { -fx-background-color: #95a5a6; }

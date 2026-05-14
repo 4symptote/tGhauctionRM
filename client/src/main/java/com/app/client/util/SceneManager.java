@@ -36,11 +36,16 @@ public class SceneManager {
             Parent root = loader.load();
 
             Scene scene = new Scene(root);
+
+            boolean wasMaximized = primaryStage.isMaximized();
+
             primaryStage.setScene(scene);
+            primaryStage.setMaximized(wasMaximized);
             primaryStage.show();
 
         } catch (IOException e) {
             logger.error("Error: Failed to load FXML: {}", e.getMessage());
+            e.printStackTrace();
         }
     }
 }

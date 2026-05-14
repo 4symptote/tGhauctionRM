@@ -13,6 +13,9 @@ public class VehicleCreator implements ItemCreator {
     public Item createItem(CreateAuctionPayload payload) {
 
         Map<String, Object> attrs = payload.customAttributes();
+        if (attrs == null) {
+            attrs = Map.of();
+        }
 
         return new Vehicle.Builder()
                 .name(payload.name())

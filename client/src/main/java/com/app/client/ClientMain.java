@@ -21,6 +21,7 @@ public class ClientMain extends Application {
         networkClient.startListener();
 
         primaryStage.setTitle("tGhauctionRM");
+        primaryStage.setMaximized(true);
         sceneManager.setPrimaryStage(primaryStage);
         sceneManager.switchScene("/view/fxml/LoginView.fxml");
     }

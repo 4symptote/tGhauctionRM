@@ -13,6 +13,9 @@ public class ArtCreator implements ItemCreator {
 
         //Extract custom attributes from the payload - Làm sau
         Map<String, Object> attrs = payload.customAttributes();
+        if (attrs == null) {
+            attrs = Map.of();
+        }
 
         // dùng Builder - xem Art
         return new Art.Builder() // cách dòng nhìn cho đẹp
