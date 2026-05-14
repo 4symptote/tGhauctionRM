@@ -14,9 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
