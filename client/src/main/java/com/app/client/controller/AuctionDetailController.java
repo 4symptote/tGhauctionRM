@@ -8,6 +8,7 @@ import com.app.shared.model.auction.Auction;
 import com.app.shared.model.item.Art;
 import com.app.shared.model.item.Electronics;
 import com.app.shared.model.item.Item;
+import com.app.shared.model.item.Vehicle;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.BidPayload;
@@ -78,12 +79,19 @@ public class AuctionDetailController implements ResponseListener {
         specsContainer.getChildren().clear(); // reset
         addSpecRow("Starting Price", String.format("$%,.2f", item.getStartingPrice()));
 
-        if (item instanceof Electronics elec) {
-            addSpecRow("Brand", elec.getBrand());
-        } else if (item instanceof Art art) {
-            addSpecRow("Artist", art.getArtist());
-            addSpecRow("Medium", art.getMedium());
-            addSpecRow("Year", String.valueOf(art.getYear()));
+        switch (item) {
+            case Electronics elec -> addSpecRow("Brand", elec.getBrand());
+            case Vehicle vehicle -> {
+                addSpecRow("Brand", vehicle.getBrand());
+                addSpecRow("Model", vehicle.getModel());
+            }
+            case Art art -> {
+                addSpecRow("Artist", art.getArtist());
+                addSpecRow("Medium", art.getMedium());
+                addSpecRow("Year", String.valueOf(art.getYear()));
+            }
+            default -> {
+            }
         }
     }
 

@@ -21,7 +21,6 @@ public class ArtCreator implements ItemCreator {
         return new Art.Builder() // cách dòng nhìn cho đẹp
                 .name(payload.name())
                 .desc(payload.description())
-                .sellerId(payload.sellerId())
                 .startingPrice(payload.startingPrice())
 
                 .artist((String) attrs.getOrDefault("artist", "Unknown"))

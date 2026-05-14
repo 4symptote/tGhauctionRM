@@ -39,7 +39,7 @@ public class TestController {
         String type = typeComboBox.getValue();
         String name = nameField.getText();
 
-        CreateAuctionPayload payload = new CreateAuctionPayload(type, name, desc, startingPrice, "", duration, null);
+        CreateAuctionPayload payload = new CreateAuctionPayload(type, name, desc, startingPrice, duration, null);
         Request request = new Request(Request.RequestType.CREATE_AUCTION, payload);
         NetworkClient.getInstance().sendRequest(request);
     }

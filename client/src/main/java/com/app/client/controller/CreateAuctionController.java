@@ -9,6 +9,10 @@ import com.app.shared.network.payload.CreateAuctionPayload;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateAuctionController implements ResponseListener {
 
@@ -18,33 +22,78 @@ public class CreateAuctionController implements ResponseListener {
     @FXML private TextField startingPriceField;
     @FXML private ComboBox<String> typeComboBox;
     @FXML private Label errorLabel;
+    @FXML private VBox dynamicAttributesContainer;
+
+    private final Map<String, TextField> dynamicFieldsMap = new HashMap<>();
 
     @FXML
     public void initialize() {
         // Register this controller to listen to server responses
         NetworkClient.getInstance().addListener(this);
+
+        typeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            updateDynamicFields(newVal);
+        });
+    }
+
+    private void updateDynamicFields(String categoryType) {
+        dynamicAttributesContainer.getChildren().clear();
+        dynamicFieldsMap.clear();
+
+        if (categoryType == null) return;
+
+        switch (categoryType) {
+            case "Electronics" -> {
+                addDynamicField("Brand", "brand");
+            }
+            case "Art" -> {
+                addDynamicField("Artist Name", "artist");
+                addDynamicField("Medium (e.g., Oil, Watercolor)", "medium");
+                addDynamicField("Year Created", "year");
+            }
+            case "Vehicle" -> {
+                addDynamicField("Brand", "brand");
+                addDynamicField("Model", "model");
+            }
+        }
+    }
+
+    private void addDynamicField(String labelText, String payloadKey) {
+        VBox row = new VBox(5);
+        Label label = new Label(labelText);
+        label.setStyle("-fx-font-weight: bold; -fx-text-fill: #34495e; -fx-font-size: 12px;");
+
+        TextField textField = new TextField();
+        textField.setStyle("-fx-padding: 8; -fx-background-color: #f8f9fa; -fx-border-color: #bdc3c7; -fx-border-radius: 4;");
+
+        row.getChildren().addAll(label, textField);
+        dynamicAttributesContainer.getChildren().add(row);
+
+        // check ItemFactory
+        dynamicFieldsMap.put(payloadKey, textField);
     }
 
     @FXML
     private void handleSubmit() {
         try {
-
             String name = nameField.getText().trim();
             String desc = descField.getText().trim();
             String type = typeComboBox.getValue();
 
-            // validaition
+            // validation
             if (name.isEmpty() || type == null || durationField.getText().isEmpty() || startingPriceField.getText().isEmpty()) {
                 errorLabel.setText("Please fill out all fields.");
                 return;
             }
 
-            // parsign
+            // parsing
             double price = Double.parseDouble(startingPriceField.getText());
             long durationMillis = Long.parseLong(durationField.getText());
 
+            Map<String, Object> customAttributes = getCustomAttributes();
+
             // request
-            CreateAuctionPayload payload = new CreateAuctionPayload(type, name, desc, price, "", durationMillis, null);
+            CreateAuctionPayload payload = new CreateAuctionPayload(type, name, desc, price, durationMillis, customAttributes);
             Request request = new Request(Request.RequestType.CREATE_AUCTION, payload);
 
             errorLabel.setStyle("-fx-text-fill: #3498db;"); // Blue text for loading
@@ -55,6 +104,24 @@ public class CreateAuctionController implements ResponseListener {
             errorLabel.setStyle("-fx-text-fill: RED;");
             errorLabel.setText("Error: Price and Duration must be valid numbers.");
         }
+    }
+
+    private Map<String, Object> getCustomAttributes() {
+        Map<String, Object> customAttributes = new HashMap<>();
+        for (Map.Entry<String, TextField> entry : dynamicFieldsMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue().getText().trim();
+
+            // ...
+            if (!value.isEmpty()) {
+                if (key.equals("year") || key.equals("mileage")) {
+                    customAttributes.put(key, Integer.parseInt(value));
+                } else {
+                    customAttributes.put(key, value);
+                }
+            }
+        }
+        return customAttributes;
     }
 
     @FXML

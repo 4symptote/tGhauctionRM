@@ -10,7 +10,6 @@ public record CreateAuctionPayload (
         String name,
         String description,
         double startingPrice,
-        String sellerId,
         long durationMillis,
         Map<String, Object> customAttributes // For extra attributes
 

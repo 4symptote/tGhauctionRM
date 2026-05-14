@@ -26,9 +26,6 @@ public final class ItemFactory {
     }
 
     private static String normalizeType(String itemType) {
-        if (itemType == null || itemType.isBlank()) {
-            return "electronics";
-        }
         return itemType.trim().toLowerCase(Locale.ROOT);
     }
 }

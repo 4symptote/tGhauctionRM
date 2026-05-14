@@ -19,7 +19,6 @@ public class ElectronicsCreator implements ItemCreator {
         return new Electronics.Builder()
                 .name(payload.name())
                 .desc(payload.description())
-                .sellerId(payload.sellerId())
                 .startingPrice(payload.startingPrice())
 
                 .brand((String) attrs.getOrDefault("brand", "Unknown"))
