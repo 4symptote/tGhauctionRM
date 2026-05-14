@@ -1,11 +1,13 @@
 package com.app.server.network.handler;
 
+import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.server.network.AuctionServer;
 import com.app.server.network.ClientHandler;
 import com.app.server.service.BidService;
 import com.app.shared.exception.AuctionClosedException;
 import com.app.shared.exception.AuctionNotFoundException;
 import com.app.shared.exception.InvalidBidException;
+import com.app.shared.model.auction.Auction;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.BidPayload;
@@ -25,13 +27,17 @@ public class PlaceBidHandler implements RequestHandler {
         }
 
         try {
+            AuctionDaoImpl auctionDao = new AuctionDaoImpl();
             BidPayload payload = (BidPayload) request.payload();
 
             String auctionId = payload.auctionId();
             double amount = payload.bidAmount();
 
             // đưa cho BidService cook
-            Response successResponse = BidService.getInstance().placeBid(auctionId, client.getCurrentUser(), amount);
+            Auction updatedAuction = BidService.getInstance().placeBid(auctionId, client.getCurrentUser(), amount);
+            // update auction to db
+            auctionDao.updateAuction(updatedAuction);
+            Response successResponse = new Response(true, "Bid placed successfully", updatedAuction);
             AuctionServer.broadcast(successResponse);
 
             // null tại vì broadcast ở trên đã gọi sendResponse() rồi, trả về null tránh duplicate...
@@ -41,7 +47,6 @@ public class PlaceBidHandler implements RequestHandler {
             return new Response(false, e.getMessage(), null);
 
         } catch (Exception e) {
-            // Ultimate fallback so the server thread never crashes
             logger.error("Unexpected error in PlaceBidHandler: ", e);
             return new Response(false, "Internal Error Occurred", null);
         }

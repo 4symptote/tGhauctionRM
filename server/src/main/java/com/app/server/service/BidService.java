@@ -32,7 +32,7 @@ public class BidService {
     // Khong dung synchronized, vi no se lock tat ca cac auction, nhieu nguoi bid cung luc nhieu auction se wait tung ng 1 mot
     // thay vi vay dung ReentrantLock, notice tao 1 lock cho moi auction tuc la chi synchronize trong 1 auction moi lock
     // ko phai nguyen cai ham (tat ca auction) (mac du app rac ko den muc nhieu ng bid cung luc nhu v de co the thay su khac biet)
-    public Response placeBid(String auctionId, User bidder, double amount) {
+    public Auction placeBid(String auctionId, User bidder, double amount) {
         // Theem lock vao auctionId nay neu chua co va lock()
         ReentrantLock auctionLock = auctionLocks.computeIfAbsent(auctionId, k -> new ReentrantLock());
         auctionLock.lock();
@@ -50,7 +50,7 @@ public class BidService {
             }
             // Không thể tự Bid item mình sell (prob k bao h xảy ra trừ khi là admin mfa đã là admin thì phải lm j cx dc)
             if (auction.getSellerId().equals(bidder.getId())) {
-                throw new InvalidBidException("Không thể tự Bid item của bản thân.");
+                throw new InvalidBidException("Không thể tự Bid item của bản thân?!.");
             }
             if (amount <= auction.getCurrentPrice()) {
                 throw new InvalidBidException("Bid phải lớn hơn: " + auction.getCurrentPrice() + "$.");
@@ -60,6 +60,8 @@ public class BidService {
             // Cập nhật giá + highest bidder
             auction.setCurrentPrice(amount);
             auction.setHighestBidderId(bidder.getId());
+            // todo update auction in db
+
 
             // - Anti-Snipping
             long timeLeft = auction.getEndTimeMillis() - System.currentTimeMillis();
@@ -69,7 +71,7 @@ public class BidService {
                 auction.setEndTimeMillis(System.currentTimeMillis() + EXTENSION_TIME);
             }
 
-            return new Response(true, "Successfully placed new bid", auction);
+            return auction;
 
         } finally { // Luon unlock neu co crash hay loi
             auctionLock.unlock();

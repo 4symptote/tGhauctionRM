@@ -73,8 +73,9 @@ public class AuctionDetailController implements ResponseListener {
             highestBidderLabel.setText("No bids placed yet.");
         }
 
-        // Specific Item Traits (Using your Item subclasses!)
-        specsContainer.getChildren().clear();
+        // custom attributes
+        // todo: idk -make it expandable?
+        specsContainer.getChildren().clear(); // reset
         addSpecRow("Starting Price", String.format("$%,.2f", item.getStartingPrice()));
 
         if (item instanceof Electronics elec) {
@@ -101,12 +102,6 @@ public class AuctionDetailController implements ResponseListener {
     private void handlePlaceBid(ActionEvent event) {
         try {
             double amount = Double.parseDouble(bidAmountField.getText().trim());
-
-            if (amount <= currentAuction.getCurrentPrice()) {
-                bidMessageLabel.setStyle("-fx-text-fill: RED;");
-                bidMessageLabel.setText("Bid must be higher than the current price.");
-                return;
-            }
 
             bidMessageLabel.setStyle("-fx-text-fill: #3498db;");
             bidMessageLabel.setText("Submitting bid...");
@@ -135,6 +130,10 @@ public class AuctionDetailController implements ResponseListener {
                 bidAmountField.clear();
 
                 // todo: handle response and update ui
+                if (response.payload() instanceof Auction updatedAuction) {
+                    this.currentAuction = updatedAuction;
+                    populateUI();
+                }
 
             } else {
                 bidMessageLabel.setStyle("-fx-text-fill: RED;");
