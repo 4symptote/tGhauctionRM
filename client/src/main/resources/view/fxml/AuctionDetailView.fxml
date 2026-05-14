@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="root-pane" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.AuctionDetailController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="top-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="15.0" left="35.0" right="35.0" top="15.0"/>
+            </padding>
+            <Button mnemonicParsing="false" onAction="#handleBackToDashboard"
+                    style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 14px;"
+                    text="← Back to Auctions"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label styleClass="brand-title" text="tGhauctionRM"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0;"
+                    BorderPane.alignment="CENTER">
+            <VBox fx:id="mainContentVBox" alignment="TOP_CENTER" spacing="30.0">
+                <padding>
+                    <Insets bottom="50.0" left="100.0" right="100.0" top="40.0"/>
+                </padding>
+                <VBox alignment="CENTER" spacing="10.0">
+                    <Label fx:id="statusBadge" styleClass="card-status-badge" text="STATUS"/>
+                    <Label fx:id="itemNameLabel"
+                           style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+                           text="Item Name" wrapText="true"/>
+                    <Label fx:id="sellerLabel" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"
+                           text="Listed by: Username"/>
+                </VBox>
+
+                <HBox alignment="TOP_CENTER" maxWidth="1200.0" spacing="30.0">
+                    <VBox maxWidth="700.0" spacing="20.0" styleClass="auction-card" HBox.hgrow="ALWAYS">
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;"
+                               text="Item Description"/>
+                        <Region style="-fx-background-color: transparent; -fx-border-color: #ecf0f1; -fx-border-width: 0 0 1 0; -fx-border-style: solid;"/>
+                        <Label fx:id="descriptionLabel"
+                               style="-fx-font-size: 14px; -fx-text-fill: #2c3e50; -fx-line-spacing: 5px;"
+                               text="Detailed description will appear here..." wrapText="true"/>
+
+                        <Region prefHeight="20.0"/>
+
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;"
+                               text="Specifications"/>
+                        <Region style="-fx-background-color: transparent; -fx-border-color: #ecf0f1; -fx-border-width: 0 0 1 0; -fx-border-style: solid;"/>
+
+                        <VBox fx:id="specsContainer" spacing="10.0"/>
+                    </VBox>
+
+                    <VBox maxWidth="400.0" minWidth="350.0" spacing="20.0" styleClass="auction-card">
+                        <VBox alignment="CENTER" spacing="5.0">
+                            <Label style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"
+                                   text="Current Highest Bid"/>
+                            <Label fx:id="currentPriceLabel"
+                                   style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"
+                                   text="\$0.00"/>
+                            <Label fx:id="highestBidderLabel"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #95a5a6;"
+                                   text="No bids yet"/>
+                        </VBox>
+
+                        <Region style="-fx-background-color: transparent; -fx-border-color: #ecf0f1; -fx-border-width: 0 0 1 0; -fx-border-style: solid;"/>
+
+                        <VBox spacing="10.0">
+                            <Label fx:id="bidMessageLabel" textFill="RED" wrapText="true"/>
+                            <HBox spacing="10.0">
+                                <Label alignment="CENTER" prefHeight="40.0"
+                                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #bdc3c7;"
+                                       text="\$"/>
+                                <TextField fx:id="bidAmountField" promptText="Enter bid amount..."
+                                           style="-fx-padding: 10; -fx-font-size: 16px; -fx-background-color: #f8f9fa; -fx-border-color: #bdc3c7; -fx-border-radius: 4;"
+                                           HBox.hgrow="ALWAYS"/>
+                            </HBox>
+
+                            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                    onAction="#handlePlaceBid"
+                                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12px; -fx-background-radius: 4; -fx-cursor: hand;"
+                                    text="Place Bid"/>
+                        </VBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

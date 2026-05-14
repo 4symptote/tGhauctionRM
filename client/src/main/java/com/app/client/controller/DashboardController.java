@@ -108,7 +108,11 @@ public class DashboardController implements ResponseListener {
 
                 // Add click effect
                 card.setOnMouseClicked(e -> {
-                    // todo: Auction Details View
+                    System.out.println("Opening Auction: " + auction.getItem().getName());
+                    // Unsubscribe from network events to prevent memory leaks
+                    NetworkClient.getInstance().removeListener(this);
+                    // Switch scene and pass the clicked auction!
+                    SceneManager.getInstance().switchSceneWithData("/view/fxml/AuctionDetailView.fxml", auction);
                 });
 
                 auctionListContainer.getChildren().add(card);
