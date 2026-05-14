@@ -134,7 +134,6 @@ public class CreateAuctionController implements ResponseListener {
     public void onResponseReceived(Response response) {
         Platform.runLater(() -> {
             if (response.success()) {
-                System.out.println("Auction created successfully!");
                 NetworkClient.getInstance().removeListener(this);
                 SceneManager.getInstance().switchScene("/view/fxml/DashboardView.fxml");
             } else {

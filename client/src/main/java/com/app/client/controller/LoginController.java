@@ -46,7 +46,6 @@ public class LoginController implements ResponseListener {
             return;
         }
 
-        System.out.println("Attempting to login with: " + username);
         errorLabel.setText("connecting to server");
 
         LoginPayload payload = new LoginPayload(username, password);
@@ -56,7 +55,7 @@ public class LoginController implements ResponseListener {
 
     @FXML
     private void switchToRegister(ActionEvent event) {
-        logger.info("switching to register");
+        //logger.info("switching to register");
         NetworkClient.getInstance().removeListener(this);
         SceneManager.getInstance().switchScene("/view/fxml/RegisterView.fxml");
     }
@@ -83,7 +82,6 @@ public class LoginController implements ResponseListener {
 
             // TODO: Switch to auction list (make da auction list view)
             SceneManager.getInstance().switchScene("/view/fxml/DashboardView.fxml");
-            System.out.println("Switching to Dashboard...");
         }
     }
 }
