@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class AuctionManager {
     private static final Logger logger = LoggerFactory.getLogger(AuctionManager.class);
 
-    private static AuctionManager instance;  // Eager initialization
+    private static AuctionManager instance = AuctionManager.getInstance();  // Eager initialization
     private final Map<String, Auction> activeAuctions;
     private final ScheduledExecutorService scheduler;
 
