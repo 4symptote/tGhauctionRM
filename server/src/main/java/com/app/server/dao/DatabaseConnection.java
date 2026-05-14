@@ -30,6 +30,7 @@ public class DatabaseConnection {
             logger.info("Connecting to MongoDB Atlas...");
             mongoClient = MongoClients.create(CONNECTION_STRING);
             database = mongoClient.getDatabase(DATABASE_NAME);
+            Thread.sleep(600);
             logger.info("Successfully connected to database: {}", DATABASE_NAME);
         } catch (Exception e) {
             logger.error("Failed to connect to MongoDB: {}", e.getMessage());

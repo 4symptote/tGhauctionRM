@@ -38,7 +38,7 @@ public class ClientHandler implements Runnable {
 
             isRunning = true;
 
-            logger.info("Info: New client connected: {}", socket.getInetAddress());
+            logger.info("New client connected: {}", socket.getInetAddress());
 
             // listen to client's requests
             while (isRunning) {
@@ -52,9 +52,9 @@ public class ClientHandler implements Runnable {
             }
 
         } catch (EOFException e) {
-            logger.info("Info: Client disconnected gracefully: {}", socket.getInetAddress());
+            logger.info("A Client disconnected gracefully: {}", socket.getInetAddress());
         } catch (Exception e) {
-            logger.error("Error: {}", e.getMessage());
+            logger.info("A Client disconnected unexpectedly {}", e.getMessage());
         } finally {
             disconnect();
         }
@@ -66,7 +66,7 @@ public class ClientHandler implements Runnable {
             out.flush();
             out.reset();
         } catch (IOException e) {
-            logger.error("Error: Failed to send response: {}", e.getMessage());
+            logger.error("Failed to send response: {}", e.getMessage());
             disconnect();
         }
     }
@@ -79,9 +79,9 @@ public class ClientHandler implements Runnable {
             if (out != null) out.close();
             socket.close();
             AuctionServer.removeClient(this);
-            logger.info("Info: Client disconnected elegantly: {}", clientAddress);
+            logger.info("Client disconnected elegantly: {}", clientAddress);
         } catch (IOException e) {
-            logger.error("Error: error occurred while trying to disconnect: {}", e.getMessage());
+            logger.error("Error occurred while trying to disconnect: {}", e.getMessage());
         }
     }
 

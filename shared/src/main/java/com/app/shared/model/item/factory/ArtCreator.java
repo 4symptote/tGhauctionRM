@@ -21,9 +21,9 @@ public class ArtCreator implements ItemCreator {
                 .sellerId(payload.sellerId())
                 .startingPrice(payload.startingPrice())
 
-                .artist((String) attrs.get("artist"))
-                .medium((String) attrs.get("medium"))
-                .year((int) attrs.get("year"))
+                .artist((String) attrs.getOrDefault("artist", "Unknown"))
+                .medium((String) attrs.getOrDefault("medium", "Unknown"))
+                .year((int) attrs.getOrDefault("year", 0))
 
                 .build();
         /*

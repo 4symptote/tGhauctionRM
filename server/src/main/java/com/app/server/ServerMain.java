@@ -12,6 +12,8 @@ public class ServerMain {
         System.setProperty("slf4j.internal.verbosity", "ERROR");
         Logger logger = LoggerFactory.getLogger(ServerMain.class);
 
+        logger.info("Server starting");
+
         DatabaseConnection.getInstance();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Server shutting down");
