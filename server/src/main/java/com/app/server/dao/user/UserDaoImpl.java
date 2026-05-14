@@ -47,8 +47,22 @@ public class UserDaoImpl implements UserDao {
         if (doc == null) {
             return null;
         }
-
         // MongoDB Document -> Java Object
+        return documentToUser(doc);
+    }
+
+    @Override
+    public User getUserById(String id) {
+        Document query = new Document("_id", id);
+        Document doc = usersCollection.find(query).first();
+        if (doc == null) {
+            return null;
+        }
+
+        return documentToUser(doc);
+    }
+
+    private User documentToUser(Document doc) {
         String dbId = doc.getString("_id");
         String fetchedUsername = doc.getString("username");
         String passwordHash = doc.getString("passwordHash");
@@ -63,9 +77,7 @@ public class UserDaoImpl implements UserDao {
                 yield new Bidder(fetchedUsername, passwordHash, email, balance);
             }
         };
-
         user.setId(dbId);
-
         return user;
     }
 

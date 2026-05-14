@@ -14,6 +14,7 @@ public class Auction extends Entity {
 
     private Item item;
     private String sellerId;
+    private String sellerName;
 
     private long startTime;
     private long endTime;
@@ -43,7 +44,7 @@ public class Auction extends Entity {
         this.endTime = this.startTime + durationMillis;
     }
 
-
+    public String getSellerName() { return sellerName; }
     public String getSellerId() { return sellerId; }
     public Item getItem() { return item; } // Returns the actual Item (Electronics, Art, etc.)
     public long getStartTime() { return startTime; }
@@ -68,6 +69,8 @@ public class Auction extends Entity {
         return status;
     }
 
+
+    public void setSellerName(String sellerName) { this.sellerName = sellerName; }
     public void setSellerId(String sellerId) { this.sellerId = sellerId; }
     public void setItem(Item item) { this.item = item; }
     public void setStartTime(long startTime) { this.startTime = startTime; }

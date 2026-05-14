@@ -12,6 +12,7 @@ import com.app.shared.model.user.Admin;
 import com.app.shared.model.user.Bidder;
 import com.app.shared.model.user.Seller;
 import com.app.shared.model.user.User;
+import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.CreateAuctionPayload;
 import javafx.application.Platform;
@@ -22,12 +23,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardController implements ResponseListener {
 
+    private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
     @FXML private Label welcomeLabel;
     @FXML private Label balanceLabel;
     @FXML private Label roleLabel;
@@ -65,7 +69,8 @@ public class DashboardController implements ResponseListener {
 
         mockAuctions.add(auction1);
         // Push to UI
-        updateAuctionList(mockAuctions);
+        //updateAuctionList(mockAuctions);
+        refreshAuctions();
     }
 
     /**
@@ -91,7 +96,8 @@ public class DashboardController implements ResponseListener {
                 Label nameLabel = new Label(auction.getItem().getName());
                 nameLabel.getStyleClass().add("card-item-name");
 
-                Label sellerLabel = new Label("Seller: " + auction.getSellerId());
+
+                Label sellerLabel = new Label("Seller: " + auction.getSellerName());
                 sellerLabel.getStyleClass().add("card-seller-label");
 
                 infoBox.getChildren().addAll(nameLabel, sellerLabel);
@@ -128,9 +134,9 @@ public class DashboardController implements ResponseListener {
     }
 
     @FXML
-    private void refreshAuctions(ActionEvent event) {
+    private void refreshAuctions() {
         System.out.println("Requesting updated auction list from server...");
-        // NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_ALL_AUCTIONS, null));
+        NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_AUCTIONS, null));
     }
 
     @FXML
@@ -142,6 +148,24 @@ public class DashboardController implements ResponseListener {
 
     @Override
     public void onResponseReceived(Response response) {
-        //updateAuctionList(new ArrayList<>());
+        System.out.println("Response received: " + response);
+        // veri important Platform.runLater
+        Platform.runLater(() -> {
+            if (response.success() && response.payload() instanceof List) {
+                try {
+                    // 100% sure that the payload is a List<Auction>
+                    @SuppressWarnings("unchecked")
+                    List<Auction> fetchedAuctions = (List<Auction>) response.payload();
+                    System.out.println("Fetched auctions count: " + fetchedAuctions.size());
+                    // update UI
+                    updateAuctionList(fetchedAuctions);
+
+                } catch (ClassCastException e) {
+                    log.error("Error casting payload to List<Auction>: {}", e.getMessage());
+                }
+            } else if (!response.success()) {
+                log.error("Failed to fetch auctions: {}", response.message());
+            }
+        });
     }
 }

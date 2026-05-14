@@ -1,5 +1,7 @@
 package com.app.server.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -20,6 +22,7 @@ public class AuctionManager {
     private AuctionManager() {
         activeAuctions = new ConcurrentHashMap<>();
         scheduler = Executors.newScheduledThreadPool(8);  // 8 threads for auction management
+        loadAuctionsFromDatabase();
     }
 
     public static AuctionManager getInstance() {
@@ -40,6 +43,28 @@ public class AuctionManager {
         // Đặt lịch kiểm tra auction sau durationMillis
         scheduler.schedule(() -> checkAndClose(auction), durationMillis, TimeUnit.MILLISECONDS);
     }
+
+
+    private void loadAuctionsFromDatabase() {
+        List<Auction> savedAuctions = auctionDao.getAllActiveAuctions();
+        long currentTime = System.currentTimeMillis();
+
+        for (Auction auction : savedAuctions) {
+            activeAuctions.put(auction.getId(), auction);
+
+            long deltaWaitTime = auction.getEndTimeMillis() - currentTime;
+
+            if (deltaWaitTime > 0) {
+                scheduler.schedule(() -> checkAndClose(auction), deltaWaitTime, TimeUnit.MILLISECONDS);
+            } else {
+                // The auction expired while the server was offline -> conclude
+                concludeAuction(auction.getId());
+            }
+        }
+        System.out.println("Loaded " + savedAuctions.size() + " active auctions from the database.");
+    }
+
+
 
     // Kiểm tra xem auction đã kết thúc chưa
     // actualEndTime là endTime đã được cập nhập (có thể bới anti snipping) nếu như endTime chưa đến (else) đặt lịch mới đến actualEndTime
@@ -83,5 +108,9 @@ public class AuctionManager {
 
     public Auction getAuction(String auctionId) {
         return activeAuctions.get(auctionId);
+    }
+
+    public List<Auction> getAllActiveAuctionsList() {
+        return new ArrayList<>(activeAuctions.values());
     }
 }
