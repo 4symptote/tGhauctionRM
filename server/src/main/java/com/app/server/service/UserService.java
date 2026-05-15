@@ -96,7 +96,7 @@ public class UserService {
         return switch (role) {
             case "SELLER" -> new Seller(username, passwordHash, email);
             case "ADMIN"  -> new Admin(username, passwordHash, email);
-            default       -> new Bidder(username, passwordHash, email, 1000000);
+            default       -> new Bidder(username, passwordHash, email, 1000000); // todo : not enough balance
         };
     }
 
