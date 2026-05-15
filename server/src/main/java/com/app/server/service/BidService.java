@@ -1,9 +1,12 @@
 package com.app.server.service;
 
+import com.app.server.dao.auction.BidDao;
+import com.app.server.dao.auction.BidDaoImpl;
 import com.app.shared.exception.AuctionClosedException;
 import com.app.shared.exception.AuctionNotFoundException;
 import com.app.shared.exception.InvalidBidException;
 import com.app.shared.model.auction.Auction;
+import com.app.shared.model.auction.BidTransaction;
 import com.app.shared.model.user.User;
 
 import java.util.Map;
@@ -12,7 +15,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BidService {
     private static final BidService instance = new BidService();
-    private AuctionManager auctionManager;
+    private final AuctionManager auctionManager = AuctionManager.getInstance();
+    private final BidDao bidDao = BidDaoImpl.getInstance();
     // Lock map (auctionId: lock)
     private final Map<String, ReentrantLock> auctionLocks = new ConcurrentHashMap<>();
 
@@ -36,8 +40,9 @@ public class BidService {
         ReentrantLock auctionLock = auctionLocks.computeIfAbsent(auctionId, k -> new ReentrantLock());
         auctionLock.lock();
 
+        Auction auction = auctionManager.getAuction(auctionId);
+
         try {
-            Auction auction = AuctionManager.getInstance().getAuction(auctionId);
 
             // Logic nghiep vu
             if (auction == null) {
@@ -55,11 +60,10 @@ public class BidService {
             }
             // todo: check if bidder has enough money
 
+            BidTransaction bid = new BidTransaction(auctionId, bidder.getId(), amount);
+            bidDao.saveBid(bid);
             // Cập nhật giá + highest bidder
-            auction.setCurrentPrice(amount);
-            auction.setHighestBidderId(bidder.getId());
-            // todo update auction in db
-
+            auction.processNewBid(amount, bidder.getId());
 
             // - Anti-Snipping
             long timeLeft = auction.getEndTimeMillis() - System.currentTimeMillis();
