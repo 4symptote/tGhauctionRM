@@ -22,14 +22,13 @@ public class Auction extends Entity {
     private double currentPrice;
     private Status status;
     private String highestBidderId;
-    private final List<BidTransaction> bids;
+    // removed bids cuz bad
 
     public Auction(Item item, long startTime, long endTime) {
         super();
         this.item = item;
         this.currentPrice = item.getStartingPrice();
         this.status = Status.OPEN;
-        this.bids = new ArrayList<>();
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -39,7 +38,6 @@ public class Auction extends Entity {
         this.item = item;
         this.currentPrice = item.getStartingPrice();
         this.status = Status.OPEN;
-        this.bids = new ArrayList<>();
         this.startTime = System.currentTimeMillis();
         this.endTime = this.startTime + durationMillis;
     }
@@ -51,7 +49,6 @@ public class Auction extends Entity {
     public long getEndTimeMillis() { return endTime; }
     public double getCurrentPrice() { return currentPrice; }
     public String getHighestBidderId() { return highestBidderId; }
-    public List<BidTransaction> getBids() { return bids; }
 
     public Status getStatus() {
         if (status == Status.PAID || status == Status.CANCELED) {
@@ -80,11 +77,10 @@ public class Auction extends Entity {
     public void setHighestBidderId(String highestBidderId) { this.highestBidderId = highestBidderId; }
 
     //
-    public void addBid(BidTransaction bid) {
-        this.bids.add(bid);
-        this.currentPrice = bid.getAmount();
-        this.highestBidderId = bid.getBidderId();
-        this.item.setCurrentHighestBid(bid.getAmount());
+    public void processNewBid(double amount, String bidderId) {
+        this.currentPrice = amount;
+        this.highestBidderId = bidderId;
+        this.item.setCurrentHighestBid(amount);
     }
 
     @Override

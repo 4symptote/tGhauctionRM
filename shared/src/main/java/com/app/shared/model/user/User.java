@@ -3,10 +3,10 @@ package com.app.shared.model.user;
 import com.app.shared.model.Entity;
 
 public class User extends Entity {
-    protected String username;
+    private String username;
     private String password;
-    protected String email;
-    protected String role;
+    private String email;
+    private String role;
 
     public User(String username, String password, String email, String role) {
         super();
@@ -26,7 +26,6 @@ public class User extends Entity {
     public void setEmail(String email) { this.email = email; }
 
     public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
 
     @Override
     public String toString() {
