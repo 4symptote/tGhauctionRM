@@ -12,6 +12,7 @@ import com.app.server.dao.auction.AuctionDao;
 import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.shared.model.auction.Auction;
 
+import com.app.shared.network.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,9 @@ public class AuctionManager {
 
         // Đặt lịch kiểm tra auction sau durationMillis
         scheduler.schedule(() -> checkAndClose(auction), durationMillis, TimeUnit.MILLISECONDS);
+
+        Response broadcastMsg = new Response(true, "AUCTION_UPDATED", auction);
+        com.app.server.network.AuctionServer.broadcast(broadcastMsg);
     }
 
 
@@ -103,6 +107,8 @@ public class AuctionManager {
             auctionDao.updateAuction(finishedAuction);
             BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
 
+            Response broadcastMsg = new Response(true, "AUCTION_UPDATED", finishedAuction);
+            com.app.server.network.AuctionServer.broadcast(broadcastMsg);
             // TODO: broadcast winner
         }
     }

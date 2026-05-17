@@ -154,6 +154,8 @@ public class DashboardController implements ResponseListener {
                 } catch (ClassCastException e) {
                     log.error("Error casting payload to List<Auction>: {}", e.getMessage());
                 }
+            } else if (response.success() && "AUCTION_UPDATED".equals(response.message())) {
+                refreshAuctions();
             } else if (!response.success()) {
                 log.error("Failed to fetch auctions: {}", response.message());
             }

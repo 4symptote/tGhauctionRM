@@ -8,6 +8,7 @@ import com.app.shared.exception.InvalidBidException;
 import com.app.shared.model.auction.Auction;
 import com.app.shared.model.auction.BidTransaction;
 import com.app.shared.model.user.User;
+import com.app.shared.network.Response;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,6 +73,9 @@ public class BidService {
                 // Ví dụ Auction end lúc 15:30, đặt bid lúc 15:28, end time mới sẽ là 15:33 (Luôn có 5p cho các bidder khác react)
                 auction.setEndTimeMillis(System.currentTimeMillis() + EXTENSION_TIME);
             }
+
+            Response broadcastMsg = new Response(true, "AUCTION_UPDATED", auction);
+            com.app.server.network.AuctionServer.broadcast(broadcastMsg);
 
             return auction;
 
