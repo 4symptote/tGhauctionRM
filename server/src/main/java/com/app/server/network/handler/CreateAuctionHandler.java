@@ -1,5 +1,6 @@
 package com.app.server.network.handler;
 
+import com.app.server.network.AuctionServer;
 import com.app.server.network.ClientHandler;
 import com.app.server.service.AuctionManager;
 import com.app.shared.model.auction.Auction;
@@ -35,8 +36,8 @@ public class CreateAuctionHandler implements RequestHandler {
 
             logger.info("Successfully created auction {} for user {}", auction.getId(), currentUser.getUsername());
 
-
-            return new Response(true, "Auction created successfully", AuctionManager.getInstance().getAllActiveAuctionsList());
+            AuctionServer.broadcast(new Response(Response.ResponseType.AUCTION_LIST,true, "A new Auction Created", AuctionManager.getInstance().getAllActiveAuctionsList()));
+            return new Response(Response.ResponseType.AUCTION_LIST,true, "Auction created successfully", AuctionManager.getInstance().getAllActiveAuctionsList());
 
         } catch (ClassCastException e) {
             logger.error("Invalid payload type for CREATE_AUCTION request");
