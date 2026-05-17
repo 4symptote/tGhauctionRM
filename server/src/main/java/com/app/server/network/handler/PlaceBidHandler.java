@@ -38,11 +38,10 @@ public class PlaceBidHandler implements RequestHandler {
             Auction updatedAuction = BidService.getInstance().placeBid(auctionId, client.getCurrentUser(), amount);
             // update auction to db
             auctionDao.updateAuction(updatedAuction);
-            Response successResponse = new Response(Response.ResponseType.PLACED_BID,true, "Bid placed successfully", updatedAuction);
-            AuctionServer.broadcast(successResponse);
 
             // null tại vì broadcast ở trên đã gọi sendResponse() rồi, trả về null tránh duplicate...
-            return null;
+            // t nhầm hồi đấy broadcast nguyên cái update, h chỉ thông báo là đã bid thành công cho tk bidder th
+            return new Response(Response.ResponseType.PLACED_BID,true, "Bid placed successfully", updatedAuction);
 
         } catch (InvalidBidException | AuctionClosedException | AuctionNotFoundException e) {
             return new Response(Response.ResponseType.PLACED_BID,false, e.getMessage(), null);
