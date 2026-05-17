@@ -9,6 +9,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
 
 <BorderPane styleClass="root-pane" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.AuctionDetailController">
 
@@ -57,6 +63,31 @@
                         <Region style="-fx-background-color: transparent; -fx-border-color: #ecf0f1; -fx-border-width: 0 0 1 0; -fx-border-style: solid;"/>
 
                         <VBox fx:id="specsContainer" spacing="10.0"/>
+
+
+                        <Region prefHeight="30.0" />
+
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;" text="Value Chart" />
+                        <Region style="-fx-background-color: transparent; -fx-border-color: #ecf0f1; -fx-border-width: 0 0 1 0; -fx-border-style: solid;" />
+
+                        <LineChart fx:id="priceChart" animated="false" legendVisible="false" prefHeight="250.0">
+                            <xAxis>
+                                <CategoryAxis label="Time" side="BOTTOM" />
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis label="Price ($)" side="LEFT" />
+                            </yAxis>
+                        </LineChart>
+
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;" text="Bid Logs" />
+
+                        <TableView fx:id="bidHistoryTable" prefHeight="200.0">
+                            <columns>
+                                <TableColumn fx:id="timeCol" prefWidth="200.0" text="Time" />
+                                <TableColumn fx:id="amountCol" prefWidth="150.0" text="Amount" />
+                                <TableColumn fx:id="bidderCol" prefWidth="250.0" text="Bidder ID" />
+                            </columns>
+                        </TableView>
                     </VBox>
 
                     <VBox maxWidth="400.0" minWidth="350.0" spacing="20.0" styleClass="auction-card">

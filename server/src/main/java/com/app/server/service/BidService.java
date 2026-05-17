@@ -61,7 +61,7 @@ public class BidService {
             }
             // todo: check if bidder has enough money
 
-            BidTransaction bid = new BidTransaction(auctionId, bidder.getId(), amount);
+            BidTransaction bid = new BidTransaction(auctionId, bidder.getId(), bidder.getUsername(), amount);
             bidDao.saveBid(bid);
             // Cập nhật giá + highest bidder
             auction.processNewBid(amount, bidder.getId());

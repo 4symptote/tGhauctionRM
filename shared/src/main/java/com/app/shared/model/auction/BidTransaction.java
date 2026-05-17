@@ -8,13 +8,14 @@ public record BidTransaction(
         String id,
         String auctionId,
         String bidderId,
+        String bidderName,
         double amount,
         long timestamp
 
 ) implements Serializable {
     // constructor for creating a new BidTransaction, with a new randomized unique id
-    public BidTransaction(String auctionId, String bidderId, double amount) {
-        this(UUID.randomUUID().toString(), auctionId, bidderId, amount, System.currentTimeMillis());
+    public BidTransaction(String auctionId, String bidderId, String bidderName, double amount) {
+        this(UUID.randomUUID().toString(), auctionId, bidderId, bidderName, amount, System.currentTimeMillis());
     }
     // Constructor de tao BidTransaction tu database
     // BidTransaction(id, auctionId, bidderId, amount, timestamp)

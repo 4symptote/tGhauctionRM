@@ -24,6 +24,7 @@ public class BidDaoImpl implements BidDao {
         Document doc = new Document("_id", bid.id())
                 .append("auctionId", bid.auctionId())
                 .append("bidderId", bid.bidderId())
+                .append("bidderName", bid.bidderName())
                 .append("amount", bid.amount())
                 .append("timestamp", bid.timestamp());
 
@@ -50,10 +51,12 @@ public class BidDaoImpl implements BidDao {
     }
 
     private BidTransaction documentToBid(Document doc) {
+        String bidderName = doc.getString("bidderName");
         return new BidTransaction(
                 doc.getString("_id"),
                 doc.getString("auctionId"),
                 doc.getString("bidderId"),
+                bidderName != null ? bidderName : "Unknown",
                 doc.getDouble("amount"),
                 doc.getLong("timestamp")
         );
