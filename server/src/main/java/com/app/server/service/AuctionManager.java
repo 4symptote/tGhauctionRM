@@ -107,7 +107,7 @@ public class AuctionManager {
             auctionDao.updateAuction(finishedAuction);
             BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
 
-            Response broadcastMsg = new Response(true, "AUCTION_UPDATED", finishedAuction);
+            Response broadcastMsg = new Response(Response.ResponseType.AUCTION_UPDATED,true, "AUCTION_UPDATED", finishedAuction);
             com.app.server.network.AuctionServer.broadcast(broadcastMsg);
             // TODO: broadcast winner
         }

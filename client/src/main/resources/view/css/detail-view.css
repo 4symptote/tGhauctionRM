@@ -1,0 +1,68 @@
+/* =====================================================================
+   BID HISTORY TABLE (Modern & Flat)
+   ===================================================================== */
+.modern-table {
+    -fx-background-color: transparent;
+    -fx-border-color: #ecf0f1;
+    -fx-border-radius: 4px;
+    -fx-padding: 0;
+}
+.modern-table .column-header-background {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 4px 4px 0 0;
+    -fx-border-color: transparent transparent #ecf0f1 transparent;
+}
+.modern-table .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+}
+.modern-table .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 13px;
+    -fx-alignment: center-left;
+}
+.modern-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f2f6 transparent;
+    -fx-border-width: 1px;
+    -fx-cell-size: 40px;
+}
+.modern-table .table-row-cell:odd {
+    -fx-background-color: #fafbfc;
+}
+.modern-table .table-row-cell:hover {
+    -fx-background-color: #f1f8ff;
+}
+.modern-table .table-row-cell:selected {
+    -fx-background-color: #e1f0fa;
+    -fx-table-cell-border-color: transparent;
+}
+.modern-table .table-row-cell:selected .text {
+    -fx-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+.modern-table:focused {
+    -fx-background-color: transparent;
+}
+
+/* =====================================================================
+   VALUE CHART (Clean & Vibrant)
+   ===================================================================== */
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines {
+    -fx-stroke: #ecf0f1;
+    -fx-stroke-dash-array: 5 5;
+}
+.chart-series-line {
+    -fx-stroke: #2ecc71;
+    -fx-stroke-width: 3px;
+}
+.chart-line-symbol {
+    -fx-background-color: #2ecc71, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 4px;
+}

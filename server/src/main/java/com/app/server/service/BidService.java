@@ -1,5 +1,6 @@
 package com.app.server.service;
 
+import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.server.dao.auction.BidDao;
 import com.app.server.dao.auction.BidDaoImpl;
 import com.app.shared.exception.AuctionClosedException;
@@ -18,6 +19,7 @@ public class BidService {
     private static final BidService instance = new BidService();
     private final AuctionManager auctionManager = AuctionManager.getInstance();
     private final BidDao bidDao = BidDaoImpl.getInstance();
+    private final AuctionDaoImpl auctionDao = AuctionDaoImpl.getInstance();
     // Lock map (auctionId: lock)
     private final Map<String, ReentrantLock> auctionLocks = new ConcurrentHashMap<>();
 
@@ -74,7 +76,9 @@ public class BidService {
                 auction.setEndTimeMillis(System.currentTimeMillis() + EXTENSION_TIME);
             }
 
-            Response broadcastMsg = new Response(true, "AUCTION_UPDATED", auction);
+            auctionDao.updateAuction(auction);
+
+            Response broadcastMsg = new Response(Response.ResponseType.AUCTION_UPDATED,true, "AUCTION_UPDATED", auction);
             com.app.server.network.AuctionServer.broadcast(broadcastMsg);
 
             return auction;

@@ -16,7 +16,11 @@
 <?import javafx.scene.control.TableView?>
 
 
-<BorderPane styleClass="root-pane" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.AuctionDetailController">
+<BorderPane styleClass="root-pane"
+            stylesheets="@../css/global.css, @../css/detail-view.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.app.client.controller.AuctionDetailController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="top-bar" BorderPane.alignment="CENTER">

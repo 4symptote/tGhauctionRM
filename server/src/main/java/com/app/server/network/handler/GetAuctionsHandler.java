@@ -12,6 +12,6 @@ public class GetAuctionsHandler implements RequestHandler {
     public Response handle(Request request, ClientHandler client) {
         List<Auction> activeAuctions = AuctionManager.getInstance().getAllActiveAuctionsList();
 
-        return new Response(true, "Auctions retrieved successfully", activeAuctions);
+        return new Response(Response.ResponseType.AUCTION_LIST,true, "Auctions retrieved successfully", activeAuctions);
     }
 }

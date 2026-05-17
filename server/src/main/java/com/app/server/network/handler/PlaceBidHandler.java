@@ -38,7 +38,7 @@ public class PlaceBidHandler implements RequestHandler {
             Auction updatedAuction = BidService.getInstance().placeBid(auctionId, client.getCurrentUser(), amount);
             // update auction to db
             auctionDao.updateAuction(updatedAuction);
-            Response successResponse = new Response(true, "Bid placed successfully", updatedAuction);
+            Response successResponse = new Response(true, "BID_PLACED", updatedAuction);
             AuctionServer.broadcast(successResponse);
 
             // null tại vì broadcast ở trên đã gọi sendResponse() rồi, trả về null tránh duplicate...

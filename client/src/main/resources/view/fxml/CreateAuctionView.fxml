@@ -6,7 +6,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane style="-fx-background-color: #f4f6f8;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.CreateAuctionController">
+<StackPane style="-fx-background-color: #f4f6f8;"
+           xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           styleClass="root-pane" stylesheets="@../css/global.css"
+           fx:controller="com.app.client.controller.CreateAuctionController">
 
     <VBox alignment="TOP_CENTER" maxHeight="600.0" maxWidth="500.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);">
 

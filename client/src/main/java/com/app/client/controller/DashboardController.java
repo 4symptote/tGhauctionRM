@@ -143,7 +143,7 @@ public class DashboardController implements ResponseListener {
     public void onResponseReceived(Response response) {
         // veri important Platform.runLater
         Platform.runLater(() -> {
-            if (response.success() && response.payload() instanceof List) {
+            if (response.type() == Response.ResponseType.AUCTION_LIST) {
                 try {
                     // 100% sure that the payload is a List<Auction>
                     @SuppressWarnings("unchecked")
@@ -154,10 +154,8 @@ public class DashboardController implements ResponseListener {
                 } catch (ClassCastException e) {
                     log.error("Error casting payload to List<Auction>: {}", e.getMessage());
                 }
-            } else if (response.success() && "AUCTION_UPDATED".equals(response.message())) {
+            } else if (response.type() == Response.ResponseType.AUCTION_UPDATED) {
                 refreshAuctions();
-            } else if (!response.success()) {
-                log.error("Failed to fetch auctions: {}", response.message());
             }
         });
     }

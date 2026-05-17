@@ -19,7 +19,7 @@ public class GetBidHistoryHandler implements RequestHandler {
             // fetch sorted bids
             List<BidTransaction> history = BidDaoImpl.getInstance().getBidsForAuction(auctionId);
 
-            return new Response(true, "BID_HISTORY", history);
+            return new Response(Response.ResponseType.BID_HISTORY,true, "BID_HISTORY", history);
         } catch (Exception e) {
             return new Response(false, "Failed to fetch bid history.", null);
         }
