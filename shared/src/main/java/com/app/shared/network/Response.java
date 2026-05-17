@@ -12,7 +12,8 @@ public record Response(ResponseType type, boolean success, String message, Objec
         GENERIC_ERROR,
         AUCTION_LIST,      // For the Dashboard
         AUCTION_UPDATED,   // For live broadcasts
-        BID_HISTORY        // For the Detail View chart
+        BID_HISTORY,        // For the Detail View chart
+        PLACED_BID         // For successful bid
     }
 
     // general success/error response

@@ -178,18 +178,18 @@ public class AuctionDetailController implements ResponseListener {
     @Override
     public void onResponseReceived(Response response) {
         Platform.runLater(() -> {
-            if (response.success() && !"AUCTION_UPDATED".equals(response.message())) {
-                bidMessageLabel.setStyle("-fx-text-fill: #27ae60;");
-                bidMessageLabel.setText("Bid placed successfully!");
-                bidAmountField.clear();
+            if (response.type() == Response.ResponseType.PLACED_BID) {
+                if (response.success()) {
+                    bidMessageLabel.setStyle("-fx-text-fill: #27ae60;");
+                    bidMessageLabel.setText("Bid placed successfully!");
+                    bidAmountField.clear();
 
-                // todo: handle response and update ui
-            } else {
-                bidMessageLabel.setStyle("-fx-text-fill: RED;");
-                bidMessageLabel.setText(response.message());
-            }
-
-            if (response.success() && "AUCTION_UPDATED".equals(response.message())) {
+                    // todo: handle response and update ui
+                } else {
+                    bidMessageLabel.setStyle("-fx-text-fill: RED;");
+                    bidMessageLabel.setText(response.message());
+                }
+            } else if (response.type() == Response.ResponseType.AUCTION_UPDATED && response.success()) {
                 if (response.payload() instanceof Auction updatedAuction) {
                     if (this.currentAuction != null && this.currentAuction.getId().equals(updatedAuction.getId())) {
                         this.currentAuction = updatedAuction;
@@ -199,7 +199,7 @@ public class AuctionDetailController implements ResponseListener {
                         NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_BID_HISTORY, currentAuction.getId()));
                     }
                 }
-            } else if (response.success() && "BID_HISTORY".equals(response.message())) {
+            } else if (response.type() == Response.ResponseType.BID_HISTORY && response.success()) {
                 @SuppressWarnings("unchecked")
                 List<BidTransaction> history = (List<BidTransaction>) response.payload();
                 updateHistoryUI(history);

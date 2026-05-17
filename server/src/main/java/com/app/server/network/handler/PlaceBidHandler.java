@@ -38,18 +38,18 @@ public class PlaceBidHandler implements RequestHandler {
             Auction updatedAuction = BidService.getInstance().placeBid(auctionId, client.getCurrentUser(), amount);
             // update auction to db
             auctionDao.updateAuction(updatedAuction);
-            Response successResponse = new Response(true, "BID_PLACED", updatedAuction);
+            Response successResponse = new Response(Response.ResponseType.PLACED_BID,true, "Bid placed successfully", updatedAuction);
             AuctionServer.broadcast(successResponse);
 
             // null tại vì broadcast ở trên đã gọi sendResponse() rồi, trả về null tránh duplicate...
             return null;
 
         } catch (InvalidBidException | AuctionClosedException | AuctionNotFoundException e) {
-            return new Response(false, e.getMessage(), null);
+            return new Response(Response.ResponseType.PLACED_BID,false, e.getMessage(), null);
 
         } catch (Exception e) {
             logger.error("Unexpected error in PlaceBidHandler: ", e);
-            return new Response(false, "Internal Error Occurred", null);
+            return new Response(Response.ResponseType.PLACED_BID,false, "Internal Error Occurred", null);
         }
     }
 }
