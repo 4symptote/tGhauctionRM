@@ -1,6 +1,8 @@
 package com.app.server.dao.auction;
 
 import com.app.server.dao.DatabaseConnection;
+import com.app.server.dao.user.UserDao;
+import com.app.server.dao.user.UserDaoImpl;
 import com.app.shared.model.auction.Auction;
 import com.app.shared.model.item.Art;
 import com.app.shared.model.item.Electronics;
@@ -95,6 +97,11 @@ public class AuctionDaoImpl implements AuctionDao {
             auction.setCurrentPrice(doc.getDouble("currentPrice"));
             auction.setHighestBidderId(doc.getString("highestBidderId"));
             auction.setStatus(Auction.Status.valueOf(doc.getString("status")));
+            //String sName = doc.getString("sellerName");
+
+            UserDao userDaoImpl = UserDaoImpl.getInstance();
+            String sName = userDaoImpl.getUserById(auction.getSellerId()).getUsername();
+            auction.setSellerName(sName != null ? sName : "Unknown");
 
             activeAuctionsList.add(auction);
         }
