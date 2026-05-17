@@ -1,6 +1,5 @@
 package com.app.client.controller;
 
-import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
