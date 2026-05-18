@@ -1,6 +1,7 @@
 package com.app.shared.model.item;
 
 import com.app.shared.model.Entity;
+import org.bson.Document;
 
 public abstract class Item extends Entity {
     protected String name, desc;
@@ -15,6 +16,8 @@ public abstract class Item extends Entity {
         this.currentHighestBid = startingPrice;
         this.sellerId = sellerId;
     }
+
+    public abstract Document toBsonDocument();
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
