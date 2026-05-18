@@ -3,6 +3,7 @@ package com.app.client.controller;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
+import com.app.client.util.TimeUtil;
 import com.app.shared.model.auction.Auction;
 import com.app.shared.model.auction.BidTransaction;
 import com.app.shared.model.item.Art;
@@ -106,31 +107,19 @@ public class AuctionDetailController implements ResponseListener {
         }
         //
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
-        endTimeLabel.setText("Ends: " + sdf.format(new Date(currentAuction.getEndTimeMillis())));
-
-        // 2. Stop any existing timer so they don't overlap if the UI refreshes
-        if (countdownTimer != null) {
-            countdownTimer.stop();
-        }
-
-        // 3. Create a new ticking clock
+        endTimeLabel.setText("Ends: " + TimeUtil.formatExactDate(currentAuction.getEndTimeMillis()));
         countdownTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                long timeLeft = currentAuction.getEndTimeMillis() - System.currentTimeMillis();
+                String countdownStr = TimeUtil.formatCountdown(currentAuction.getEndTimeMillis());
 
-                if (timeLeft <= 0) {
+                if ("Ended".equals(countdownStr)) {
                     timeRemainingLabel.setText("Status: Ended");
-                    timeRemainingLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-font-size: 16px;"); // Red
-                    stop(); // Stop ticking
+                    timeRemainingLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-font-size: 16px;");
+                    stop();
                 } else {
-                    long hours = timeLeft / (1000 * 60 * 60);
-                    long minutes = (timeLeft / (1000 * 60)) % 60;
-                    long seconds = (timeLeft / 1000) % 60;
-
-                    timeRemainingLabel.setText(String.format("Time Left: %02d:%02d:%02d", hours, minutes, seconds));
-                    timeRemainingLabel.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16px;"); // Orange warning color
+                    timeRemainingLabel.setText("Time Left: " + countdownStr);
+                    timeRemainingLabel.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16px;");
                 }
             }
         };
