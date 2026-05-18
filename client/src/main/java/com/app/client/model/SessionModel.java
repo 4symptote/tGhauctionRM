@@ -1,14 +1,20 @@
 package com.app.client.model;
 
+import com.app.client.network.NetworkClient;
+import com.app.client.network.ResponseListener;
+import com.app.shared.model.user.Bidder;
 import com.app.shared.model.user.User;
+import com.app.shared.network.Response;
 
 //
-public class SessionModel {
+public class SessionModel implements ResponseListener {
     private static SessionModel instance;
     private User currentUser;
 
     // Singleton ofc
-    private SessionModel() {}
+    private SessionModel() {
+        NetworkClient.getInstance().addListener(this);
+    }
 
     public static SessionModel getInstance() {
         if (instance == null) {
@@ -25,12 +31,27 @@ public class SessionModel {
         this.currentUser = user;
     }
 
+
+
     public boolean isLoggedIn() {
         return currentUser != null;
     }
 
-    public void logout() {
+    public void logout() { this.currentUser = null; }
 
-        this.currentUser = null;
+    @Override
+    public void onResponseReceived(Response response) {
+        switch (response.type()) {
+            case BALANCE_UPDATED -> handleBalanceUpdateResponse(response);
+            default -> {}
+        }
+    }
+
+    private void handleBalanceUpdateResponse(Response response) {
+        double newBalance = (Double) response.payload();
+        if (currentUser instanceof Bidder b) {
+            b.setBalance(newBalance);
+            //Platform.runLater(() -> liveBalance.set(newBalance));
+        }
     }
 }

@@ -104,20 +104,32 @@ public class DashboardController implements ResponseListener {
     public void onResponseReceived(Response response) {
         // veri important Platform.runLater
         Platform.runLater(() -> {
-            if (response.type() == Response.ResponseType.AUCTION_LIST) {
-                try {
-                    // 100% sure that the payload is a List<Auction>
-                    @SuppressWarnings("unchecked")
-                    List<Auction> fetchedAuctions = (List<Auction>) response.payload();
-                    // update UI
-                    updateAuctionList(fetchedAuctions);
-
-                } catch (ClassCastException e) {
-                    log.error("Error casting payload to List<Auction>: {}", e.getMessage());
-                }
-            } else if (response.type() == Response.ResponseType.AUCTION_UPDATED) {
-                refreshAuctions();
+            switch (response.type()) {
+                case AUCTION_UPDATED -> handleAuctionUpdatedResponse(response);
+                case AUCTION_LIST     -> handleAutcionListResponse(response);
+                case BALANCE_UPDATED -> handleBalanceUpdateResponse(response);
             }
         });
+    }
+
+    private void handleAutcionListResponse(Response response) {
+        if (response.success() && response.payload() instanceof List<?> rawList) {
+            @SuppressWarnings("unchecked")
+            List<Auction> auctions = (List<Auction>) rawList;
+            updateAuctionList(auctions);
+        }
+    }
+
+    private void handleAuctionUpdatedResponse(Response response) {
+        refreshAuctions();
+    }
+
+    private void handleBalanceUpdateResponse(Response response) {
+        if (response.success() && response.payload() instanceof Double balance) {
+            if (SessionModel.getInstance().getCurrentUser() instanceof Bidder b) {
+                b.setBalance(balance);
+                balanceLabel.setText(String.format("Balance: $%,.2f", balance));
+            }
+        }
     }
 }
