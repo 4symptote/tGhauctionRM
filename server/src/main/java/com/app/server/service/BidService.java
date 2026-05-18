@@ -58,7 +58,7 @@ public class BidService {
                 throw new InvalidBidException("Không thể tự Bid item của bản thân?!?.");
             if (amount <= auction.getCurrentPrice())
                 throw new InvalidBidException("Bid phải lớn hơn: " + auction.getCurrentPrice() + "$.");
-            // done
+
 
             User user = userDao.getUserById(bidder.getId());
             if (!(user instanceof Bidder liveBidder))
