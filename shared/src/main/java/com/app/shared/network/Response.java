@@ -13,7 +13,8 @@ public record Response(ResponseType type, boolean success, String message, Objec
         AUCTION_LIST,      // For the Dashboard
         AUCTION_UPDATED,   // For live broadcasts
         BID_HISTORY,        // For the Detail View chart
-        PLACED_BID         // For successful bid
+        PLACED_BID,         // For successful bid
+        BALANCE_UPDATED     // For balance updates ( after bids, auction conclude, overtake,...)
     }
 
     // general success/error response
