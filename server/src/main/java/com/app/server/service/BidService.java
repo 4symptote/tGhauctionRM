@@ -3,11 +3,14 @@ package com.app.server.service;
 import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.server.dao.auction.BidDao;
 import com.app.server.dao.auction.BidDaoImpl;
+import com.app.server.dao.user.UserDao;
+import com.app.server.dao.user.UserDaoImpl;
 import com.app.shared.exception.AuctionClosedException;
 import com.app.shared.exception.AuctionNotFoundException;
 import com.app.shared.exception.InvalidBidException;
 import com.app.shared.model.auction.Auction;
 import com.app.shared.model.auction.BidTransaction;
+import com.app.shared.model.user.Bidder;
 import com.app.shared.model.user.User;
 import com.app.shared.network.Response;
 
@@ -20,6 +23,7 @@ public class BidService {
     private final AuctionManager auctionManager = AuctionManager.getInstance();
     private final BidDao bidDao = BidDaoImpl.getInstance();
     private final AuctionDaoImpl auctionDao = AuctionDaoImpl.getInstance();
+    private final UserDao userDao = UserDaoImpl.getInstance();
     // Lock map (auctionId: lock)
     private final Map<String, ReentrantLock> auctionLocks = new ConcurrentHashMap<>();
 
@@ -46,22 +50,38 @@ public class BidService {
         Auction auction = auctionManager.getAuction(auctionId);
 
         try {
-
-            // Logic nghiep vu
-            if (auction == null) {
+            if (auction == null)
                 throw new AuctionNotFoundException("Auction không tồn tại.");
-            }
-            if (auction.getStatus() != Auction.Status.RUNNING) {
+            if (auction.getStatus() != Auction.Status.RUNNING)
                 throw new AuctionClosedException("Auction đã kết thúc.");
-            }
-            // Không thể tự Bid item mình sell (prob k bao h xảy ra trừ khi là admin mfa đã là admin thì phải lm j cx dc)
-            if (auction.getSellerId().equals(bidder.getId())) {
+            if (auction.getSellerId().equals(bidder.getId()))
                 throw new InvalidBidException("Không thể tự Bid item của bản thân?!?.");
-            }
-            if (amount <= auction.getCurrentPrice()) {
+            if (amount <= auction.getCurrentPrice())
                 throw new InvalidBidException("Bid phải lớn hơn: " + auction.getCurrentPrice() + "$.");
+            // done
+
+            User user = userDao.getUserById(bidder.getId());
+            if (!(user instanceof Bidder liveBidder))
+                throw new InvalidBidException("Only bidder can bid");
+            if (liveBidder.getBalance() < amount)
+                throw new InvalidBidException("You are too poor. Check your wallet");
+
+            // all checks passed -> place bid / take money <- refund previous bidder
+            // refund previous bidder
+            String previousBidderId = auction.getHighestBidderId();
+            double previousBidAmount = auction.getCurrentPrice();
+
+            if (previousBidderId != null) {
+                User previousUser = userDao.getUserById(previousBidderId);
+                if (previousUser instanceof Bidder previousBidder) {
+                    // refund
+                    previousBidder.setBalance(previousBidder.getBalance() + previousBidAmount);
+                    userDao.updateUser(previousBidder);
+                }
             }
-            // todo: check if bidder has enough money
+            // take bidder's money and update balance
+            liveBidder.setBalance(liveBidder.getBalance() - amount);
+            userDao.updateUser(liveBidder);
 
             BidTransaction bid = new BidTransaction(auctionId, bidder.getId(), bidder.getUsername(), amount);
             bidDao.saveBid(bid);
