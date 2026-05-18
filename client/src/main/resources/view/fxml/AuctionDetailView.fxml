@@ -47,8 +47,13 @@
                     <Label fx:id="itemNameLabel"
                            style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
                            text="Item Name" wrapText="true"/>
+
                     <Label fx:id="sellerLabel" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"
                            text="Listed by: Username"/>
+
+                    <Label fx:id="timeRemainingLabel" text="Time Left: --:--:--" />
+                    <Label fx:id="endTimeLabel" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;" text="Ends: --" />
+
                 </VBox>
 
                 <HBox alignment="TOP_CENTER" maxWidth="1200.0" spacing="30.0">

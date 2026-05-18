@@ -3,6 +3,7 @@ package com.app.client.controller;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
+import com.app.client.util.TimeUtil;
 import com.app.shared.model.auction.Auction;
 import com.app.shared.model.auction.BidTransaction;
 import com.app.shared.model.item.Art;
@@ -12,6 +13,7 @@ import com.app.shared.model.item.Vehicle;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.BidPayload;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -47,6 +49,11 @@ public class AuctionDetailController implements ResponseListener {
     @FXML private TableColumn<BidTransaction, String> timeCol;
     @FXML private TableColumn<BidTransaction, String> amountCol;
     @FXML private TableColumn<BidTransaction, String> bidderCol;
+
+    @FXML private Label endTimeLabel;        // NEW: Shows the static date
+    @FXML private Label timeRemainingLabel;  //  clock
+
+    private AnimationTimer countdownTimer;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:mm:ss");
 
@@ -98,6 +105,25 @@ public class AuctionDetailController implements ResponseListener {
         } else {
             highestBidderLabel.setText("No bids placed yet.");
         }
+        //
+
+        endTimeLabel.setText("Ends: " + TimeUtil.formatExactDate(currentAuction.getEndTimeMillis()));
+        countdownTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                String countdownStr = TimeUtil.formatCountdown(currentAuction.getEndTimeMillis());
+
+                if ("Ended".equals(countdownStr)) {
+                    timeRemainingLabel.setText("Status: Ended");
+                    timeRemainingLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-font-size: 16px;");
+                    stop();
+                } else {
+                    timeRemainingLabel.setText("Time Left: " + countdownStr);
+                    timeRemainingLabel.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16px;");
+                }
+            }
+        };
+        countdownTimer.start();
 
         // custom attributes
         // todo: idk -make it expandable?
@@ -150,8 +176,11 @@ public class AuctionDetailController implements ResponseListener {
 
     @FXML
     private void handleBackToDashboard(ActionEvent event) {
+        if (countdownTimer != null) countdownTimer.stop();
+
         NetworkClient.getInstance().removeListener(this);
         SceneManager.getInstance().switchScene("/view/fxml/DashboardView.fxml");
+
     }
 
     private void updateHistoryUI(List<BidTransaction> history) {
@@ -177,32 +206,41 @@ public class AuctionDetailController implements ResponseListener {
     @Override
     public void onResponseReceived(Response response) {
         Platform.runLater(() -> {
-            if (response.type() == Response.ResponseType.PLACED_BID) {
-                if (response.success()) {
-                    bidMessageLabel.setStyle("-fx-text-fill: #27ae60;");
-                    bidMessageLabel.setText("Bid placed successfully!");
-                    bidAmountField.clear();
-
-                    // todo: handle response and update ui
-                } else {
-                    bidMessageLabel.setStyle("-fx-text-fill: RED;");
-                    bidMessageLabel.setText(response.message());
-                }
-            } else if (response.type() == Response.ResponseType.AUCTION_UPDATED && response.success()) {
-                if (response.payload() instanceof Auction updatedAuction) {
-                    if (this.currentAuction != null && this.currentAuction.getId().equals(updatedAuction.getId())) {
-                        this.currentAuction = updatedAuction;
-                        populateUI();
-
-                        // NEW: Someone just bid, fetch the updated history to refresh the chart!
-                        NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_BID_HISTORY, currentAuction.getId()));
-                    }
-                }
-            } else if (response.type() == Response.ResponseType.BID_HISTORY && response.success()) {
-                @SuppressWarnings("unchecked")
-                List<BidTransaction> history = (List<BidTransaction>) response.payload();
-                updateHistoryUI(history);
+            switch (response.type()) {
+                case PLACED_BID      -> handlePlacedBidResponse(response);
+                case AUCTION_UPDATED -> handleAuctionBroadcast(response);
+                case BID_HISTORY     -> handleHistoryResponse(response);
             }
         });
+    }
+
+    // PLACE_BID
+    private void handlePlacedBidResponse(Response response) {
+        if (response.success()) {
+            bidMessageLabel.setStyle("-fx-text-fill: #27ae60;");
+            bidMessageLabel.setText("Bid placed successfully!");
+            bidAmountField.clear();
+        } else {
+            bidMessageLabel.setStyle("-fx-text-fill: RED;");
+            bidMessageLabel.setText(response.message());
+        }
+    }
+    // AUCTION_UPDATED
+    private void handleAuctionBroadcast(Response response) {
+        if (response.success() && response.payload() instanceof Auction updatedAuction) {
+            if (this.currentAuction != null && this.currentAuction.getId().equals(updatedAuction.getId())) {
+                this.currentAuction = updatedAuction;
+                populateUI();
+                NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_BID_HISTORY, currentAuction.getId()));
+            }
+        }
+    }
+    // BID_HISTORY
+    private void handleHistoryResponse(Response response) {
+        if (response.success() && response.payload() instanceof List<?> rawList) {
+            @SuppressWarnings("unchecked")
+            List<BidTransaction> history = (List<BidTransaction>) rawList;
+            updateHistoryUI(history);
+        }
     }
 }

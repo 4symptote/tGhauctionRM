@@ -3,6 +3,7 @@ package com.app.shared.model.item.factory;
 import com.app.shared.model.item.Art;
 import com.app.shared.model.item.Item;
 import com.app.shared.network.payload.CreateAuctionPayload;
+import org.bson.Document;
 
 import java.util.Map;
 
@@ -51,5 +52,18 @@ public class ArtCreator implements ItemCreator {
 
         Repo cũ thậm chí còn đéo dùng mấy cái custom attr đấy.
         */
+    }
+
+    // I am insane
+    @Override
+    public Item createItemFromDocument(Document itemDoc) {
+        return new Art.Builder()
+                .name(itemDoc.getString("name"))
+                .desc(itemDoc.getString("description"))
+                .startingPrice(itemDoc.getDouble("startingPrice"))
+                .artist(itemDoc.getString("artist"))
+                .medium(itemDoc.getString("medium"))
+                .year(itemDoc.getInteger("year") != null ? itemDoc.getInteger("year") : 0)
+                .build();
     }
 }

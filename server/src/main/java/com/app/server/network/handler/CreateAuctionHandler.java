@@ -37,7 +37,7 @@ public class CreateAuctionHandler implements RequestHandler {
             logger.info("Successfully created auction {} for user {}", auction.getId(), currentUser.getUsername());
 
             AuctionServer.broadcast(new Response(Response.ResponseType.AUCTION_LIST,true, "A new Auction Created", AuctionManager.getInstance().getAllActiveAuctionsList()));
-            return new Response(Response.ResponseType.AUCTION_LIST,true, "Auction created successfully", AuctionManager.getInstance().getAllActiveAuctionsList());
+            return null;
 
         } catch (ClassCastException e) {
             logger.error("Invalid payload type for CREATE_AUCTION request");

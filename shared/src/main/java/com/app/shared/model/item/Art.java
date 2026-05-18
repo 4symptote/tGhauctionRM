@@ -1,5 +1,7 @@
 package com.app.shared.model.item;
 
+import org.bson.Document;
+
 public class Art extends Item {
     // Custom Art Fields
     private final String artist;
@@ -40,6 +42,17 @@ public class Art extends Item {
         public Art build() {
             return new Art(this);
         }
+    }
+
+    @Override
+    public Document toBsonDocument() {
+        return new Document("type", "Art")
+                .append("name", getName())
+                .append("description", getDescription())
+                .append("startingPrice", getStartingPrice())
+                .append("artist", this.artist)
+                .append("medium", this.medium)
+                .append("year", this.year);
     }
 
     public int getYear() {

@@ -23,25 +23,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void saveUser(User user) {
-
-        String role = "BIDDER";
-        double balance = 0.0;
-
-        if (user instanceof Admin) role = "ADMIN";
-        else if (user instanceof Seller) role = "SELLER";
-        else if (user instanceof Bidder b) {
-            role = "BIDDER";
-            balance = b.getBalance();
-        }
-
-        // object -> document
-        Document doc = new Document("_id", user.getId())
-                .append("username", user.getUsername())
-                .append("passwordHash", user.getPassword())
-                .append("email", user.getEmail())
-                .append("role", role)
-                .append("balance", balance);
-
+        Document doc = userToDocument(user);
         usersCollection.insertOne(doc);
     }
 
@@ -68,6 +50,12 @@ public class UserDaoImpl implements UserDao {
         return documentToUser(doc);
     }
 
+    @Override
+    public void updateUser(User user) {
+        Document doc = userToDocument(user);
+        usersCollection.replaceOne(new Document("_id", user.getId()), doc);
+    }
+
     private User documentToUser(Document doc) {
         String dbId = doc.getString("_id");
         String fetchedUsername = doc.getString("username");
@@ -85,6 +73,18 @@ public class UserDaoImpl implements UserDao {
         };
         user.setId(dbId);
         return user;
+    }
+
+    private Document userToDocument(User user) {
+        double balance = 0.0;
+        if (user instanceof Bidder b) balance = b.getBalance();
+        if (user instanceof Seller s) balance = s.getTotalRevenue();
+        return new Document("_id", user.getId())
+                .append("username", user.getUsername())
+                .append("passwordHash", user.getPassword())
+                .append("email", user.getEmail())
+                .append("role", user.getRole())
+                .append("balance", balance);
     }
 
     @Override

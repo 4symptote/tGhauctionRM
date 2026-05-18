@@ -3,6 +3,7 @@ package com.app.client.controller;
 import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
+import com.app.client.util.AuctionCardFactory;
 import com.app.client.util.SceneManager;
 import com.app.shared.model.auction.Auction;
 import com.app.shared.model.user.Admin;
@@ -68,53 +69,13 @@ public class DashboardController implements ResponseListener {
             auctionListContainer.getChildren().clear();
 
             for (Auction auction : auctions) {
-                // 1. The Main Card Container
-                HBox card = new HBox(20);
-                card.getStyleClass().add("auction-card");
-                card.setAlignment(Pos.CENTER_LEFT);
-
-                card.prefWidthProperty().bind(auctionListContainer.widthProperty().multiply(0.95));
-                card.setMaxWidth(1100.0);
-                card.setMinWidth(450.0);
-
-                // Left Side: Name and Seller
-                VBox infoBox = new VBox(8); // Slight spacing between title and seller
-                HBox.setHgrow(infoBox, Priority.ALWAYS); // This pushes the right-side box all the way to the edge
-
-                Label nameLabel = new Label(auction.getItem().getName());
-                nameLabel.getStyleClass().add("card-item-name");
-                nameLabel.setWrapText(true);
-
-
-                Label sellerLabel = new Label("Seller: " + auction.getSellerName());
-                sellerLabel.getStyleClass().add("card-seller-label");
-
-                infoBox.getChildren().addAll(nameLabel, sellerLabel);
-
-                // Right Side: Price and Status Badge
-                VBox priceBox = new VBox(10); // Spacing between price and badge
-                priceBox.setAlignment(Pos.CENTER_RIGHT);
-
-                Label priceLabel = new Label(String.format("$%,.2f", auction.getCurrentPrice()));
-                priceLabel.getStyleClass().add("card-bid-value");
-
-                Label statusLabel = new Label(auction.getStatus().name());
-                statusLabel.getStyleClass().addAll("card-status-badge", "status-" + auction.getStatus().name());
-
-                priceBox.getChildren().addAll(priceLabel, statusLabel);
-
-                // Combine and add to layout
-                card.getChildren().addAll(infoBox, priceBox);
-
-                // Add click effect
-                card.setOnMouseClicked(e -> {
-                    System.out.println("Opening Auction: " + auction.getItem().getName());
-                    // Unsubscribe from network events to prevent memory leaks
+                // Da cards
+                HBox card = AuctionCardFactory.createCard(auction, () -> {
+                    //System.out.println("Opening Auction: " + auction.getItem().getName());
                     NetworkClient.getInstance().removeListener(this);
-                    // Switch scene and pass the clicked auction!
                     SceneManager.getInstance().switchSceneWithData("/view/fxml/AuctionDetailView.fxml", auction);
                 });
-
+                card.prefWidthProperty().bind(auctionListContainer.widthProperty().multiply(0.9));
                 auctionListContainer.getChildren().add(card);
             }
         });

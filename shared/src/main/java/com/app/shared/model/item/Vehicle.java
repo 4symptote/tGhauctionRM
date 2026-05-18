@@ -1,6 +1,8 @@
 package com.app.shared.model.item;
 
 
+import org.bson.Document;
+
 public class Vehicle extends Item {
     // custom Vehicle fields
     private String brand;
@@ -32,6 +34,16 @@ public class Vehicle extends Item {
 
         public Vehicle build() { return new Vehicle(this); }
 
+    }
+
+    @Override
+    public Document toBsonDocument() {
+        return new Document("type", "Vehicle")
+                .append("name", getName())
+                .append("description", getDescription())
+                .append("startingPrice", getStartingPrice())
+                .append("brand", this.brand)
+                .append("model", this.model);
     }
 
     public String getBrand() { return this.brand; }
