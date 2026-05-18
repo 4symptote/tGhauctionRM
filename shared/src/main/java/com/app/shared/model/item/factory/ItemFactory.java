@@ -12,8 +12,8 @@ import java.util.Map;
 
 public final class ItemFactory {
     private static final Map<String, ItemCreator> CREATORS = Map.of(
-            "art", new ArtCreator(),
-            "vehicle", new VehicleCreator(),
+            "art"        , new ArtCreator(),
+            "vehicle"    , new VehicleCreator(),
             "electronics", new ElectronicsCreator()
     );
 
@@ -23,43 +23,20 @@ public final class ItemFactory {
         String normalizedType = normalizeType(payload.itemType());
         ItemCreator creator = CREATORS.get(normalizedType);
         if (creator == null) {
-            throw new IllegalArgumentException("Unsupported item type: " + payload.itemType());
+            throw new IllegalArgumentException("Unknown item type: " + payload.itemType());
         }
-
         return creator.createItem(payload);
     }
 
     // Factory method de tao item tu document
     public static Item createItemFromDocument(Document itemDoc) {
-        String type = itemDoc.getString("type");
-        String name = itemDoc.getString("name");
-        String desc = itemDoc.getString("description");
-        double price = itemDoc.getDouble("startingPrice");
-
-        return switch (type) {
-            case "Art" -> new Art.Builder()
-                    .name(name).desc(desc).startingPrice(price)
-                    .artist(itemDoc.getString("artist"))
-                    .medium(itemDoc.getString("medium"))
-                    .year(itemDoc.getInteger("year") != null ? itemDoc.getInteger("year") : 0)
-                    .build();
-
-            case "Vehicle" -> new Vehicle.Builder()
-                    .name(name).desc(desc).startingPrice(price)
-                    .brand(itemDoc.getString("brand"))
-                    .model(itemDoc.getString("model"))
-                    .build();
-
-            case "Electronics" -> new Electronics.Builder()
-                    .name(name).desc(desc).startingPrice(price)
-                    .brand(itemDoc.getString("brand"))
-                    .build();
-
-            default -> throw new IllegalArgumentException("Unknown item type :" + type);
-        };
+        String normalizedType = normalizeType(itemDoc.getString("type"));
+        ItemCreator creator = CREATORS.get(normalizedType);
+        if (creator == null) {
+            throw new IllegalArgumentException("Unknown item type: " + itemDoc.getString("type"));
+        }
+        return creator.createItemFromDocument(itemDoc);
     }
-
-
 
     private static String normalizeType(String itemType) {
         return itemType.trim().toLowerCase(Locale.ROOT);
