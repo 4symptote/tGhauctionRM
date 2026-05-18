@@ -206,32 +206,41 @@ public class AuctionDetailController implements ResponseListener {
     @Override
     public void onResponseReceived(Response response) {
         Platform.runLater(() -> {
-            if (response.type() == Response.ResponseType.PLACED_BID) {
-                if (response.success()) {
-                    bidMessageLabel.setStyle("-fx-text-fill: #27ae60;");
-                    bidMessageLabel.setText("Bid placed successfully!");
-                    bidAmountField.clear();
-
-                    // todo: handle response and update ui
-                } else {
-                    bidMessageLabel.setStyle("-fx-text-fill: RED;");
-                    bidMessageLabel.setText(response.message());
-                }
-            } else if (response.type() == Response.ResponseType.AUCTION_UPDATED && response.success()) {
-                if (response.payload() instanceof Auction updatedAuction) {
-                    if (this.currentAuction != null && this.currentAuction.getId().equals(updatedAuction.getId())) {
-                        this.currentAuction = updatedAuction;
-                        populateUI();
-
-                        // NEW: Someone just bid, fetch the updated history to refresh the chart!
-                        NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_BID_HISTORY, currentAuction.getId()));
-                    }
-                }
-            } else if (response.type() == Response.ResponseType.BID_HISTORY && response.success()) {
-                @SuppressWarnings("unchecked")
-                List<BidTransaction> history = (List<BidTransaction>) response.payload();
-                updateHistoryUI(history);
+            switch (response.type()) {
+                case PLACED_BID      -> handlePlacedBidResponse(response);
+                case AUCTION_UPDATED -> handleAuctionBroadcast(response);
+                case BID_HISTORY     -> handleHistoryResponse(response);
             }
         });
+    }
+
+    // PLACE_BID
+    private void handlePlacedBidResponse(Response response) {
+        if (response.success()) {
+            bidMessageLabel.setStyle("-fx-text-fill: #27ae60;");
+            bidMessageLabel.setText("Bid placed successfully!");
+            bidAmountField.clear();
+        } else {
+            bidMessageLabel.setStyle("-fx-text-fill: RED;");
+            bidMessageLabel.setText(response.message());
+        }
+    }
+    // AUCTION_UPDATED
+    private void handleAuctionBroadcast(Response response) {
+        if (response.success() && response.payload() instanceof Auction updatedAuction) {
+            if (this.currentAuction != null && this.currentAuction.getId().equals(updatedAuction.getId())) {
+                this.currentAuction = updatedAuction;
+                populateUI();
+                NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_BID_HISTORY, currentAuction.getId()));
+            }
+        }
+    }
+    // BID_HISTORY
+    private void handleHistoryResponse(Response response) {
+        if (response.success() && response.payload() instanceof List<?> rawList) {
+            @SuppressWarnings("unchecked")
+            List<BidTransaction> history = (List<BidTransaction>) rawList;
+            updateHistoryUI(history);
+        }
     }
 }
