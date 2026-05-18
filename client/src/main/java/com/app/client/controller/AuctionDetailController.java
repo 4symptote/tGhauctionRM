@@ -12,6 +12,7 @@ import com.app.shared.model.item.Vehicle;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.BidPayload;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -47,6 +48,11 @@ public class AuctionDetailController implements ResponseListener {
     @FXML private TableColumn<BidTransaction, String> timeCol;
     @FXML private TableColumn<BidTransaction, String> amountCol;
     @FXML private TableColumn<BidTransaction, String> bidderCol;
+
+    @FXML private Label endTimeLabel;        // NEW: Shows the static date
+    @FXML private Label timeRemainingLabel;  //  clock
+
+    private AnimationTimer countdownTimer;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:mm:ss");
 
@@ -98,6 +104,37 @@ public class AuctionDetailController implements ResponseListener {
         } else {
             highestBidderLabel.setText("No bids placed yet.");
         }
+        //
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
+        endTimeLabel.setText("Ends: " + sdf.format(new Date(currentAuction.getEndTimeMillis())));
+
+        // 2. Stop any existing timer so they don't overlap if the UI refreshes
+        if (countdownTimer != null) {
+            countdownTimer.stop();
+        }
+
+        // 3. Create a new ticking clock
+        countdownTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                long timeLeft = currentAuction.getEndTimeMillis() - System.currentTimeMillis();
+
+                if (timeLeft <= 0) {
+                    timeRemainingLabel.setText("Status: Ended");
+                    timeRemainingLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold; -fx-font-size: 16px;"); // Red
+                    stop(); // Stop ticking
+                } else {
+                    long hours = timeLeft / (1000 * 60 * 60);
+                    long minutes = (timeLeft / (1000 * 60)) % 60;
+                    long seconds = (timeLeft / 1000) % 60;
+
+                    timeRemainingLabel.setText(String.format("Time Left: %02d:%02d:%02d", hours, minutes, seconds));
+                    timeRemainingLabel.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 16px;"); // Orange warning color
+                }
+            }
+        };
+        countdownTimer.start();
 
         // custom attributes
         // todo: idk -make it expandable?
@@ -150,8 +187,11 @@ public class AuctionDetailController implements ResponseListener {
 
     @FXML
     private void handleBackToDashboard(ActionEvent event) {
+        if (countdownTimer != null) countdownTimer.stop();
+
         NetworkClient.getInstance().removeListener(this);
         SceneManager.getInstance().switchScene("/view/fxml/DashboardView.fxml");
+
     }
 
     private void updateHistoryUI(List<BidTransaction> history) {
