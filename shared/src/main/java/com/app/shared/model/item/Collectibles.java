@@ -1,12 +1,12 @@
 package com.app.shared.model.item;
 
 
-public class Collectibles extends Item {
+public class Collectibles {
     // custom Vehicle fields
     private String brand;
 
     private Collectibles(Builder builder) {
-        super(builder.name, builder.desc, builder.startingPrice, builder.sellerId);
+        //super(builder.name, builder.desc, builder.startingPrice, builder.sellerId);
     }
 
     public static class Builder {
