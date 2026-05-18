@@ -55,4 +55,14 @@ public class AuctionServer {
             client.sendResponse(response);
         }
     }
+
+    // y chang broadcast nhưng chỉ gửi đến đúng 1 client
+    public static void sendToClient(String targetUserId, Response response) {
+        for (ClientHandler client : clients) {
+            com.app.shared.model.user.User user = client.getCurrentUser();
+            if (user != null && user.getId().equals(targetUserId)) {
+                client.sendResponse(response);
+            }
+        }
+    }
 }
