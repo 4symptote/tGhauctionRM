@@ -25,6 +25,12 @@ public class CreateAuctionHandler implements RequestHandler {
             if (currentUser == null) {
                 return new Response(false, "You must be logged in to create an auction.", null);
             }
+
+            if (!currentUser.canSell()) {
+                // check hack
+                logger.warn("User {} attempted to illegally create an auction without SELLER clearance", currentUser.getUsername());
+                return new Response(false, "Only sellers can list items", null);
+            }
             //
             Item item = ItemFactory.createItem(payload);
             Auction auction = new Auction(item, payload.durationMillis());
@@ -38,6 +44,7 @@ public class CreateAuctionHandler implements RequestHandler {
 
             AuctionServer.broadcast(new Response(Response.ResponseType.AUCTION_LIST,true, "A new Auction Created", AuctionManager.getInstance().getAllActiveAuctionsList()));
             return null;
+
 
         } catch (ClassCastException e) {
             logger.error("Invalid payload type for CREATE_AUCTION request");

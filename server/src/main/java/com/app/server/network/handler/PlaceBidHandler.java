@@ -8,6 +8,7 @@ import com.app.shared.exception.AuctionClosedException;
 import com.app.shared.exception.AuctionNotFoundException;
 import com.app.shared.exception.InvalidBidException;
 import com.app.shared.model.auction.Auction;
+import com.app.shared.model.user.User;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.BidPayload;
@@ -21,9 +22,13 @@ public class PlaceBidHandler implements RequestHandler {
     @Override
     public Response handle(Request request, ClientHandler client) {
         // security check
-        if (client.getCurrentUser() == null) {
-            logger.warn("Unauthorized bid attempt from IP: {}", client.getInetAddress());
-            return new Response(false, "Unauthorized", null);
+        User currentUser = client.getCurrentUser();
+        if (currentUser == null) {
+            return new Response(false, "You must be logged in to place a bid", null);
+        }
+        if (!currentUser.canBid()) {
+            logger.warn("User {} attempted to illegally place a bid without SELLER clearance", currentUser.getUsername());
+            return new Response(Response.ResponseType.PLACED_BID, false, "Only bidder can bid on items", null);
         }
 
         try {

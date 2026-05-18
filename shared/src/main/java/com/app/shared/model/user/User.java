@@ -8,6 +8,11 @@ public class User extends Entity {
     private String email;
     private String role;
 
+    // finally
+    public boolean canBid() { return false; }
+    public boolean canSell() { return false; }
+    public boolean isAdmin() { return false; }
+
     public User(String username, String password, String email, String role) {
         super();
         this.username = username;

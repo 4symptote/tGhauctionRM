@@ -1,11 +1,10 @@
 package com.app.shared.model.user;
 
-//import com.app.shared.model.auction.BidTransaction;
-import java.util.ArrayList;
-import java.util.List;
-
 public class Bidder extends User {
     private double balance;
+
+    @Override
+    public boolean canBid() { return true; }
 
     public Bidder(String username, String password, String email, double initialBalance) {
         super(username, password, email, "BIDDER");

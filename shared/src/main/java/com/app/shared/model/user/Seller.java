@@ -1,8 +1,10 @@
 package com.app.shared.model.user;
 
-
 public class Seller extends User {
     private double totalRevenue;
+
+    @Override
+    public boolean canBid() { return true; }
 
     public Seller(String username, String password, String email) {
         super(username, password, email, "SELLER");
