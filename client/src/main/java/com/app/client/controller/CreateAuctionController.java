@@ -57,7 +57,6 @@ public class CreateAuctionController implements ResponseListener {
             }
         }
     }
-
     private void addDynamicField(String labelText, String payloadKey) {
         VBox row = new VBox(5);
         Label label = new Label(labelText);
