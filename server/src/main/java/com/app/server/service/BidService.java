@@ -1,10 +1,12 @@
 package com.app.server.service;
 
+import com.app.server.dao.auction.AuctionDao;
 import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.server.dao.auction.BidDao;
 import com.app.server.dao.auction.BidDaoImpl;
 import com.app.server.dao.user.UserDao;
 import com.app.server.dao.user.UserDaoImpl;
+import com.app.server.network.AuctionServer;
 import com.app.shared.exception.AuctionClosedException;
 import com.app.shared.exception.AuctionNotFoundException;
 import com.app.shared.exception.InvalidBidException;
@@ -22,7 +24,7 @@ public class BidService {
     private static final BidService instance = new BidService();
     private final AuctionManager auctionManager = AuctionManager.getInstance();
     private final BidDao bidDao = BidDaoImpl.getInstance();
-    private final AuctionDaoImpl auctionDao = AuctionDaoImpl.getInstance();
+    private final AuctionDao auctionDao = AuctionDaoImpl.getInstance();
     private final UserDao userDao = UserDaoImpl.getInstance();
     // Lock map (auctionId: lock)
     private final Map<String, ReentrantLock> auctionLocks = new ConcurrentHashMap<>();
@@ -77,11 +79,17 @@ public class BidService {
                     // refund
                     previousBidder.setBalance(previousBidder.getBalance() + previousBidAmount);
                     userDao.updateUser(previousBidder);
+
+                    AuctionServer.sendToClient(previousBidderId,
+                            new Response(Response.ResponseType.BALANCE_UPDATED, true, "Outbid Refund", previousBidder.getBalance()));
                 }
             }
             // take bidder's money and update balance
             liveBidder.setBalance(liveBidder.getBalance() - amount);
             userDao.updateUser(liveBidder);
+
+            AuctionServer.sendToClient(liveBidder.getId(),
+                    new Response(Response.ResponseType.BALANCE_UPDATED, true, "Escrow Deducted", liveBidder.getBalance()));
 
             BidTransaction bid = new BidTransaction(auctionId, bidder.getId(), bidder.getUsername(), amount);
             bidDao.saveBid(bid);
@@ -99,7 +107,7 @@ public class BidService {
             auctionDao.updateAuction(auction);
 
             Response broadcastMsg = new Response(Response.ResponseType.AUCTION_UPDATED,true, "AUCTION_UPDATED", auction);
-            com.app.server.network.AuctionServer.broadcast(broadcastMsg);
+            AuctionServer.broadcast(broadcastMsg);
 
             return auction;
 
