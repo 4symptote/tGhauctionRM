@@ -12,7 +12,7 @@
            styleClass="root-pane" stylesheets="@../css/global.css"
            fx:controller="com.app.client.controller.CreateAuctionController">
 
-    <VBox alignment="TOP_CENTER" maxHeight="600.0" maxWidth="500.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+    <VBox alignment="TOP_CENTER" maxHeight="650.0" maxWidth="500.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);">
 
         <padding>
             <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
@@ -50,6 +50,11 @@
         </HBox>
 
         <VBox spacing="5.0">
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Start Delay (Seconds)" />
+            <TextField fx:id="startDelayMinutesField" promptText="blank = start immediately" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" />
+        </VBox>
+
+        <VBox spacing="5.0">
             <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Starting Price ($)" />
             <TextField fx:id="startingPriceField" promptText="0.00" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #bdc3c7; -fx-border-radius: 4;" />
         </VBox>
@@ -63,10 +68,11 @@
             <Label text="Select a category to see specific attributes." style="-fx-text-fill: #95a5a6; -fx-font-style: italic;"/>
         </VBox>
 
-        <Region VBox.vgrow="ALWAYS" /> <HBox alignment="CENTER" spacing="15.0">
-        <Button onAction="#handleCancel" prefWidth="150" style="-fx-background-color: #ecf0f1; -fx-text-fill: #7f8c8d; -fx-font-weight: bold; -fx-padding: 12px; -fx-background-radius: 4; -fx-cursor: hand;" text="Cancel" />
+        <Region VBox.vgrow="ALWAYS" />
 
-        <Button onAction="#handleSubmit" prefWidth="250" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12px; -fx-background-radius: 4; -fx-cursor: hand;" text="Create" />
-    </HBox>
+        <HBox alignment="CENTER" spacing="15.0">
+            <Button onAction="#handleCancel" prefWidth="150" style="-fx-background-color: #ecf0f1; -fx-text-fill: #7f8c8d; -fx-font-weight: bold; -fx-padding: 12px; -fx-background-radius: 4; -fx-cursor: hand;" text="Cancel" />
+            <Button onAction="#handleSubmit" prefWidth="250" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12px; -fx-background-radius: 4; -fx-cursor: hand;" text="Create" />
+        </HBox>
     </VBox>
 </StackPane>

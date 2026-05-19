@@ -33,12 +33,13 @@ public class CreateAuctionHandler implements RequestHandler {
             }
             //
             Item item = ItemFactory.createItem(payload);
-            Auction auction = new Auction(item, payload.durationMillis());
+            long endTime = payload.startTime() + payload.durationMillis();
+            Auction auction = new Auction(item, payload.startTime(), endTime);
 
             auction.setSellerId(currentUser.getId());
             auction.setSellerName(currentUser.getUsername());
 
-            AuctionManager.getInstance().startAuction(auction, payload.durationMillis());
+            AuctionManager.getInstance().startAuction(auction);
 
             logger.info("Successfully created auction {} for user {}", auction.getId(), currentUser.getUsername());
 
