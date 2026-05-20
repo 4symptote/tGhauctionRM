@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class BidService {
-    private static final BidService instance = new BidService();
+    private static BidService instance = new BidService();
     private final AuctionManager auctionManager = AuctionManager.getInstance();
     private final BidDao bidDao = BidDaoImpl.getInstance();
     private final AuctionDao auctionDao = AuctionDaoImpl.getInstance();
@@ -38,6 +38,9 @@ public class BidService {
     }
 
     public static BidService getInstance() {
+        if (instance == null) {
+            instance = new BidService();
+        }
         return instance;
     }
 
@@ -80,16 +83,22 @@ public class BidService {
                     previousBidder.setBalance(previousBidder.getBalance() + previousBidAmount);
                     userDao.updateUser(previousBidder);
 
-                    AuctionServer.sendToClient(previousBidderId,
-                            new Response(Response.ResponseType.BALANCE_UPDATED, true, "Outbid Refund", previousBidder.getBalance()));
+                    AuctionServer.sendToClient(previousBidderId, new Response(
+                            Response.ResponseType.USER_UPDATED,
+                            true, "Outbid Refund",
+                            previousBidder
+                    ));
                 }
             }
             // take bidder's money and update balance
             liveBidder.setBalance(liveBidder.getBalance() - amount);
             userDao.updateUser(liveBidder);
 
-            AuctionServer.sendToClient(liveBidder.getId(),
-                    new Response(Response.ResponseType.BALANCE_UPDATED, true, "Escrow Deducted", liveBidder.getBalance()));
+            AuctionServer.sendToClient(liveBidder.getId(), new Response(
+                    Response.ResponseType.USER_UPDATED,
+                    true, "Escrow Deducted",
+                    liveBidder
+            ));
 
             BidTransaction bid = new BidTransaction(auctionId, bidder.getId(), bidder.getUsername(), amount);
             bidDao.saveBid(bid);

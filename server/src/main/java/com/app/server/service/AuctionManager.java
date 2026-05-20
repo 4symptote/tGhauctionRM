@@ -74,10 +74,8 @@ public class AuctionManager {
         if (auction.getStatus() == Auction.Status.PAID || auction.getStatus() == Auction.Status.CANCELED) {
             return;
         }
-        System.out.println("Manage");
 
         if (currentTime < startTime) { // OPEN
-            System.out.println("OPEN");
             long delay = startTime - currentTime;
             scheduler.schedule(() -> {
                 com.app.server.network.AuctionServer.broadcast(new Response(

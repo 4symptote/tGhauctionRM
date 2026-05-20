@@ -37,15 +37,14 @@ public class SessionModel implements ResponseListener {
     @Override
     public void onResponseReceived(Response response) {
         switch (response.type()) {
-            case BALANCE_UPDATED -> handleBalanceUpdateResponse(response);
+            case USER_UPDATED -> handleUserUpdateResponse(response);
             default -> {}
         }
     }
 
-    private void handleBalanceUpdateResponse(Response response) {
-        double newBalance = (Double) response.payload();
-        if (currentUser instanceof Bidder b) {
-            b.setBalance(newBalance);
+    private void handleUserUpdateResponse(Response response) {
+        if (response.success() && response.payload() instanceof User user) {
+            this.currentUser = user;
         }
     }
 }

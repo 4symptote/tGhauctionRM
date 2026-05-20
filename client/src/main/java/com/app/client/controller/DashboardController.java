@@ -106,13 +106,14 @@ public class DashboardController implements ResponseListener {
         Platform.runLater(() -> {
             switch (response.type()) {
                 case AUCTION_UPDATED -> handleAuctionUpdatedResponse(response);
-                case AUCTION_LIST     -> handleAutcionListResponse(response);
-                case BALANCE_UPDATED -> handleBalanceUpdateResponse(response);
+                case AUCTION_LIST     -> handleAuctionListResponse(response);
+                // case BALANCE_UPDATED -> handleBalanceUpdateResponse(response);
+                case USER_UPDATED    -> refreshAuctions();
             }
         });
     }
 
-    private void handleAutcionListResponse(Response response) {
+    private void handleAuctionListResponse(Response response) {
         if (response.success() && response.payload() instanceof List<?> rawList) {
             @SuppressWarnings("unchecked")
             List<Auction> auctions = (List<Auction>) rawList;
