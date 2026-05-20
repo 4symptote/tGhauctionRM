@@ -23,6 +23,8 @@ public class CreateAuctionController implements ResponseListener {
     @FXML private ComboBox<String> typeComboBox;
     @FXML private Label errorLabel;
     @FXML private VBox dynamicAttributesContainer;
+    // todo: sau nay se la chon thoi gian cu the, d/h/m/s
+    @FXML private TextField startDelayMinutesField;
 
     private final Map<String, TextField> dynamicFieldsMap = new HashMap<>();
 
@@ -89,10 +91,19 @@ public class CreateAuctionController implements ResponseListener {
             double price = Double.parseDouble(startingPriceField.getText());
             long durationMillis = Long.parseLong(durationField.getText());
 
+            long startDelayMillis ;
+            if (startDelayMinutesField != null && !startDelayMinutesField.getText().trim().isEmpty()) {
+                long secondsDelay = Long.parseLong(startDelayMinutesField.getText().trim());
+                startDelayMillis = secondsDelay * 1000;
+            } else {
+                startDelayMillis = 0;
+            }
+            long calculatedStartTime = System.currentTimeMillis() + startDelayMillis;
+
             Map<String, Object> customAttributes = getCustomAttributes();
 
             // request
-            CreateAuctionPayload payload = new CreateAuctionPayload(type, name, desc, price, durationMillis, customAttributes);
+            CreateAuctionPayload payload = new CreateAuctionPayload(type, name, desc, price, calculatedStartTime, durationMillis, customAttributes);
             Request request = new Request(Request.RequestType.CREATE_AUCTION, payload);
 
             errorLabel.setStyle("-fx-text-fill: #3498db;"); // Blue text for loading

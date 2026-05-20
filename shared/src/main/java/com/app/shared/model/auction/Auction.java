@@ -33,15 +33,6 @@ public class Auction extends Entity {
         this.endTime = endTime;
     }
 
-    public Auction(Item item, long durationMillis) {
-        super();
-        this.item = item;
-        this.currentPrice = item.getStartingPrice();
-        this.status = Status.OPEN;
-        this.startTime = System.currentTimeMillis();
-        this.endTime = this.startTime + durationMillis;
-    }
-
     public String getSellerName() { return sellerName; }
     public String getSellerId() { return sellerId; }
     public Item getItem() { return item; } // Returns the actual Item (Electronics, Art, etc.)

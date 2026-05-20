@@ -38,21 +38,17 @@ public class AuctionManager {
         return instance;
     }
 
-    public void startAuction(Auction auction, long durationMillis) {
+    public void startAuction(Auction auction) {
         activeAuctions.put(auction.getId(), auction);
-
-        // tinhs thoi gian ket thuc
-        long endTime = System.currentTimeMillis() + durationMillis;
-        auction.setEndTimeMillis(endTime);
-
-        // TODO: Save initial state to MongoDB / Database
         auctionDao.saveAuction(auction);
 
-        // Đặt lịch kiểm tra auction sau durationMillis
-        scheduler.schedule(() -> checkAndClose(auction), durationMillis, TimeUnit.MILLISECONDS);
+        manageAuctionLifecycle(auction);
 
-        Response broadcastMsg = new Response(true, "AUCTION_UPDATED", auction);
-        com.app.server.network.AuctionServer.broadcast(broadcastMsg);
+        com.app.server.network.AuctionServer.broadcast(new Response(
+                Response.ResponseType.AUCTION_UPDATED,
+                true, "AUCTION_STARTED",
+                auction
+        ));
     }
 
 
@@ -63,35 +59,48 @@ public class AuctionManager {
         for (Auction auction : savedAuctions) {
             activeAuctions.put(auction.getId(), auction);
 
-            checkAndClose(auction);
-
-//            long deltaWaitTime = auction.getEndTimeMillis() - currentTime;
-//
-//            if (deltaWaitTime > 0) {
-//                scheduler.schedule(() -> checkAndClose(auction), deltaWaitTime, TimeUnit.MILLISECONDS);
-//            } else {
-//                // The auction expired while the server was offline -> conclude
-//                concludeAuction(auction.getId());
-//            }
+            manageAuctionLifecycle(auction);
         }
         logger.info("Loaded {} active auctions from the database.", activeAuctions.size());
     }
 
 
-
-    // Kiểm tra xem auction đã kết thúc chưa
-    // actualEndTime là endTime đã được cập nhập (có thể bới anti snipping) nếu như endTime chưa đến (else) đặt lịch mới đến actualEndTime
-    private void checkAndClose(Auction auction) {
+    private void manageAuctionLifecycle(Auction auction) {
+        // OPEN -> RUNNING -> FINISHED
         long currentTime = System.currentTimeMillis();
-        long actualEndTime = auction.getEndTimeMillis();
+        long startTime = auction.getStartTime();
+        long endTime = auction.getEndTimeMillis();
 
-        if (currentTime >= actualEndTime) {
-            // Time is actually up. End it.
+        if (auction.getStatus() == Auction.Status.PAID || auction.getStatus() == Auction.Status.CANCELED) {
+            return;
+        }
+        System.out.println("Manage");
+
+        if (currentTime < startTime) { // OPEN
+            System.out.println("OPEN");
+            long delay = startTime - currentTime;
+            scheduler.schedule(() -> {
+                com.app.server.network.AuctionServer.broadcast(new Response(
+                        Response.ResponseType.AUCTION_UPDATED,
+                        true, "AUCTION_STARTED",
+                        auction
+                ));
+
+                manageAuctionLifecycle(auction);
+            }, delay, TimeUnit.MILLISECONDS);
+
+        } else if (currentTime < endTime) { // RUNNING
+            long delay = endTime - currentTime;
+            scheduler.schedule(() -> {
+                if (System.currentTimeMillis() < auction.getEndTimeMillis()) {
+                    manageAuctionLifecycle(auction);
+                } else {
+                    concludeAuction(auction.getId());
+                }
+            }, delay, TimeUnit.MILLISECONDS);
+
+        } else { // FINISHED
             concludeAuction(auction.getId());
-        } else {
-            //
-            long deltaWaitTime = actualEndTime - currentTime;
-            scheduler.schedule(() -> checkAndClose(auction), deltaWaitTime, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -107,8 +116,11 @@ public class AuctionManager {
             auctionDao.updateAuction(finishedAuction);
             BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
 
-            Response broadcastMsg = new Response(Response.ResponseType.AUCTION_UPDATED,true, "AUCTION_UPDATED", finishedAuction);
-            com.app.server.network.AuctionServer.broadcast(broadcastMsg);
+            com.app.server.network.AuctionServer.broadcast(new Response(
+                    Response.ResponseType.AUCTION_UPDATED,
+                    true, "AUCTION_STARTED",
+                    finishedAuction
+            ));
             // TODO: broadcast winner
         }
     }
