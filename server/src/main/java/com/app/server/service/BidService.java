@@ -22,6 +22,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BidService {
     private static BidService instance = new BidService();
+    private final AuctionManager auctionManager = AuctionManager.getInstance();
     private final BidDao bidDao = BidDaoImpl.getInstance();
     private final AuctionDao auctionDao = AuctionDaoImpl.getInstance();
     private final UserDao userDao = UserDaoImpl.getInstance();
@@ -51,7 +52,6 @@ public class BidService {
         ReentrantLock auctionLock = auctionLocks.computeIfAbsent(auctionId, k -> new ReentrantLock());
         auctionLock.lock();
 
-        AuctionManager auctionManager = AuctionManager.getInstance();
         Auction auction = auctionManager.getAuction(auctionId);
 
         try {
@@ -61,8 +61,6 @@ public class BidService {
                 throw new AuctionClosedException("Auction đã kết thúc.");
             if (auction.getSellerId().equals(bidder.getId()))
                 throw new InvalidBidException("Không thể tự Bid item của bản thân?!?.");
-            if (bidder.getId().equals(auction.getHighestBidderId()))
-                throw new InvalidBidException("you are already the highest bidder");
             if (amount <= auction.getCurrentPrice())
                 throw new InvalidBidException("Bid phải lớn hơn: " + auction.getCurrentPrice() + "$.");
 
