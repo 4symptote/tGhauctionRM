@@ -62,7 +62,7 @@ public class BidService {
             if (auction.getSellerId().equals(bidder.getId()))
                 throw new InvalidBidException("Không thể tự Bid item của bản thân?!?.");
             if (bidder.getId().equals(auction.getHighestBidderId()))
-                throw new InvalidBidException("you are already the highest bidder");
+                throw new InvalidBidException("You are already the highest bidder!");
             if (amount <= auction.getCurrentPrice())
                 throw new InvalidBidException("Bid phải lớn hơn: " + auction.getCurrentPrice() + "$.");
 
