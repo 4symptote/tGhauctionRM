@@ -46,7 +46,6 @@ public class SessionModel implements ResponseListener {
         double newBalance = (Double) response.payload();
         if (currentUser instanceof Bidder b) {
             b.setBalance(newBalance);
-            //Platform.runLater(() -> liveBalance.set(newBalance));
         }
     }
 }

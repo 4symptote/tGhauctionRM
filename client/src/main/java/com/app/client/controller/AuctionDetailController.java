@@ -180,7 +180,6 @@ public class AuctionDetailController implements ResponseListener {
 
         NetworkClient.getInstance().removeListener(this);
         SceneManager.getInstance().switchScene("/view/fxml/DashboardView.fxml");
-
     }
 
     private void updateHistoryUI(List<BidTransaction> history) {
@@ -214,6 +213,8 @@ public class AuctionDetailController implements ResponseListener {
         });
     }
 
+
+//  RESPONSE HANDLERS
     // PLACE_BID
     private void handlePlacedBidResponse(Response response) {
         if (response.success()) {
@@ -239,7 +240,7 @@ public class AuctionDetailController implements ResponseListener {
     private void handleHistoryResponse(Response response) {
         if (response.success() && response.payload() instanceof List<?> rawList) {
             @SuppressWarnings("unchecked")
-            List<BidTransaction> history = (List<BidTransaction>) rawList;
+            List<BidTransaction> history = (List<BidTransaction>) rawList; // cast to List<BidTransaction>
             updateHistoryUI(history);
         }
     }
