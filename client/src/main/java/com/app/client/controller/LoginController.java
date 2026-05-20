@@ -76,7 +76,7 @@ public class LoginController implements ResponseListener {
             errorLabel.setText("Welcome " + loggedInUser.getUsername());
 
             // Clean up? ko can observe nx
-            // NetworkClient.getInstance().removeListener(this);
+            NetworkClient.getInstance().removeListener(this);
 
             SessionModel.getInstance().setCurrentUser(loggedInUser);
 

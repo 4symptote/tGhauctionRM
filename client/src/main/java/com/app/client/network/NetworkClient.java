@@ -72,6 +72,7 @@ public class NetworkClient {
                 try {
                     // Block and wait for a message from the server
                     Response response = (Response) in.readObject();
+                    logger.info("Received {}", response.type());
                     handleResponse(response);
                 } catch (Exception e) {
                     if (!isConnected()) {

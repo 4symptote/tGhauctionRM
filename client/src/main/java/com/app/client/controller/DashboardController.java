@@ -106,9 +106,8 @@ public class DashboardController implements ResponseListener {
         Platform.runLater(() -> {
             switch (response.type()) {
                 case AUCTION_UPDATED -> handleAuctionUpdatedResponse(response);
-                case AUCTION_LIST     -> handleAuctionListResponse(response);
-                // case BALANCE_UPDATED -> handleBalanceUpdateResponse(response);
-                case USER_UPDATED    -> refreshAuctions();
+                case AUCTION_LIST    -> handleAuctionListResponse(response);
+                case USER_UPDATED    -> handleUserUpdateResponse(response);
             }
         });
     }
@@ -125,12 +124,9 @@ public class DashboardController implements ResponseListener {
         refreshAuctions();
     }
 
-    private void handleBalanceUpdateResponse(Response response) {
-        if (response.success() && response.payload() instanceof Double balance) {
-            if (SessionModel.getInstance().getCurrentUser() instanceof Bidder b) {
-                b.setBalance(balance);
-                balanceLabel.setText(String.format("Balance: $%,.2f", balance));
-            }
+    private void handleUserUpdateResponse(Response response) {
+        if (SessionModel.getInstance().getCurrentUser() instanceof Bidder curUser) {
+            balanceLabel.setText(String.format("Balance: $%,.2f", curUser.getBalance()));
         }
     }
 }
