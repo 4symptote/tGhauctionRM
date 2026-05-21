@@ -20,22 +20,20 @@ public final class ItemFactory {
     private ItemFactory() {}
 
     public static Item createItem(CreateAuctionPayload payload) {
-        String normalizedType = normalizeType(payload.itemType());
-        ItemCreator creator = CREATORS.get(normalizedType);
-        if (creator == null) {
-            throw new IllegalArgumentException("Unknown item type: " + payload.itemType());
-        }
+        ItemCreator creator = getCreator(payload.itemType());
         return creator.createItem(payload);
     }
 
     // Factory method de tao item tu document
     public static Item createItemFromDocument(Document itemDoc) {
-        String normalizedType = normalizeType(itemDoc.getString("type"));
-        ItemCreator creator = CREATORS.get(normalizedType);
-        if (creator == null) {
-            throw new IllegalArgumentException("Unknown item type: " + itemDoc.getString("type"));
-        }
+        ItemCreator creator = getCreator(itemDoc.getString("type"));
         return creator.createItemFromDocument(itemDoc);
+    }
+
+    private static ItemCreator getCreator(String itemType) {
+        ItemCreator creator = CREATORS.get(normalizeType(itemType));
+        if (creator == null) throw new IllegalArgumentException("Unknown item type: " + itemType);
+        return creator;
     }
 
     private static String normalizeType(String itemType) {
