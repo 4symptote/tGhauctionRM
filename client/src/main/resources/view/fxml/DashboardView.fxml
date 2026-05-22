@@ -4,63 +4,39 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" styleClass="root-pane"
+<VBox prefHeight="720.0" prefWidth="1280.0" styleClass="root-pane"
             stylesheets="@../css/global.css, @../css/dashboard.css"
             xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="mainContentVBox"
             fx:controller="com.app.client.controller.DashboardController">
 
-    <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
-            <padding>
-                <Insets bottom="15" left="35" right="35" top="15" />
-            </padding>
+    <padding>
+        <Insets bottom="30" left="150" right="150" top="30" />
+    </padding>
 
-            <Label styleClass="brand-title" text="tGhauctionRM" />
-
-            <Region HBox.hgrow="ALWAYS" />
-
-            <VBox alignment="CENTER_RIGHT" spacing="2">
-                <Label fx:id="welcomeLabel" styleClass="user-name" text="User Name" />
-                <HBox alignment="CENTER_RIGHT" spacing="10">
-                    <Label fx:id="roleLabel" styleClass="user-role" text="BIDDER" />
-                    <Label fx:id="balanceLabel" styleClass="user-balance" text="Balance: $0.00" />
-                </HBox>
-            </VBox>
-
-            <Button onAction="#handleLogout" styleClass="action-btn, logout-btn" text="Logout" />
-        </HBox>
-    </top>
-
-    <center>
-        <VBox fx:id="mainContentVBox" styleClass="main-content">
-            <padding>
-                <Insets bottom="30" left="150" right="150" top="30" />
-            </padding>
-
-            <HBox alignment="CENTER_LEFT">
-                <VBox spacing="5">
-                    <Label prefHeight="51.0" prefWidth="126.0" styleClass="section-title" text="Live Auctions" />
-                </VBox>
-                <Region HBox.hgrow="ALWAYS">
-               <padding>
-                  <Insets bottom="50.0" />
-               </padding></Region>
-                <HBox alignment="CENTER" spacing="10">
-                    <Button onAction="#handleCreateAuction" styleClass="action-btn, create-btn" text="Create Auction" />
-                    <Button onAction="#refreshAuctions" styleClass="action-btn, refresh-btn" text="Refresh" />
-                </HBox>
-            </HBox>
-
-            <Region style="-fx-background-color: transparent; -fx-border-color: #d3dbdc; -fx-border-width: 1 0 0 0; -fx-border-style: solid;" />
-
-            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0;">
-                <VBox fx:id="auctionListContainer" alignment="TOP_CENTER" spacing="15">
-                    <padding>
-                        <Insets bottom="20" left="10" right="10" top="10" />
-                    </padding>
-                </VBox>
-            </ScrollPane>
+    <HBox alignment="CENTER_LEFT">
+        <VBox spacing="5">
+            <Label prefHeight="51.0" prefWidth="126.0" styleClass="section-title" text="Live Auctions" />
         </VBox>
-    </center>
-</BorderPane>
+        <Region HBox.hgrow="ALWAYS">
+       <padding>
+          <Insets bottom="50.0" />
+       </padding></Region>
+        <HBox alignment="CENTER" spacing="10">
+            <Button onAction="#refreshAuctions" styleClass="action-btn, refresh-btn" text="Refresh" />
+        </HBox>
+    </HBox>
+
+<!--    Horizontal line-->
+    <Region style="-fx-background-color: transparent; -fx-border-color: #d3dbdc; -fx-border-width: 1 0 0 0; -fx-border-style: solid;" />
+
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0;">
+        <VBox fx:id="auctionListContainer" alignment="TOP_CENTER" spacing="15">
+            <padding>
+                <Insets bottom="20" left="10" right="10" top="10" />
+            </padding>
+        </VBox>
+    </ScrollPane>
+
+</VBox>

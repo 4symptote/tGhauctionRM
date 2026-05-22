@@ -15,10 +15,15 @@ public class TimeUtil {
 
         if (timeLeft <= 0) return "Ended";
 
-        long hours = timeLeft / (1000 * 60 * 60);
+        long days = timeLeft / (1000 * 60 * 60 * 24);
+        long hours = (timeLeft / (1000 * 60 * 60)) % 24;
         long minutes = (timeLeft / (1000 * 60)) % 60;
         long seconds = (timeLeft / 1000) % 60;
 
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        if (days > 0) {
+            return String.format("%dd %02d:%02d:%02d", days, hours, minutes, seconds);
+        } else {
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        }
     }
 }

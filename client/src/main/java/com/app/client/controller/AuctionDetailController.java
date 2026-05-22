@@ -194,7 +194,7 @@ public class AuctionDetailController implements ResponseListener {
         series.getData().add(new XYChart.Data<>("Start", currentAuction.getItem().getStartingPrice()));
 
         for (BidTransaction bid : history) {
-            String time = new SimpleDateFormat("HH:mm:ss").format(new Date(bid.timestamp()));
+            String time = new SimpleDateFormat("dd HH:mm:ss").format(new Date(bid.timestamp()));
             series.getData().add(new XYChart.Data<>(time, bid.amount()));
         }
 
