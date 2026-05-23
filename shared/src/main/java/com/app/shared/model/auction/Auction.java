@@ -47,8 +47,12 @@ public class Auction extends Entity {
     public String getHighestBidderName() { return highestBidderName; }
 
     public Status getStatus() {
+        return status;
+    }
+
+    public void updateStatus() {
         if (status == Status.PAID || status == Status.CANCELED) {
-            return status;
+            return;
         }
 
         long now = System.currentTimeMillis();
@@ -59,7 +63,6 @@ public class Auction extends Entity {
         } else {
             status = Status.OPEN;
         }
-        return status;
     }
 
 

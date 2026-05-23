@@ -78,6 +78,7 @@ public class AuctionManager {
         if (currentTime < startTime) { // OPEN
             long delay = startTime - currentTime;
             scheduler.schedule(() -> {
+                auction.updateStatus();
                 com.app.server.network.AuctionServer.broadcast(new Response(
                         Response.ResponseType.AUCTION_UPDATED,
                         true, "AUCTION_STARTED",
@@ -90,6 +91,7 @@ public class AuctionManager {
         } else if (currentTime < endTime) { // RUNNING
             long delay = endTime - currentTime;
             scheduler.schedule(() -> {
+                auction.updateStatus();
                 if (System.currentTimeMillis() < auction.getEndTimeMillis()) {
                     manageAuctionLifecycle(auction);
                 } else {

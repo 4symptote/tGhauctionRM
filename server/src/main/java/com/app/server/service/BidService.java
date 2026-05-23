@@ -54,6 +54,8 @@ public class BidService {
         AuctionManager auctionManager = AuctionManager.getInstance();
         Auction auction = auctionManager.getAuction(auctionId);
 
+        auction.updateStatus();
+
         try {
             if (auction == null)
                 throw new AuctionNotFoundException("Auction không tồn tại.");
