@@ -17,7 +17,7 @@ public record Response(ResponseType type, boolean success, String message, Objec
         BALANCE_UPDATED,     // For balance updates ( after bids, auction conclude, overtake,...)
         USER_UPDATED,
         SELLER_AUCTION_LIST,  // <-- GET_SELLER_AUCTIONS
-        WINNING_AUCTIONS_LIST,
+        WINNING_AUCTION_LIST,
     }
 
     // general success/error response
