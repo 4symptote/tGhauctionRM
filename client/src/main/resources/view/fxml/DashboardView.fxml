@@ -4,18 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="720.0" prefWidth="1280.0" styleClass="root-pane"
-            stylesheets="@../css/global.css, @../css/dashboard.css"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:id="mainContentVBox"
-            fx:controller="com.app.client.controller.DashboardController">
+<VBox fx:id="mainContentVBox" prefHeight="720.0" prefWidth="1280.0" styleClass="root-pane" stylesheets="@../css/global.css, @../css/dashboard.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.DashboardController">
 
     <padding>
         <Insets bottom="30" left="150" right="150" top="30" />
     </padding>
 
-    <HBox alignment="CENTER_LEFT">
+    <HBox alignment="CENTER_LEFT" minHeight="-Infinity">
         <VBox spacing="5">
             <Label prefHeight="51.0" prefWidth="126.0" styleClass="section-title" text="Live Auctions" />
         </VBox>
@@ -29,7 +24,7 @@
     </HBox>
 
 <!--    Horizontal line-->
-    <Region style="-fx-background-color: transparent; -fx-border-color: #d3dbdc; -fx-border-width: 1 0 0 0; -fx-border-style: solid;" />
+    <Region minHeight="-Infinity" prefHeight="20.0" prefWidth="980.0" style="-fx-background-color: transparent; -fx-border-color: #d3dbdc; -fx-border-width: 1 0 0 0; -fx-border-style: solid;" />
 
     <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0;">
         <VBox fx:id="auctionListContainer" alignment="TOP_CENTER" spacing="15">

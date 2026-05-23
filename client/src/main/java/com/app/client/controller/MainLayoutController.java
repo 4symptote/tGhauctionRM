@@ -11,6 +11,7 @@ import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
@@ -20,6 +21,7 @@ public class MainLayoutController implements ResponseListener {
     @FXML private Label welcomeLabel;
     @FXML private Label roleLabel;
     @FXML private Label balanceLabel;
+    @FXML private Button myListingsBtn;
 
     @FXML
     public void initialize() {
@@ -46,6 +48,12 @@ public class MainLayoutController implements ResponseListener {
         } else {
             balanceLabel.setText("");
         }
+
+        if (myListingsBtn != null) {
+            boolean canSell = user.canSell();
+            myListingsBtn.setVisible(canSell);
+            myListingsBtn.setManaged(canSell);
+        }
     }
 
     @FXML
@@ -56,6 +64,11 @@ public class MainLayoutController implements ResponseListener {
     @FXML
     private void navToCreate() {
         SceneManager.getInstance().switchScene("/view/fxml/CreateAuctionView.fxml");
+    }
+
+    @FXML
+    private void navToMyListings() {
+        SceneManager.getInstance().switchScene("/view/fxml/SellerListingsView.fxml");
     }
 
     @FXML

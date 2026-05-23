@@ -49,6 +49,7 @@
 
             <Button maxWidth="Infinity" onAction="#navToDashboard" styleClass="sidebar-btn" text="Live Auctions" />
             <Button maxWidth="Infinity" onAction="#navToCreate" styleClass="sidebar-btn" text="Create Auction" />
+            <Button fx:id="myListingsBtn" maxWidth="Infinity" onAction="#navToMyListings" styleClass="sidebar-btn" text="My Listings" managed="false" visible="false" />
 
             <Region VBox.vgrow="ALWAYS" />
         </VBox>
