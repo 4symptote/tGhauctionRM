@@ -56,6 +56,14 @@ public class UserDaoImpl implements UserDao {
         usersCollection.replaceOne(new Document("_id", user.getId()), doc);
     }
 
+    @Override
+    public void adjustBalance(String userId, double amount) {
+        usersCollection.updateOne(
+                new Document("_id", userId),
+                com.mongodb.client.model.Updates.inc("balance", amount)
+        );
+    }
+
     private User documentToUser(Document doc) {
         String dbId = doc.getString("_id");
         String fetchedUsername = doc.getString("username");

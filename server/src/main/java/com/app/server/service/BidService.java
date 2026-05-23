@@ -82,8 +82,7 @@ public class BidService {
                 User previousUser = userDao.getUserById(previousBidderId);
                 if (previousUser instanceof Bidder previousBidder) {
                     // refund
-                    previousBidder.setBalance(previousBidder.getBalance() + previousBidAmount);
-                    userDao.updateUser(previousBidder);
+                    userDao.adjustBalance(previousBidderId, amount);
 
                     AuctionServer.sendToClient(previousBidderId, new Response(
                             Response.ResponseType.USER_UPDATED,
