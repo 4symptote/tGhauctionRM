@@ -8,4 +8,5 @@ public interface UserDao {
     User getUserByUsername(String username);
     User getUserById(String id);
     boolean userExists(String username);
+    void adjustBalance(String userId, double amount);
 }
