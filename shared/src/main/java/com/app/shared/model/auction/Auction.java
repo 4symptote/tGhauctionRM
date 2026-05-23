@@ -21,7 +21,9 @@ public class Auction extends Entity {
 
     private double currentPrice;
     private Status status;
+
     private String highestBidderId;
+    private String highestBidderName;
     // removed bids cuz bad
 
     public Auction(Item item, long startTime, long endTime) {
@@ -35,11 +37,14 @@ public class Auction extends Entity {
 
     public String getSellerName() { return sellerName; }
     public String getSellerId() { return sellerId; }
+
     public Item getItem() { return item; } // Returns the actual Item (Electronics, Art, etc.)
     public long getStartTime() { return startTime; }
     public long getEndTimeMillis() { return endTime; }
     public double getCurrentPrice() { return currentPrice; }
+
     public String getHighestBidderId() { return highestBidderId; }
+    public String getHighestBidderName() { return highestBidderName; }
 
     public Status getStatus() {
         if (status == Status.PAID || status == Status.CANCELED) {
@@ -66,11 +71,13 @@ public class Auction extends Entity {
     public void setCurrentPrice(double currentPrice) { this.currentPrice = currentPrice; }
     public void setStatus(Status status) { this.status = status; }
     public void setHighestBidderId(String highestBidderId) { this.highestBidderId = highestBidderId; }
+    public void setHighestBidderName(String highestBidderName) { this.highestBidderName = highestBidderName; }
 
     //
-    public void processNewBid(double amount, String bidderId) {
+    public void processNewBid(double amount, String bidderId, String bidderName) {
         this.currentPrice = amount;
         this.highestBidderId = bidderId;
+        this.highestBidderName = bidderName;
         this.item.setCurrentHighestBid(amount);
     }
 

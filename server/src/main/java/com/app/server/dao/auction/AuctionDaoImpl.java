@@ -87,6 +87,7 @@ public class AuctionDaoImpl implements AuctionDao {
         auction.setCurrentPrice(doc.getDouble("currentPrice"));
         auction.setHighestBidderId(doc.getString("highestBidderId"));
         auction.setStatus(Auction.Status.valueOf(doc.getString("status")));
+        auction.setHighestBidderName(doc.getString("highestBidderName"));
 
         UserDao userDaoImpl = UserDaoImpl.getInstance();
         String sName = userDaoImpl.getUserById(auction.getSellerId()).getUsername();
@@ -103,6 +104,7 @@ public class AuctionDaoImpl implements AuctionDao {
                 .append("item", auction.getItem().toBsonDocument()) // goated
                 .append("currentPrice", auction.getCurrentPrice())
                 .append("highestBidderId", auction.getHighestBidderId())
+                .append("highestBidderName", auction.getHighestBidderName())
                 .append("status", auction.getStatus().name())
                 .append("startTime", auction.getStartTime())
                 .append("endTime", auction.getEndTimeMillis());

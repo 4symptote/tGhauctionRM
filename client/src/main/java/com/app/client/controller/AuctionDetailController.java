@@ -101,7 +101,8 @@ public class AuctionDetailController implements ResponseListener {
         statusBadge.getStyleClass().add("status-" + currentAuction.getStatus().name());
 
         if (currentAuction.getHighestBidderId() != null) {
-            highestBidderLabel.setText("Highest Bidder ID: " + currentAuction.getHighestBidderId());
+            String bName = currentAuction.getHighestBidderName();
+            highestBidderLabel.setText("Highest Bidder: " + (bName != null ? bName : "Unknown"));
         } else {
             highestBidderLabel.setText("No bids placed yet.");
         }
