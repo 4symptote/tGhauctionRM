@@ -125,9 +125,4 @@ public class BidService {
             auctionLock.unlock();
         }
     }
-
-    // chạy từ concludeAuction() cửa AuctionManager, xóa các entry không cần thiết nữa
-    public void cleanupLock(String auctionId) {
-        auctionLocks.remove(auctionId);
-    }
 }

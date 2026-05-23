@@ -112,7 +112,6 @@ public class AuctionManager {
             logger.info("Auction {} concluded - Winner: {}", auctionId, finishedAuction.getHighestBidderId());
 
             auctionDao.updateAuction(finishedAuction);
-            BidService.getInstance().cleanupLock(auctionId);  // check cleanupLock()
 
             com.app.server.network.AuctionServer.broadcast(new Response(
                     Response.ResponseType.AUCTION_UPDATED,
