@@ -15,7 +15,8 @@ public record Response(ResponseType type, boolean success, String message, Objec
         BID_HISTORY,        // For the Detail View chart
         PLACED_BID,         // For successful bid
         BALANCE_UPDATED,     // For balance updates ( after bids, auction conclude, overtake,...)
-        USER_UPDATED
+        USER_UPDATED,
+        SELLER_AUCTION_LIST,  // <-- GET_SELLER_AUCTIONS
     }
 
     // general success/error response

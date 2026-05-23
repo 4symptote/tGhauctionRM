@@ -46,6 +46,15 @@ public class AuctionDaoImpl implements AuctionDao {
     }
 
     @Override
+    public List<Auction> getAuctionsBySellerId(String sellerId) {
+        List<Auction> sellerAuctions = new ArrayList<>();
+        for (Document doc : collection.find(eq("sellerId", sellerId))) {
+            sellerAuctions.add(documentToAuction(doc));
+        }
+        return sellerAuctions;
+    }
+
+    @Override
     public List<Auction> getAllActiveAuctions() {
         List<Auction> activeAuctionsList = new ArrayList<>();
         // Find all auctions where the status is OPEN or RUNNING
