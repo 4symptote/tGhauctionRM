@@ -54,11 +54,11 @@ public class BidService {
         AuctionManager auctionManager = AuctionManager.getInstance();
         Auction auction = auctionManager.getAuction(auctionId);
 
-        auction.updateStatus();
 
         try {
             if (auction == null)
                 throw new AuctionNotFoundException("Auction không tồn tại.");
+            auction.updateStatus();
             if (auction.getStatus() != Auction.Status.RUNNING)
                 throw new AuctionClosedException("Auction đã kết thúc.");
             if (auction.getSellerId().equals(bidder.getId()))
@@ -84,7 +84,8 @@ public class BidService {
                 User previousUser = userDao.getUserById(previousBidderId);
                 if (previousUser instanceof Bidder previousBidder) {
                     // refund
-                    userDao.adjustBalance(previousBidderId, amount);
+                    userDao.adjustBalance(previousBidderId, previousBidAmount);
+                    previousBidder.setBalance(previousBidder.getBalance() + previousBidAmount);
 
                     AuctionServer.sendToClient(previousBidderId, new Response(
                             Response.ResponseType.USER_UPDATED,
@@ -94,8 +95,8 @@ public class BidService {
                 }
             }
             // take bidder's money and update balance
+            userDao.adjustBalance(liveBidder.getId(), -amount);
             liveBidder.setBalance(liveBidder.getBalance() - amount);
-            userDao.updateUser(liveBidder);
 
             AuctionServer.sendToClient(liveBidder.getId(), new Response(
                     Response.ResponseType.USER_UPDATED,
