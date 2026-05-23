@@ -48,8 +48,11 @@
             <Region prefHeight="10.0" />
 
             <Button maxWidth="Infinity" onAction="#navToDashboard" styleClass="sidebar-btn" text="Live Auctions" />
-            <Button maxWidth="Infinity" onAction="#navToCreate" styleClass="sidebar-btn" text="Create Auction" />
+
             <Button fx:id="myListingsBtn" maxWidth="Infinity" onAction="#navToMyListings" styleClass="sidebar-btn" text="My Listings" managed="false" visible="false" />
+            <Button fx:id="winningBidsBtn" maxWidth="Infinity" onAction="#navToWinningBids" styleClass="sidebar-btn" text="Winning Bids" managed="false" visible="false" />
+
+            <Button maxWidth="Infinity" onAction="#navToCreate" styleClass="sidebar-btn" text="Create Auction" />
 
             <Region VBox.vgrow="ALWAYS" />
         </VBox>

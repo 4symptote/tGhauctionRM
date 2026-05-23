@@ -22,6 +22,7 @@ public class MainLayoutController implements ResponseListener {
     @FXML private Label roleLabel;
     @FXML private Label balanceLabel;
     @FXML private Button myListingsBtn;
+    @FXML private Button winningBidsBtn;
 
     @FXML
     public void initialize() {
@@ -54,6 +55,12 @@ public class MainLayoutController implements ResponseListener {
             myListingsBtn.setVisible(canSell);
             myListingsBtn.setManaged(canSell);
         }
+
+        if (winningBidsBtn != null) {
+            boolean canBid = user.canBid();
+            winningBidsBtn.setVisible(canBid);
+            winningBidsBtn.setManaged(canBid);
+        }
     }
 
     @FXML
@@ -69,6 +76,11 @@ public class MainLayoutController implements ResponseListener {
     @FXML
     private void navToMyListings() {
         SceneManager.getInstance().switchScene("/view/fxml/SellerListingsView.fxml");
+    }
+
+    @FXML
+    private void navToWinningBids() {
+        SceneManager.getInstance().switchScene("/view/fxml/WinningAuctionsView.fxml");
     }
 
     @FXML

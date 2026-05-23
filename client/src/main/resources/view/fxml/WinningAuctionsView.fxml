@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="mainContentVBox" prefHeight="720.0" prefWidth="1280.0" styleClass="root-pane" stylesheets="@../css/global.css, @../css/dashboard.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.SellerListingsController">
+<VBox fx:id="mainContentVBox" prefHeight="720.0" prefWidth="1280.0" styleClass="root-pane" stylesheets="@../css/global.css, @../css/dashboard.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.WinningAuctionsController">
 
     <padding>
         <Insets bottom="30" left="150" right="150" top="30" />
@@ -12,15 +12,15 @@
 
     <HBox alignment="CENTER_LEFT" minHeight="-Infinity">
         <VBox spacing="5">
-            <Label prefHeight="50.0" prefWidth="126.0" styleClass="section-title" text="Listed items" />
+            <Label prefHeight="50.0" prefWidth="161.0" styleClass="section-title" text="My Winning Bids" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
         <HBox alignment="CENTER" spacing="10">
-            <Button onAction="#refreshAuctions" prefWidth="73.0" styleClass="action-btn, refresh-btn" text="Refresh" />
+            <Button onAction="#refreshAuctions" styleClass="action-btn, refresh-btn" text="Refresh" />
         </HBox>
     </HBox>
 
-    <Region minHeight="-Infinity" prefHeight="20.0" prefWidth="980.0" style="-fx-background-color: transparent; -fx-border-color: #d3dbdc; -fx-border-width: 1 0 0 0; -fx-border-style: solid; -fx-padding: 10px 0;" />
+    <Region minHeight="-Infinity" prefHeight="20" style="-fx-background-color: transparent; -fx-border-color: #d3dbdc; -fx-border-width: 1 0 0 0; -fx-border-style: solid; -fx-padding: 10px 0;" />
 
     <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0;" VBox.vgrow="ALWAYS">
         <VBox fx:id="auctionListContainer" alignment="TOP_CENTER" spacing="15">

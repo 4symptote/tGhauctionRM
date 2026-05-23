@@ -12,7 +12,7 @@
 
     <HBox alignment="CENTER_LEFT" minHeight="-Infinity">
         <VBox spacing="5">
-            <Label prefHeight="51.0" prefWidth="126.0" styleClass="section-title" text="Live Auctions" />
+            <Label prefHeight="50.0" prefWidth="126.0" styleClass="section-title" text="Live Auctions" />
         </VBox>
         <Region HBox.hgrow="ALWAYS">
        <padding>
