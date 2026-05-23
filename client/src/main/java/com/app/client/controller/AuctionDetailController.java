@@ -61,9 +61,12 @@ public class AuctionDetailController implements ResponseListener {
 
     @FXML
     public void initialize() {
-        NetworkClient.getInstance().addListener(this);
+        mainContentVBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                NetworkClient.getInstance().removeListener(this);
+            }
+        });
 
-        // Dynamic padding for responsiveness, just like the dashboard
         mainContentVBox.widthProperty().addListener((obs, oldVal, newVal) -> {
             double padding = Math.max(40, Math.min(200, newVal.doubleValue() * 0.10));
             mainContentVBox.setPadding(new javafx.geometry.Insets(40, padding, 50, padding));

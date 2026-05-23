@@ -30,7 +30,6 @@ public class CreateAuctionController implements ResponseListener {
 
     @FXML
     public void initialize() {
-        // Register this controller to listen to server responses
         NetworkClient.getInstance().addListener(this);
 
         typeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {

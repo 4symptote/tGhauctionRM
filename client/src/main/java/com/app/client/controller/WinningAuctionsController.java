@@ -21,7 +21,11 @@ public class WinningAuctionsController implements ResponseListener {
 
     @FXML
     public void initialize() {
-        NetworkClient.getInstance().addListener(this);
+        mainContentVBox.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                NetworkClient.getInstance().removeListener(this);
+            }
+        });
 
         mainContentVBox.widthProperty().addListener((obs, oldVal, newVal) -> {
             double currentWidth = newVal.doubleValue();
