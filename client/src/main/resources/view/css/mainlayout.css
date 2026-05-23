@@ -1,0 +1,87 @@
+
+.root-pane {
+    -fx-background-color: #f4f6f8;
+}
+
+/* top bar */
+.top-bar {
+    -fx-background-color: white;
+    -fx-border-color: #d3dbdc;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.brand-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* User Info Panel */
+.user-name {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+.user-role {
+    -fx-font-size: 11px;
+    -fx-text-fill: #95a5a6;
+    -fx-font-weight: bold;
+}
+.user-balance {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60; /*green */
+}
+
+/* Logout Button */
+.logout-btn {
+    -fx-background-color: white;
+    -fx-text-fill: #e74c3c;
+    -fx-border-color: #e74c3c;
+    -fx-border-radius: 4px;
+    -fx-cursor: hand;
+    -fx-padding: 6px 15px;
+    -fx-font-weight: bold;
+}
+.logout-btn:hover {
+    -fx-background-color: #fcebeb; /* red */
+}
+
+/* sidebar */
+.sidebar {
+    -fx-background-color: white;
+    -fx-border-color: #d3dbdc;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.sidebar-title {
+    -fx-text-fill: #95a5a6;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 5px 10px;
+}
+
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #34495e;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12px 15px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+
+.sidebar-btn:hover {
+    -fx-background-color: #f4f7f8;
+    -fx-text-fill: #3498db; /* primary blue */
+}
+
+/* Optional: Add this class dynamically in Java when a user is ON that specific page */
+.active-btn {
+    -fx-background-color: #eaf2f8; /* Very light blue */
+    -fx-text-fill: #3498db;
+    -fx-border-color: #3498db;
+    -fx-border-width: 0 0 0 4px; /* A sleek left border indicator */
+    -fx-border-radius: 4px;
+}

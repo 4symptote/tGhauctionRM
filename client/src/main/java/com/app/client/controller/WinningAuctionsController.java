@@ -11,16 +11,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class DashboardController implements ResponseListener {
+public class WinningAuctionsController implements ResponseListener {
 
-    private static final Logger log = LoggerFactory.getLogger(DashboardController.class);
-
-    @FXML private VBox auctionListContainer; // The container from our FXML
+    @FXML private VBox auctionListContainer;
     @FXML private VBox mainContentVBox;
 
     @FXML
@@ -29,24 +25,31 @@ public class DashboardController implements ResponseListener {
 
         mainContentVBox.widthProperty().addListener((obs, oldVal, newVal) -> {
             double currentWidth = newVal.doubleValue();
-            double horizontalPadding = currentWidth * 0.1;
-
+            double horizontalPadding = currentWidth * 0.10;
             horizontalPadding = Math.max(20, Math.min(100, horizontalPadding));
             mainContentVBox.setPadding(new javafx.geometry.Insets(30, horizontalPadding, 30, horizontalPadding));
         });
 
         refreshAuctions();
-
     }
 
     public void updateAuctionList(List<Auction> auctions) {
+        // Sort: RUNNING first (active monitoring), then FINISHED (won), then others. Tie-break by time remaining.
+        auctions.sort((a1, a2) -> {
+            int priority1 = getWinningStatusPriority(a1.getStatus());
+            int priority2 = getWinningStatusPriority(a2.getStatus());
+
+            if (priority1 != priority2) {
+                return Integer.compare(priority1, priority2);
+            }
+            return Long.compare(a1.getEndTimeMillis(), a2.getEndTimeMillis());
+        });
+
         Platform.runLater(() -> {
             auctionListContainer.getChildren().clear();
 
             for (Auction auction : auctions) {
-                // Da cards
                 HBox card = AuctionCardFactory.createCard(auction, () -> {
-                    //System.out.println("Opening Auction: " + auction.getItem().getName());
                     NetworkClient.getInstance().removeListener(this);
                     SceneManager.getInstance().switchSceneWithData("/view/fxml/AuctionDetailView.fxml", auction);
                 });
@@ -56,34 +59,33 @@ public class DashboardController implements ResponseListener {
         });
     }
 
+    private int getWinningStatusPriority(Auction.Status status) {
+        return switch (status) {
+            case RUNNING -> 0;
+            case OPEN -> 1;
+            case FINISHED -> 2;
+            default -> 3; // PAID, CANCELED
+        };
+    }
+
     @FXML
     private void refreshAuctions() {
-        //System.out.println("Requesting updated auction list from server...");
-        NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_AUCTIONS, null));
+        NetworkClient.getInstance().sendRequest(new Request(Request.RequestType.GET_WINNING_AUCTIONS, null));
     }
 
     @Override
     public void onResponseReceived(Response response) {
-        // veri important Platform.runLater
         Platform.runLater(() -> {
             switch (response.type()) {
-                case AUCTION_UPDATED -> handleAuctionUpdatedResponse(response);
-                case AUCTION_LIST    -> handleAuctionListResponse(response);
-                //case USER_UPDATED    -> handleUserUpdateResponse(response);
+                case AUCTION_UPDATED -> refreshAuctions();
+                case WINNING_AUCTION_LIST -> {
+                    if (response.success() && response.payload() instanceof List<?> rawList) {
+                        @SuppressWarnings("unchecked")
+                        List<Auction> auctions = (List<Auction>) rawList;
+                        updateAuctionList(auctions);
+                    }
+                }
             }
         });
     }
-
-    private void handleAuctionListResponse(Response response) {
-        if (response.success() && response.payload() instanceof List<?> rawList) {
-            @SuppressWarnings("unchecked")
-            List<Auction> auctions = (List<Auction>) rawList;
-            updateAuctionList(auctions);
-        }
-    }
-
-    private void handleAuctionUpdatedResponse(Response response) {
-        refreshAuctions();
-    }
-
 }

@@ -79,9 +79,7 @@ public class LoginController implements ResponseListener {
             NetworkClient.getInstance().removeListener(this);
 
             SessionModel.getInstance().setCurrentUser(loggedInUser);
-
-            // TODO: Switch to auction list (make da auction list view)
-            SceneManager.getInstance().switchScene("/view/fxml/DashboardView.fxml");
+            SceneManager.getInstance().switchScene("/view/fxml/MainLayout.fxml");
         }
     }
 }

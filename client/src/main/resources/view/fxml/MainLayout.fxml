@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane styleClass="root-pane" stylesheets="@../css/global.css, @../css/mainlayout.css"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.app.client.controller.MainLayoutController"
+            prefWidth="1000.0" prefHeight="600.0">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
+            <padding>
+                <Insets bottom="15" left="30" right="35" top="15" />
+            </padding>
+
+            <Label styleClass="brand-title" text="tGhauctionRM" />
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <VBox alignment="CENTER_RIGHT" spacing="2">
+                <Label fx:id="welcomeLabel" styleClass="user-name" text="User Name" />
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <Label fx:id="roleLabel" styleClass="user-role" text="BIDDER" />
+                    <Label fx:id="balanceLabel" styleClass="user-balance" text="Balance: $0.00" />
+                </HBox>
+            </VBox>
+
+            <Region prefWidth="10" />
+            <Button onAction="#handleLogout" styleClass="action-btn, logout-btn" text="Logout" />
+        </HBox>
+    </top>
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="180.0" spacing="10.0">
+            <padding>
+                <Insets bottom="30.0" left="15.0" right="0.0" top="0.0" />
+            </padding>
+
+<!--            <Label styleClass="sidebar-title" text="MAIN MENU" />-->
+            <Region prefHeight="10.0" />
+
+            <Button maxWidth="Infinity" onAction="#navToDashboard" styleClass="sidebar-btn" text="Live Auctions" />
+
+            <Button fx:id="myListingsBtn" maxWidth="Infinity" onAction="#navToMyListings" styleClass="sidebar-btn" text="My Listings" managed="false" visible="false" />
+            <Button fx:id="winningBidsBtn" maxWidth="Infinity" onAction="#navToWinningBids" styleClass="sidebar-btn" text="Winning Bids" managed="false" visible="false" />
+
+            <Button maxWidth="Infinity" onAction="#navToCreate" styleClass="sidebar-btn" text="Create Auction" />
+
+            <Region VBox.vgrow="ALWAYS" />
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f4f6f8;" />
+    </center>
+
+</BorderPane>

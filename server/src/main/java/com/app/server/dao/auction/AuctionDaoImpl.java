@@ -46,6 +46,24 @@ public class AuctionDaoImpl implements AuctionDao {
     }
 
     @Override
+    public List<Auction> getAuctionsBySellerId(String sellerId) {
+        List<Auction> sellerAuctions = new ArrayList<>();
+        for (Document doc : collection.find(eq("sellerId", sellerId))) {
+            sellerAuctions.add(documentToAuction(doc));
+        }
+        return sellerAuctions;
+    }
+
+    @Override
+    public List<Auction> getAuctionsByHighestBidderId(String bidderId) {
+        List<Auction> winningAuctions = new ArrayList<>();
+        for (Document doc : collection.find(eq("highestBidderId", bidderId))) {
+            winningAuctions.add(documentToAuction(doc));
+        }
+        return winningAuctions;
+    }
+
+    @Override
     public List<Auction> getAllActiveAuctions() {
         List<Auction> activeAuctionsList = new ArrayList<>();
         // Find all auctions where the status is OPEN or RUNNING
@@ -69,6 +87,7 @@ public class AuctionDaoImpl implements AuctionDao {
         auction.setCurrentPrice(doc.getDouble("currentPrice"));
         auction.setHighestBidderId(doc.getString("highestBidderId"));
         auction.setStatus(Auction.Status.valueOf(doc.getString("status")));
+        auction.setHighestBidderName(doc.getString("highestBidderName"));
 
         UserDao userDaoImpl = UserDaoImpl.getInstance();
         String sName = userDaoImpl.getUserById(auction.getSellerId()).getUsername();
@@ -85,6 +104,7 @@ public class AuctionDaoImpl implements AuctionDao {
                 .append("item", auction.getItem().toBsonDocument()) // goated
                 .append("currentPrice", auction.getCurrentPrice())
                 .append("highestBidderId", auction.getHighestBidderId())
+                .append("highestBidderName", auction.getHighestBidderName())
                 .append("status", auction.getStatus().name())
                 .append("startTime", auction.getStartTime())
                 .append("endTime", auction.getEndTimeMillis());

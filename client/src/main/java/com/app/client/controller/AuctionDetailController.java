@@ -101,7 +101,8 @@ public class AuctionDetailController implements ResponseListener {
         statusBadge.getStyleClass().add("status-" + currentAuction.getStatus().name());
 
         if (currentAuction.getHighestBidderId() != null) {
-            highestBidderLabel.setText("Highest Bidder ID: " + currentAuction.getHighestBidderId());
+            String bName = currentAuction.getHighestBidderName();
+            highestBidderLabel.setText("Highest Bidder: " + (bName != null ? bName : "Unknown"));
         } else {
             highestBidderLabel.setText("No bids placed yet.");
         }
@@ -194,7 +195,7 @@ public class AuctionDetailController implements ResponseListener {
         series.getData().add(new XYChart.Data<>("Start", currentAuction.getItem().getStartingPrice()));
 
         for (BidTransaction bid : history) {
-            String time = new SimpleDateFormat("HH:mm:ss").format(new Date(bid.timestamp()));
+            String time = new SimpleDateFormat("dd HH:mm:ss").format(new Date(bid.timestamp()));
             series.getData().add(new XYChart.Data<>(time, bid.amount()));
         }
 

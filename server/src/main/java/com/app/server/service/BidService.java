@@ -105,7 +105,7 @@ public class BidService {
             BidTransaction bid = new BidTransaction(auctionId, bidder.getId(), bidder.getUsername(), amount);
             bidDao.saveBid(bid);
             // Cập nhật giá + highest bidder
-            auction.processNewBid(amount, bidder.getId());
+            auction.processNewBid(amount, bidder.getId(), bidder.getUsername());
 
             // - Anti-Snipping
             long timeLeft = auction.getEndTimeMillis() - System.currentTimeMillis();

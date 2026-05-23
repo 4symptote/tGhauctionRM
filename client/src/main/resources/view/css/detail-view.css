@@ -1,54 +1,50 @@
-/* =====================================================================
-   BID HISTORY TABLE (Modern & Flat)
-   ===================================================================== */
-.modern-table {
+/* bid history table */
+.history_table {
     -fx-background-color: transparent;
     -fx-border-color: #ecf0f1;
     -fx-border-radius: 4px;
     -fx-padding: 0;
 }
-.modern-table .column-header-background {
+.history_table .column-header-background {
     -fx-background-color: #f8f9fa;
     -fx-background-radius: 4px 4px 0 0;
     -fx-border-color: transparent transparent #ecf0f1 transparent;
 }
-.modern-table .column-header {
+.history_table .column-header {
     -fx-background-color: transparent;
     -fx-size: 40px;
 }
-.modern-table .column-header .label {
+.history_table .column-header .label {
     -fx-font-weight: bold;
     -fx-text-fill: #7f8c8d;
     -fx-font-size: 13px;
     -fx-alignment: center-left;
 }
-.modern-table .table-row-cell {
+.history_table .table-row-cell {
     -fx-background-color: white;
     -fx-border-color: transparent transparent #f1f2f6 transparent;
     -fx-border-width: 1px;
     -fx-cell-size: 40px;
 }
-.modern-table .table-row-cell:odd {
+.history_table .table-row-cell:odd {
     -fx-background-color: #fafbfc;
 }
-.modern-table .table-row-cell:hover {
+.history_table .table-row-cell:hover {
     -fx-background-color: #f1f8ff;
 }
-.modern-table .table-row-cell:selected {
+.history_table .table-row-cell:selected {
     -fx-background-color: #e1f0fa;
     -fx-table-cell-border-color: transparent;
 }
-.modern-table .table-row-cell:selected .text {
+.history_table .table-row-cell:selected .text {
     -fx-fill: #2c3e50;
     -fx-font-weight: bold;
 }
-.modern-table:focused {
+.history_table:focused {
     -fx-background-color: transparent;
 }
 
-/* =====================================================================
-   VALUE CHART (Clean & Vibrant)
-   ===================================================================== */
+/* value chart */
 .chart-plot-background {
     -fx-background-color: transparent;
 }
@@ -65,4 +61,101 @@
     -fx-background-insets: 0, 2;
     -fx-background-radius: 5px;
     -fx-padding: 4px;
+}
+
+/* top*/
+
+.transparent-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+.transparent-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.detail-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.detail-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.detail-end-time {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 12px;
+}
+
+.section-header {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.divider-region {
+    -fx-background-color: transparent;
+    -fx-border-color: #ecf0f1;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-style: solid;
+}
+
+.description-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-line-spacing: 5px;
+}
+
+/* bid section */
+
+.bid-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.current-price-text {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #27ae60;
+}
+
+.highest-bidder-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #95a5a6;
+}
+
+.dollar-sign {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #bdc3c7;
+}
+
+.bid-input-field {
+    -fx-padding: 10px;
+    -fx-font-size: 16px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4px;
+}
+.bid-input-field:focused {
+    -fx-border-color: #3498db;
+    -fx-background-color: #ffffff;
+}
+
+.place-bid-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.place-bid-btn:hover {
+    -fx-background-color: #2980b9;
+}
+
+.error-message {
+    -fx-text-fill: red;
 }
