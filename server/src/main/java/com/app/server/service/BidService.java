@@ -30,7 +30,7 @@ public class BidService {
 
     // Anti-snipping settings
     private static final long ANTI_SNIPE_THRESHOLD = 60*1000 * 5;   // Trigger antisnipe nếu đặt bid khi thời gian còn dưới 5p
-    private static final long EXTENSION_TIME = 60*1000 * 1;         // Thời gian thêm vào
+    private static final long EXTENSION_TIME = 60*1000 * 5;         // Thời gian thêm vào
 
     private BidService() {
 
