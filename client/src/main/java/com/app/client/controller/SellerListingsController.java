@@ -56,7 +56,7 @@ public class SellerListingsController implements ResponseListener {
             auctionListContainer.getChildren().clear();
 
             for (Auction auction : auctions) {
-                HBox card = AuctionCardFactory.createCard(auction, () -> {
+                HBox card = AuctionCardFactory.createSellerCard(auction, () -> {
                     NetworkClient.getInstance().removeListener(this);
                     SceneManager.getInstance().switchSceneWithData("/view/fxml/AuctionDetailView.fxml", auction);
                 });

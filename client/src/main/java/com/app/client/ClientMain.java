@@ -24,7 +24,7 @@ public class ClientMain extends Application {
         //primaryStage.setMaximized(true);
         sceneManager.setPrimaryStage(primaryStage);
 //        sceneManager.switchScene("/view/fxml/LoginView.fxml");
-        sceneManager.switchScene("/view/fxml/MainLayout.fxml");
+        sceneManager.switchScene("/view/fxml/LoginView.fxml");
     }
 
     public static void main(String[] args) {

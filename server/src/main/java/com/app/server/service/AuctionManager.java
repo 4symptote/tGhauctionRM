@@ -10,8 +10,11 @@ import java.util.concurrent.TimeUnit;
 
 import com.app.server.dao.auction.AuctionDao;
 import com.app.server.dao.auction.AuctionDaoImpl;
+import com.app.server.dao.user.UserDao;
+import com.app.server.dao.user.UserDaoImpl;
 import com.app.shared.model.auction.Auction;
 
+import com.app.shared.model.user.User;
 import com.app.shared.network.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +113,25 @@ public class AuctionManager {
 
         if (finishedAuction != null) {
             finishedAuction.setStatus(Auction.Status.FINISHED);
+            String winnerId = finishedAuction.getHighestBidderId();
 
+            if (winnerId != null) {
+                double winningPrice = finishedAuction.getCurrentPrice();
+                String sellerId = finishedAuction.getSellerId();
+
+                UserDao userDao = UserDaoImpl.getInstance();
+                userDao.adjustBalance(sellerId, winningPrice);
+
+                User updatedSeller = userDao.getUserById(sellerId);
+
+                if (updatedSeller != null) {
+                    com.app.server.network.AuctionServer.sendToClient(sellerId, new Response(
+                            Response.ResponseType.USER_UPDATED,
+                            true, "Item Sold. Revenue updated",
+                            updatedSeller
+                    ));
+                }
+            }
             logger.info("Auction {} concluded - Winner: {}", auctionId, finishedAuction.getHighestBidderId());
 
             auctionDao.updateAuction(finishedAuction);

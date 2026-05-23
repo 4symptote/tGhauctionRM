@@ -6,9 +6,9 @@ public class Seller extends User {
     @Override
     public boolean canSell() { return true; }
 
-    public Seller(String username, String password, String email) {
+    public Seller(String username, String password, String email, double initialBalance) {
         super(username, password, email, "SELLER");
-        this.totalRevenue = 0.0;
+        this.totalRevenue = initialBalance;
     }
 
     public void collectRevenue(double amount) {

@@ -73,7 +73,10 @@ public class UserDaoImpl implements UserDao {
 
         User user = switch (role) {
             case "ADMIN" -> new Admin(fetchedUsername, passwordHash, email);
-            case "SELLER" -> new Seller(fetchedUsername, passwordHash, email);
+            case "SELLER" -> {
+                double revenue = doc.getDouble("balance");
+                yield new Seller(fetchedUsername, passwordHash, email, revenue);
+            }
             default -> {
                 double balance = doc.getDouble("balance");
                 yield new Bidder(fetchedUsername, passwordHash, email, balance);

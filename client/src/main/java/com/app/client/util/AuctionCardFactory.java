@@ -14,6 +14,24 @@ public class AuctionCardFactory {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:mm");
 
     public static HBox createCard(Auction auction, Runnable onClickAction) {
+        return buildCard(auction, "Seller: " + auction.getSellerName(), onClickAction);
+    }
+
+    public static HBox createSellerCard(Auction auction, Runnable onClickAction) {
+        String subtitle;
+        String bName = auction.getHighestBidderName();
+        boolean hasBids = (bName != null && !bName.isEmpty());
+
+        if (auction.getStatus() == Auction.Status.FINISHED || auction.getStatus() == Auction.Status.PAID) {
+            subtitle = hasBids ? "Winner: " + bName : "Ended with no bids";
+        } else {
+            subtitle = hasBids ? "Highest Bidder: " + bName : "No bids yet";
+        }
+
+        return buildCard(auction, subtitle, onClickAction);
+    }
+
+    public static HBox buildCard(Auction auction, String subtitleText, Runnable onClickAction) {
         HBox card = new HBox(20);
         card.getStyleClass().add("auction-card");
         card.setAlignment(Pos.CENTER_LEFT);
@@ -28,13 +46,13 @@ public class AuctionCardFactory {
         nameLabel.getStyleClass().add("card-item-name");
         nameLabel.setWrapText(true);
 
-        Label sellerLabel = new Label("Seller: " + auction.getSellerName());
-        sellerLabel.getStyleClass().add("card-seller-label");
+        Label subtitleLabel = new Label(subtitleText); // Uses our custom subtitle string
+        subtitleLabel.getStyleClass().add("card-seller-label"); // Reuse the original styling
 
         Label timeLabel = new Label("Ends: " + sdf.format(new Date(auction.getEndTimeMillis())));
         timeLabel.setStyle("-fx-text-fill: #e67e22; -fx-font-size: 13px; -fx-font-weight: bold;");
 
-        infoBox.getChildren().addAll(nameLabel, sellerLabel, timeLabel);
+        infoBox.getChildren().addAll(nameLabel, subtitleLabel, timeLabel);
 
         // Right Side
         VBox priceBox = new VBox(10);

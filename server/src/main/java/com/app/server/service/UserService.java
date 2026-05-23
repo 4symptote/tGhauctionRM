@@ -94,7 +94,7 @@ public class UserService {
 
     private User createUser(String username, String passwordHash, String email, String role) {
         return switch (role) {
-            case "SELLER" -> new Seller(username, passwordHash, email);
+            case "SELLER" -> new Seller(username, passwordHash, email, 0.0);
             case "ADMIN"  -> new Admin(username, passwordHash, email);
             default       -> new Bidder(username, passwordHash, email, 1000000); // todo : not enough balance
         };
