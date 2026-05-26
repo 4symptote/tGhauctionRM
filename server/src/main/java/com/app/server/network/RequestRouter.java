@@ -20,6 +20,8 @@ public class RequestRouter {
         handlers.put(Request.RequestType.GET_BID_HISTORY, new GetBidHistoryHandler());
         handlers.put(Request.RequestType.GET_SELLER_AUCTIONS, new GetSellerAuctionsHandler());
         handlers.put(Request.RequestType.GET_WINNING_AUCTIONS, new GetWinningAuctionsHandler());
+        handlers.put(Request.RequestType.DEPOSIT, new DepositHandler());
+        handlers.put(Request.RequestType.WITHDRAW, new WithdrawHandler());
     }
 
     public Response route(Request request, ClientHandler client) {
