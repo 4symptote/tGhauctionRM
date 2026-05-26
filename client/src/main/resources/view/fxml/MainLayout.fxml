@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane styleClass="root-pane" stylesheets="@../css/global.css, @../css/mainlayout.css"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.app.client.controller.MainLayoutController"
-            prefWidth="1000.0" prefHeight="600.0">
+<BorderPane prefHeight="600.0" prefWidth="1000.0" styleClass="root-pane" stylesheets="@../css/global.css, @../css/mainlayout.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.MainLayoutController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
@@ -39,20 +30,20 @@
     </top>
 
     <left>
-        <VBox styleClass="sidebar" prefWidth="180.0" spacing="10.0">
+        <VBox prefWidth="180.0" spacing="10.0" styleClass="sidebar">
             <padding>
-                <Insets bottom="30.0" left="15.0" right="0.0" top="0.0" />
+                <Insets bottom="30.0" left="0.0" right="0.0" top="0.0" />
             </padding>
 
 <!--            <Label styleClass="sidebar-title" text="MAIN MENU" />-->
             <Region prefHeight="10.0" />
 
-            <Button maxWidth="Infinity" onAction="#navToDashboard" styleClass="sidebar-btn" text="Live Auctions" />
+            <Button fx:id="dashboardBtn" maxWidth="Infinity" onAction="#navToDashboard" styleClass="sidebar-btn" text="Live Auctions" />
 
-            <Button fx:id="myListingsBtn" maxWidth="Infinity" onAction="#navToMyListings" styleClass="sidebar-btn" text="My Listings" managed="false" visible="false" />
-            <Button fx:id="winningBidsBtn" maxWidth="Infinity" onAction="#navToWinningBids" styleClass="sidebar-btn" text="Winning Bids" managed="false" visible="false" />
+            <Button fx:id="myListingsBtn" managed="false" maxWidth="Infinity" onAction="#navToMyListings" styleClass="sidebar-btn" text="My Listings" visible="false" />
+            <Button fx:id="winningBidsBtn" managed="false" maxWidth="Infinity" onAction="#navToWinningBids" styleClass="sidebar-btn" text="Winning Bids" visible="false" />
 
-            <Button maxWidth="Infinity" onAction="#navToCreate" styleClass="sidebar-btn" text="Create Auction" />
+            <Button fx:id="createAuctionBtn" maxWidth="Infinity" onAction="#navToCreate" prefWidth="181.0" styleClass="sidebar-btn, cta-btn" text="Create Auction" />
 
             <Region VBox.vgrow="ALWAYS" />
         </VBox>

@@ -85,3 +85,23 @@
     -fx-border-width: 0 0 0 4px; /* A sleek left border indicator */
     -fx-border-radius: 4px;
 }
+
+.cta-btn {
+    -fx-background-color: #4fbbff; /* Bright modern blue */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 15 10 15;
+    -fx-border-width: 0;
+}
+
+/* Make it slightly darker when the user hovers over it */
+.cta-btn:hover {
+    -fx-background-color: #2980b9;
+    -fx-cursor: hand;
+    -fx-text-fill: #82c6f1;
+}
+
+/* Optional: Add a subtle shadow if you want it to pop even more */
+.cta-btn:effect {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
