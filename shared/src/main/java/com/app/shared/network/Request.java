@@ -20,5 +20,7 @@ public record Request(RequestType type, Object payload) implements Serializable 
         GET_BID_HISTORY,
         GET_SELLER_AUCTIONS, // --> SELLER_AUCTION_LIST
         GET_WINNING_AUCTIONS,
+        WITHDRAW,
+        DEPOSIT,
     }
 }

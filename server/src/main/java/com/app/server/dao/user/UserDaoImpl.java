@@ -64,6 +64,28 @@ public class UserDaoImpl implements UserDao {
         );
     }
 
+    public boolean withdraw(String userId, double amount) {
+        if (amount <= 0) return false;
+
+        // $gte (>=) check ensures MongoDB ONLY updates if the balance is high enough
+        org.bson.Document query = new org.bson.Document("_id", userId)
+                .append("balance", new org.bson.Document("$gte", amount));
+
+        org.bson.Document update = new org.bson.Document("$inc", new org.bson.Document("balance", -amount));
+
+        // findOneAndUpdate is atomic
+        org.bson.Document result = usersCollection.findOneAndUpdate(query, update);
+
+        // If result is not null, it found the user AND they had enough money.
+        return result != null;
+    }
+
+    public void deposit(String userId, double amount) {
+        if (amount > 0) {
+            adjustBalance(userId, amount);
+        }
+    }
+
     private User documentToUser(Document doc) {
         String dbId = doc.getString("_id");
         String fetchedUsername = doc.getString("username");

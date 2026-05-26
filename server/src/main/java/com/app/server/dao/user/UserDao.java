@@ -9,4 +9,6 @@ public interface UserDao {
     User getUserById(String id);
     boolean userExists(String username);
     void adjustBalance(String userId, double amount);
+    void deposit(String userId, double amount);
+    boolean withdraw(String userId, double amount);
 }
