@@ -93,6 +93,7 @@ public class UserDaoImpl implements UserDao {
         String email = doc.getString("email");
         String role = doc.getString("role");
 
+
         User user = switch (role) {
             case "ADMIN" -> new Admin(fetchedUsername, passwordHash, email);
             case "SELLER" -> {
@@ -101,7 +102,8 @@ public class UserDaoImpl implements UserDao {
             }
             default -> {
                 double balance = doc.getDouble("balance");
-                yield new Bidder(fetchedUsername, passwordHash, email, balance);
+                double reserved = doc.get("reservedBalance") != null ? doc.getDouble("reservedBalance") : 0.0;
+                yield new Bidder(fetchedUsername, passwordHash, email, balance, reserved);
             }
         };
         user.setId(dbId);
@@ -110,14 +112,20 @@ public class UserDaoImpl implements UserDao {
 
     private Document userToDocument(User user) {
         double balance = 0.0;
-        if (user instanceof Bidder b) balance = b.getBalance();
+        double reserved = 0.0;
+        if (user instanceof Bidder b) {
+            balance = b.getBalance();
+            reserved = b.getReservedBalance();
+        }
         if (user instanceof Seller s) balance = s.getTotalRevenue();
+
         return new Document("_id", user.getId())
                 .append("username", user.getUsername())
                 .append("passwordHash", user.getPassword())
                 .append("email", user.getEmail())
                 .append("role", user.getRole())
-                .append("balance", balance);
+                .append("balance", balance)
+                .append("reservedBalance", reserved);
     }
 
     @Override
