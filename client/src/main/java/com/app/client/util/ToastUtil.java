@@ -18,58 +18,54 @@ public class ToastUtil {
         SUCCESS, ERROR, INFO
     }
 
+    private static int activeToasts = 0;
+
     public static void showToast(String message, ToastType type) {
         Platform.runLater(() -> {
-            System.out.println(message);
+
             Window activeWindow = Window.getWindows().stream()
                     .filter(Window::isFocused)
                     .findFirst()
-                    .orElse(null);
+                    .orElseGet(() -> Window.getWindows().isEmpty() ? null : Window.getWindows().get(0));
 
             if (activeWindow == null) return;
 
             Popup popup = new Popup();
             popup.setAutoFix(true);
 
-            // Build the UI
             Label label = new Label(message);
             label.getStyleClass().add("toast-label");
 
             StackPane pane = new StackPane(label);
             pane.getStyleClass().addAll("toast-pane", "toast-" + type.name().toLowerCase());
 
-            // apply css
             try {
                 pane.getStylesheets().add(Objects.requireNonNull(
                         ToastUtil.class.getResource("/view/css/global.css")).toExternalForm());
-            } catch (Exception e) {
-                System.out.println("Could not load global.css for Toast");
-            }
+            } catch (Exception ignored) {}
 
             popup.getContent().add(pane);
-
-            // Temporarily show it invisibly to calculate its width/height
             popup.setOpacity(0);
             popup.show(activeWindow);
 
-            // Position it at the Top-Right of the active window
             double x = activeWindow.getX() + activeWindow.getWidth() - pane.getWidth() - 30;
-            double y = activeWindow.getY() + 70;
+            double y = activeWindow.getY() + 70 + (activeToasts * 60);
             popup.setX(x);
             popup.setY(y);
 
-            // Animation: Fade in (0.3s) -> Wait (2.5s) -> Fade out (0.5s) -> Close
-            Timeline timeline = new Timeline();
+            activeToasts++; //
 
-            // Fade in
+            Timeline timeline = new Timeline();
             KeyFrame fadeIn = new KeyFrame(Duration.millis(300), new KeyValue(popup.opacityProperty(), 1.0));
-            // Start fading out after 2.5 seconds
             KeyFrame fadeOutStart = new KeyFrame(Duration.millis(2800), new KeyValue(popup.opacityProperty(), 1.0));
-            // Fully transparent and close at 3.3 seconds
             KeyFrame fadeOutEnd = new KeyFrame(Duration.millis(3300), new KeyValue(popup.opacityProperty(), 0.0));
 
             timeline.getKeyFrames().addAll(fadeIn, fadeOutStart, fadeOutEnd);
-            timeline.setOnFinished(e -> popup.hide());
+            timeline.setOnFinished(e -> {
+                popup.hide();
+                activeToasts--;
+                if (activeToasts < 0) activeToasts = 0;
+            });
 
             timeline.play();
         });
