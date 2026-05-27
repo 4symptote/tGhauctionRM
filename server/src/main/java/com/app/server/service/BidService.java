@@ -127,6 +127,8 @@ public class BidService {
 
         } finally { // Luon unlock neu co crash hay loi
             auctionLock.unlock();
+            // tính toán auto bid mỗi khi có tk đặt bid mới (kể cả fail hay k )
+            AutoBidService.getInstance().evaluate(auctionId);
         }
     }
 }

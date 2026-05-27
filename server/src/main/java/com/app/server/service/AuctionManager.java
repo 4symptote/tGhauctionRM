@@ -111,6 +111,9 @@ public class AuctionManager {
 
         Auction finishedAuction = activeAuctions.remove(auctionId);
 
+        //
+        AutoBidService.getInstance().releaseAllEscrow(auctionId);
+
         if (finishedAuction != null) {
             finishedAuction.setStatus(Auction.Status.FINISHED);
             String winnerId = finishedAuction.getHighestBidderId();
