@@ -11,4 +11,7 @@ public interface UserDao {
     void adjustBalance(String userId, double amount);
     void deposit(String userId, double amount);
     boolean withdraw(String userId, double amount);
+
+    boolean lockFunds(String userId, double amount);
+    void unlockFunds(String userId, double amount);
 }

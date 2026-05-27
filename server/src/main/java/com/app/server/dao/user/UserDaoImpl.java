@@ -86,6 +86,36 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public boolean lockFunds(String userId, double amount) {
+        if (amount <= 0) return false;
+
+        // kiem tra xem du tien k
+        org.bson.Document query = new org.bson.Document("_id", userId)
+                .append("balance", new org.bson.Document("$gte", amount));
+
+        // subtract from balance, them vao reservedBalance atomically
+        org.bson.Document update = new org.bson.Document("$inc",
+                new org.bson.Document("balance", -amount)
+                        .append("reservedBalance", amount));
+
+        return usersCollection.findOneAndUpdate(query, update) != null;
+    }
+
+    @Override
+    public void unlockFunds(String userId, double amount) {
+        if (amount <= 0) return;
+
+        // tra lai tien vao balance tu reserved
+        usersCollection.updateOne(
+                new Document("_id", userId),
+                com.mongodb.client.model.Updates.combine(
+                        com.mongodb.client.model.Updates.inc("balance", amount),
+                        com.mongodb.client.model.Updates.inc("reservedBalance", -amount)
+                )
+        );
+    }
+
     private User documentToUser(Document doc) {
         String dbId = doc.getString("_id");
         String fetchedUsername = doc.getString("username");
