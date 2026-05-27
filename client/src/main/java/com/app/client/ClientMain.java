@@ -1,5 +1,7 @@
 package com.app.client;
 
+import com.app.client.network.NetworkClient;
+import com.app.client.util.SceneManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.net.URL;
 
 public class ClientMain extends Application {
@@ -19,28 +20,12 @@ public class ClientMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        connect("localhost", port);
+        NetworkClient.getInstance().connect("localhost", port);
+        NetworkClient.getInstance().startListener();
 
-        // Setup simple scene for testing
-        URL fxmlFile = getClass().getResource("/view/fxml/HellowScreen.fxml");
-        assert fxmlFile != null;
-
-        try {
-            FXMLLoader loader = new FXMLLoader(fxmlFile);
-            Parent root = loader.load();
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
-        } catch (IOException e) {
-            logger.error("Error: Failed to load FXML: {}", e.getMessage());
-        }
-    }
-
-    public static void connect(String host, int port) {
-        try (Socket socket = new Socket(host, port)) {
-            logger.info("Info: Connected to server successfully");
-        } catch (Exception e) {
-            logger.error("Error: Failed to connect to server: {}", e.getMessage());
-        }
+        primaryStage.setTitle("tGhauctionRM");
+        SceneManager.getInstance().setPrimaryStage(primaryStage);
+        SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
     }
 
     public static void main(String[] args) {
