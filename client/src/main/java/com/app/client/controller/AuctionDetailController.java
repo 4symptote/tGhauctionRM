@@ -233,7 +233,7 @@ public class AuctionDetailController implements ResponseListener {
             // Create payload and send to the engine!
             AutoBidPayload payload = new AutoBidPayload(currentAuction.getId(), maxLimit);
 
-            Request request = new Request(com.app.shared.network.Request.RequestType.SET_AUTO_BID, payload);
+            Request request = new Request(Request.RequestType.SET_AUTO_BID, payload);
 
             NetworkClient.getInstance().sendRequest(request);
 
@@ -269,6 +269,7 @@ public class AuctionDetailController implements ResponseListener {
                 case PLACED_BID -> handlePlacedBidResponse(response);
                 case AUCTION_UPDATED -> handleAuctionBroadcast(response);
                 case BID_HISTORY -> handleHistoryResponse(response);
+                case AUTO_BID_SET -> handleUserUpdatedResponse(response);
             }
         });
     }
@@ -308,7 +309,18 @@ public class AuctionDetailController implements ResponseListener {
     }
 
     //AUTO+BID_SET
+    private void handleUserUpdatedResponse(Response response) {
+        if (response.success() && response.payload() instanceof User updatedUser) {
+            SessionModel.getInstance().setCurrentUser(updatedUser);
 
+
+            showAlert("Auto-Bid Active", response.message());
+            autoBidLimitField.clear();
+
+        } else {
+            showAlert("Failed", response.message());
+        }
+    }
 
 
     // temporal showAlrt

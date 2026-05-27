@@ -78,7 +78,7 @@
                     </VBox>
 
                     <!-- RIGHT COLUMN: Pricing & Bidding -->
-                    <VBox maxWidth="400.0" minWidth="350.0" maxHeight="-Infinity" spacing="20.0" styleClass="auction-card">
+                    <VBox maxWidth="800.0" minWidth="350.0" maxHeight="-Infinity" spacing="20.0" styleClass="auction-card">
 
                         <VBox alignment="CENTER" spacing="5.0">
                             <Label styleClass="bid-subtitle" text="Current Highest Bid"/>
@@ -98,7 +98,7 @@
                             <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlaceBid" styleClass="place-bid-btn" text="Place Bid"/>
                         </VBox>
 
-                        <VBox fx:id="autoBidContainer" spacing="8" alignment="CENTER" styleClass="auto-bid-box" managed="false" visible="false">
+                        <VBox fx:id="autoBidContainer" spacing="8" alignment="CENTER" styleClass="auto-bid-box" managed="true" visible="true">
                             <Label text="Set Auto-Bid Limit" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" /><Label text="The system will automatically bid for you up to this amount." style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;" wrapText="true"/>
                             <HBox spacing="10" alignment="CENTER">
                                 <TextField fx:id="autoBidLimitField" promptText="Max limit (e.g. 5000)" prefWidth="150" />
@@ -107,6 +107,7 @@
                         </VBox>
 
                     </VBox>
+
                 </HBox>
             </VBox>
         </ScrollPane>

@@ -24,7 +24,7 @@ public class SetAutoBidHandler implements RequestHandler {
             User updatedUser = UserDaoImpl.getInstance().getUserById(currentUser.getId());
             client.setCurrentUser(updatedUser);
 
-            return new Response(Response.ResponseType.USER_UPDATED, true, "Auto-Bid set", updatedUser);
+            return new Response(Response.ResponseType.AUTO_BID_SET, true, "Auto-Bid set", updatedUser);
 
         } catch (IllegalStateException e) {
             return new Response(false, e.getMessage(), null); // Insufficient funds

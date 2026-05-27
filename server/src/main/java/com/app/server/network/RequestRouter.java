@@ -22,6 +22,7 @@ public class RequestRouter {
         handlers.put(Request.RequestType.GET_WINNING_AUCTIONS, new GetWinningAuctionsHandler());
         handlers.put(Request.RequestType.DEPOSIT, new DepositHandler());
         handlers.put(Request.RequestType.WITHDRAW, new WithdrawHandler());
+        handlers.put(Request.RequestType.SET_AUTO_BID, new SetAutoBidHandler());
     }
 
     public Response route(Request request, ClientHandler client) {

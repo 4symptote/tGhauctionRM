@@ -69,6 +69,7 @@ public class AuctionManager {
 
 
     private void manageAuctionLifecycle(Auction auction) {
+        auction.updateStatus();
         // OPEN -> RUNNING -> FINISHED
         long currentTime = System.currentTimeMillis();
         long startTime = auction.getStartTime();
@@ -82,6 +83,7 @@ public class AuctionManager {
             long delay = startTime - currentTime;
             scheduler.schedule(() -> {
                 auction.updateStatus();
+                auctionDao.updateAuction(auction);
                 com.app.server.network.AuctionServer.broadcast(new Response(
                         Response.ResponseType.AUCTION_UPDATED,
                         true, "AUCTION_STARTED",
@@ -95,6 +97,7 @@ public class AuctionManager {
             long delay = endTime - currentTime;
             scheduler.schedule(() -> {
                 auction.updateStatus();
+                auctionDao.updateAuction(auction);
                 if (System.currentTimeMillis() < auction.getEndTimeMillis()) {
                     manageAuctionLifecycle(auction);
                 } else {
