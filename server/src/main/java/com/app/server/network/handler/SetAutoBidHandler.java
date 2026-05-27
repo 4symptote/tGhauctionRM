@@ -18,16 +18,23 @@ public class SetAutoBidHandler implements RequestHandler {
 
         try {
             AutoBidPayload payload = (AutoBidPayload) request.payload();
-            AutoBidService.getInstance().registerAutoBid(currentUser.getId(), payload.auctionId(), payload.maxLimit());
+
+            boolean wasUpdate = AutoBidService.getInstance().hasAutoBid(currentUser.getId(), payload.auctionId());
+
+            AutoBidService.getInstance().setOrUpdateAutoBid(currentUser.getId(), payload.auctionId(), payload.maxLimit());
 
             // update user
             User updatedUser = UserDaoImpl.getInstance().getUserById(currentUser.getId());
             client.setCurrentUser(updatedUser);
 
-            return new Response(Response.ResponseType.AUTO_BID_SET, true, "Auto-Bid set", updatedUser);
+            String successMsg = wasUpdate ?
+                    "Successfully updated your Auto-Bid limit to $" + payload.maxLimit() + "!" :
+                    "Successfully locked $" + payload.maxLimit() + " in escrow. The system will now bid on your behalf!";
+
+            return new Response(Response.ResponseType.AUTO_BID_SET, true, successMsg, updatedUser);
 
         } catch (IllegalStateException e) {
-            return new Response(false, e.getMessage(), null); // Insufficient funds
+            return new Response(false, e.getMessage(), null); // Insufficient funds or cannot lower limit
         } catch (Exception e) {
             return new Response(false, "Failed to set Auto-Bid", null);
         }
