@@ -114,7 +114,8 @@ public class BidService {
             if (timeLeft < ANTI_SNIPE_THRESHOLD) {
                 // thêm thời gian mới
                 // Ví dụ Auction end lúc 15:30, đặt bid lúc 15:28, end time mới sẽ là 15:33 (Luôn có 5p cho các bidder khác react)
-                auction.setEndTimeMillis(System.currentTimeMillis() + EXTENSION_TIME);
+                long extendedTime = System.currentTimeMillis() + EXTENSION_TIME;
+                auction.setEndTimeMillis(Math.max(auction.getEndTimeMillis(), extendedTime));
             }
 
             auctionDao.updateAuction(auction);
