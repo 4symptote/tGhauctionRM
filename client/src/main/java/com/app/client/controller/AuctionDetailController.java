@@ -1,5 +1,6 @@
 package com.app.client.controller;
 
+import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
@@ -10,8 +11,10 @@ import com.app.shared.model.item.Art;
 import com.app.shared.model.item.Electronics;
 import com.app.shared.model.item.Item;
 import com.app.shared.model.item.Vehicle;
+import com.app.shared.model.user.User;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
+import com.app.shared.network.payload.AutoBidPayload;
 import com.app.shared.network.payload.BidPayload;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -21,10 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.text.SimpleDateFormat;
@@ -33,25 +33,47 @@ import java.util.List;
 
 public class AuctionDetailController implements ResponseListener {
 
-    @FXML private VBox mainContentVBox;
-    @FXML private Label statusBadge;
-    @FXML private Label itemNameLabel;
-    @FXML private Label sellerLabel;
-    @FXML private Label descriptionLabel;
-    @FXML private VBox specsContainer;
-    @FXML private Label currentPriceLabel;
-    @FXML private Label highestBidderLabel;
-    @FXML private TextField bidAmountField;
-    @FXML private Label bidMessageLabel;
+    @FXML
+    private VBox mainContentVBox;
+    @FXML
+    private Label statusBadge;
+    @FXML
+    private Label itemNameLabel;
+    @FXML
+    private Label sellerLabel;
+    @FXML
+    private Label descriptionLabel;
+    @FXML
+    private VBox specsContainer;
+    @FXML
+    private Label currentPriceLabel;
+    @FXML
+    private Label highestBidderLabel;
+    @FXML
+    private TextField bidAmountField;
+    @FXML
+    private Label bidMessageLabel;
 
-    @FXML private LineChart<String, Number> priceChart;
-    @FXML private TableView<BidTransaction> bidHistoryTable;
-    @FXML private TableColumn<BidTransaction, String> timeCol;
-    @FXML private TableColumn<BidTransaction, String> amountCol;
-    @FXML private TableColumn<BidTransaction, String> bidderCol;
+    @FXML
+    private VBox autoBidContainer;
+    @FXML
+    private TextField autoBidLimitField;
 
-    @FXML private Label endTimeLabel;        // NEW: Shows the static date
-    @FXML private Label timeRemainingLabel;  //  clock
+    @FXML
+    private LineChart<String, Number> priceChart;
+    @FXML
+    private TableView<BidTransaction> bidHistoryTable;
+    @FXML
+    private TableColumn<BidTransaction, String> timeCol;
+    @FXML
+    private TableColumn<BidTransaction, String> amountCol;
+    @FXML
+    private TableColumn<BidTransaction, String> bidderCol;
+
+    @FXML
+    private Label endTimeLabel;        // NEW: Shows the static date
+    @FXML
+    private Label timeRemainingLabel;  //  clock
 
     private AnimationTimer countdownTimer;
 
@@ -114,6 +136,15 @@ public class AuctionDetailController implements ResponseListener {
             highestBidderLabel.setText("No bids placed yet.");
         }
         //
+        // Ẩn autobid nếu k phải bidder
+        User currentUser = SessionModel.getInstance().getCurrentUser();
+        if (currentUser != null && currentUser.canBid() && currentAuction.getStatus() == Auction.Status.RUNNING) {
+            autoBidContainer.setVisible(true);
+            autoBidContainer.setManaged(true);
+        } else {
+            autoBidContainer.setVisible(false);
+            autoBidContainer.setManaged(false);
+        }
 
         endTimeLabel.setText("Ends: " + TimeUtil.formatExactDate(currentAuction.getEndTimeMillis()));
         countdownTimer = new AnimationTimer() {
@@ -183,11 +214,32 @@ public class AuctionDetailController implements ResponseListener {
     }
 
     @FXML
-    private void handleBackToDashboard(ActionEvent event) {
-        if (countdownTimer != null) countdownTimer.stop();
+    private void handleSetAutoBid() {
+        String limitStr = autoBidLimitField.getText();
+        if (limitStr == null || limitStr.trim().isEmpty()) {
+            showAlert("Invalid Input", "Please enter a maximum limit.");
+            return;
+        }
 
-        NetworkClient.getInstance().removeListener(this);
-        SceneManager.getInstance().switchScene("/view/fxml/DashboardView.fxml");
+        try {
+            double maxLimit = Double.parseDouble(limitStr);
+
+            // Basic validation
+            if (maxLimit <= currentAuction.getCurrentPrice()) {
+                showAlert("Invalid Limit", "Your auto-bid limit must be higher than the current price!");
+                return;
+            }
+
+            // Create payload and send to the engine!
+            AutoBidPayload payload = new AutoBidPayload(currentAuction.getId(), maxLimit);
+
+            Request request = new Request(com.app.shared.network.Request.RequestType.SET_AUTO_BID, payload);
+
+            NetworkClient.getInstance().sendRequest(request);
+
+        } catch (NumberFormatException e) {
+            showAlert("Error", "Please enter a valid numeric amount.");
+        }
     }
 
     private void updateHistoryUI(List<BidTransaction> history) {
@@ -214,15 +266,15 @@ public class AuctionDetailController implements ResponseListener {
     public void onResponseReceived(Response response) {
         Platform.runLater(() -> {
             switch (response.type()) {
-                case PLACED_BID      -> handlePlacedBidResponse(response);
+                case PLACED_BID -> handlePlacedBidResponse(response);
                 case AUCTION_UPDATED -> handleAuctionBroadcast(response);
-                case BID_HISTORY     -> handleHistoryResponse(response);
+                case BID_HISTORY -> handleHistoryResponse(response);
             }
         });
     }
 
 
-//  RESPONSE HANDLERS
+    //  RESPONSE HANDLERS
     // PLACE_BID
     private void handlePlacedBidResponse(Response response) {
         if (response.success()) {
@@ -234,6 +286,7 @@ public class AuctionDetailController implements ResponseListener {
             bidMessageLabel.setText(response.message());
         }
     }
+
     // AUCTION_UPDATED
     private void handleAuctionBroadcast(Response response) {
         if (response.success() && response.payload() instanceof Auction updatedAuction) {
@@ -244,6 +297,7 @@ public class AuctionDetailController implements ResponseListener {
             }
         }
     }
+
     // BID_HISTORY
     private void handleHistoryResponse(Response response) {
         if (response.success() && response.payload() instanceof List<?> rawList) {
@@ -252,4 +306,26 @@ public class AuctionDetailController implements ResponseListener {
             updateHistoryUI(history);
         }
     }
+
+    //AUTO+BID_SET
+
+
+
+    // temporal showAlrt
+    private void showAlert(String title, String content) {
+        javafx.application.Platform.runLater(() -> {
+            Alert.AlertType type = Alert.AlertType.INFORMATION;
+
+            if (title.toLowerCase().contains("error") || title.toLowerCase().contains("failed") || title.toLowerCase().contains("invalid")) {
+                type = Alert.AlertType.ERROR;
+            }
+
+            Alert alert = new Alert(type);
+            alert.setTitle(title);
+            alert.setHeaderText(null); // Removes the awkward extra header space
+            alert.setContentText(content);
+            alert.showAndWait();
+        });
+    }
+
 }

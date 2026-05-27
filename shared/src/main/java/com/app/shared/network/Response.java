@@ -18,6 +18,7 @@ public record Response(ResponseType type, boolean success, String message, Objec
         USER_UPDATED,
         SELLER_AUCTION_LIST,  // <-- GET_SELLER_AUCTIONS
         WINNING_AUCTION_LIST,
+        AUTO_BID_SET
     }
 
     // general success/error response
