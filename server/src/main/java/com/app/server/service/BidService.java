@@ -86,7 +86,6 @@ public class BidService {
                     // refund
                     userDao.adjustBalance(previousBidderId, previousBidAmount);
                     previousBidder.setBalance(previousBidder.getBalance() + previousBidAmount);
-
                     AuctionServer.sendToClient(previousBidderId, new Response(
                             Response.ResponseType.USER_UPDATED,
                             true, "Outbid Refund",

@@ -5,6 +5,7 @@ import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
 import com.app.client.util.TimeUtil;
+import com.app.client.util.ToastUtil;
 import com.app.shared.model.auction.Auction;
 import com.app.shared.model.auction.BidTransaction;
 import com.app.shared.model.item.Art;
@@ -210,6 +211,7 @@ public class AuctionDetailController implements ResponseListener {
         } catch (NumberFormatException e) {
             bidMessageLabel.setStyle("-fx-text-fill: RED;");
             bidMessageLabel.setText("Please enter a valid amount.");
+            ToastUtil.showToast("Please enter a valid amount.", ToastUtil.ToastType.ERROR);
         }
     }
 
@@ -217,7 +219,7 @@ public class AuctionDetailController implements ResponseListener {
     private void handleSetAutoBid() {
         String limitStr = autoBidLimitField.getText();
         if (limitStr == null || limitStr.trim().isEmpty()) {
-            showAlert("Invalid Input", "Please enter a maximum limit.");
+            ToastUtil.showToast("Please enter a maximum limit.", ToastUtil.ToastType.ERROR);
             return;
         }
 
@@ -226,7 +228,7 @@ public class AuctionDetailController implements ResponseListener {
 
             // Basic validation
             if (maxLimit <= currentAuction.getCurrentPrice()) {
-                showAlert("Invalid Limit", "Your auto-bid limit must be higher than the current price!");
+                ToastUtil.showToast("Your auto-bid limit must be higher than the current price!", ToastUtil.ToastType.ERROR);
                 return;
             }
 
@@ -238,7 +240,7 @@ public class AuctionDetailController implements ResponseListener {
             NetworkClient.getInstance().sendRequest(request);
 
         } catch (NumberFormatException e) {
-            showAlert("Error", "Please enter a valid numeric amount.");
+            ToastUtil.showToast("Please enter a valid numeric amount", ToastUtil.ToastType.ERROR);
         }
     }
 
@@ -281,10 +283,12 @@ public class AuctionDetailController implements ResponseListener {
         if (response.success()) {
             bidMessageLabel.setStyle("-fx-text-fill: #27ae60;");
             bidMessageLabel.setText("Bid placed successfully!");
+            ToastUtil.showToast("Bid placed successfully!", ToastUtil.ToastType.SUCCESS);
             bidAmountField.clear();
         } else {
             bidMessageLabel.setStyle("-fx-text-fill: RED;");
             bidMessageLabel.setText(response.message());
+            ToastUtil.showToast(response.message(), ToastUtil.ToastType.ERROR);
         }
     }
 
@@ -314,30 +318,11 @@ public class AuctionDetailController implements ResponseListener {
             SessionModel.getInstance().setCurrentUser(updatedUser);
 
 
-            showAlert("Auto-Bid Active", response.message());
+            ToastUtil.showToast(response.message(), ToastUtil.ToastType.SUCCESS);
             autoBidLimitField.clear();
 
         } else {
-            showAlert("Failed", response.message());
+            ToastUtil.showToast(response.message(), ToastUtil.ToastType.ERROR);
         }
     }
-
-
-    // temporal showAlrt
-    private void showAlert(String title, String content) {
-        javafx.application.Platform.runLater(() -> {
-            Alert.AlertType type = Alert.AlertType.INFORMATION;
-
-            if (title.toLowerCase().contains("error") || title.toLowerCase().contains("failed") || title.toLowerCase().contains("invalid")) {
-                type = Alert.AlertType.ERROR;
-            }
-
-            Alert alert = new Alert(type);
-            alert.setTitle(title);
-            alert.setHeaderText(null); // Removes the awkward extra header space
-            alert.setContentText(content);
-            alert.showAndWait();
-        });
-    }
-
 }
