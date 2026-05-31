@@ -2,6 +2,7 @@ package com.app.client.controller;
 
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
+import com.app.client.util.ImageUtil;
 import com.app.client.util.SceneManager;
 import com.app.client.util.ToastUtil;
 import com.app.shared.network.Request;
@@ -11,7 +12,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +29,9 @@ public class CreateAuctionController implements ResponseListener {
     @FXML private VBox dynamicAttributesContainer;
     // todo: sau nay se la chon thoi gian cu the, d/h/m/s
     @FXML private TextField startDelayMinutesField;
+
+    @FXML private javafx.scene.image.ImageView imagePreview;
+    private String currentBase64Image = null;
 
     private final Map<String, TextField> dynamicFieldsMap = new HashMap<>();
 
@@ -75,6 +81,27 @@ public class CreateAuctionController implements ResponseListener {
     }
 
     @FXML
+    private void handleUploadImage() {
+        FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.setTitle("Select Item Image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(nameField.getScene().getWindow());
+        if (selectedFile != null) {
+            // < 2mb
+            if (selectedFile.length() > 2 * 1024 * 1024) {
+                ToastUtil.showToast("Image must be smaller than 2MB.", ToastUtil.ToastType.ERROR);
+                return;
+            }
+
+            currentBase64Image = ImageUtil.encodeToBase64(selectedFile);
+            imagePreview.setImage(ImageUtil.decodeToImage(currentBase64Image));
+        }
+    }
+
+    @FXML
     private void handleSubmit() {
         try {
             String name = nameField.getText().trim();
@@ -104,7 +131,7 @@ public class CreateAuctionController implements ResponseListener {
             Map<String, Object> customAttributes = getCustomAttributes();
 
             // request
-            CreateAuctionPayload payload = new CreateAuctionPayload(type, name, desc, price, calculatedStartTime, durationMillis, customAttributes);
+            CreateAuctionPayload payload = new CreateAuctionPayload(type, name, desc, price, calculatedStartTime, durationMillis, customAttributes, currentBase64Image);
             Request request = new Request(Request.RequestType.CREATE_AUCTION, payload);
 
             errorLabel.setStyle("-fx-text-fill: #3498db;"); // Blue text for loading

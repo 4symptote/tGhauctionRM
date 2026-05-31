@@ -15,21 +15,25 @@ public class ElectronicsCreator implements ItemCreator {
         Map<String, Object> attrs = payload.customAttributes();
         if (attrs == null) attrs = Map.of();
 
-        return new Electronics.Builder()
+        Item item = new Electronics.Builder()
                 .name(payload.name())
                 .desc(payload.description())
                 .startingPrice(payload.startingPrice())
                 .brand((String) attrs.getOrDefault("brand", "Unknown"))
                 .build();
+        item.setImageBase64(payload.imageBase64());
+        return item;
     }
 
     @Override
     public Item createItemFromDocument(Document itemDoc) {
-        return new Electronics.Builder()
+        Item item = new Electronics.Builder()
                 .name(itemDoc.getString("name"))
                 .desc(itemDoc.getString("description"))
                 .startingPrice(itemDoc.getDouble("startingPrice"))
                 .brand(itemDoc.getString("brand"))
                 .build();
+        item.setImageBase64(itemDoc.getString("imageBase64"));
+        return item;
     }
 }

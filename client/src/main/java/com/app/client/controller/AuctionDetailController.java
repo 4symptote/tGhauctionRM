@@ -3,6 +3,7 @@ package com.app.client.controller;
 import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
+import com.app.client.util.ImageUtil;
 import com.app.client.util.SceneManager;
 import com.app.client.util.TimeUtil;
 import com.app.client.util.ToastUtil;
@@ -26,6 +27,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 import java.text.SimpleDateFormat;
@@ -70,6 +72,9 @@ public class AuctionDetailController implements ResponseListener {
     private TableColumn<BidTransaction, String> amountCol;
     @FXML
     private TableColumn<BidTransaction, String> bidderCol;
+
+    @FXML
+    private ImageView detailImageView;
 
     @FXML
     private Label endTimeLabel;        // NEW: Shows the static date
@@ -118,7 +123,10 @@ public class AuctionDetailController implements ResponseListener {
 
         Item item = currentAuction.getItem();
 
+        detailImageView.setImage(com.app.client.util.ImageUtil.decodeToImage(item.getImageBase64()));
         // Basic Info
+        detailImageView.setImage(ImageUtil.decodeToImage(item.getImageBase64()));
+
         itemNameLabel.setText(item.getName());
         sellerLabel.setText("Listed by: " + currentAuction.getSellerName());
         descriptionLabel.setText(item.getDescription());

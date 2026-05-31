@@ -12,7 +12,8 @@ public record CreateAuctionPayload (
         double startingPrice,
         long startTime,   // milliseconds
         long durationMillis,
-        Map<String, Object> customAttributes // For extra attributes
+        Map<String, Object> customAttributes, // For extra attributes
+        String imageBase64
 
 ) implements Serializable {
     @Serial

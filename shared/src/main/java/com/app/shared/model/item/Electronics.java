@@ -38,7 +38,8 @@ public class Electronics extends Item {
                 .append("name", getName())
                 .append("description", getDescription())
                 .append("startingPrice", getStartingPrice())
-                .append("brand", this.brand);
+                .append("brand", this.brand)
+                .append("imageBase64", this.getImageBase64());
     }
 
     public String getBrand() { return this.brand; }

@@ -16,23 +16,27 @@ public class VehicleCreator implements ItemCreator {
         Map<String, Object> attrs = payload.customAttributes();
         if (attrs == null) attrs = Map.of();
 
-        return new Vehicle.Builder()
+        Item item = new Vehicle.Builder()
                 .name(payload.name())
                 .desc(payload.description())
                 .startingPrice(payload.startingPrice())
                 .model((String) attrs.getOrDefault("model", "Unknown"))
                 .brand((String) attrs.getOrDefault("brand", "Unknown"))
                 .build();
+        item.setImageBase64(payload.imageBase64());
+        return item;
     }
 
     @Override
     public Item createItemFromDocument(Document itemDoc) {
-        return new Vehicle.Builder()
+        Item item = new Vehicle.Builder()
                 .name(itemDoc.getString("name"))
                 .desc(itemDoc.getString("description"))
                 .startingPrice(itemDoc.getDouble("startingPrice"))
                 .brand(itemDoc.getString("brand"))
                 .model(itemDoc.getString("model"))
                 .build();
+        item.setImageBase64(itemDoc.getString("imageBase64"));
+        return item;
     }
 }

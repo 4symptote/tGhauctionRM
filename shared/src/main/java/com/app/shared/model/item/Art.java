@@ -52,7 +52,8 @@ public class Art extends Item {
                 .append("startingPrice", getStartingPrice())
                 .append("artist", this.artist)
                 .append("medium", this.medium)
-                .append("year", this.year);
+                .append("year", this.year)
+                .append("imageBase64", this.getImageBase64());
     }
 
     public int getYear() {

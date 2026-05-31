@@ -3,6 +3,7 @@ package com.app.client.util;
 import com.app.shared.model.auction.Auction;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -65,6 +66,12 @@ public class AuctionCardFactory {
         statusLabel.getStyleClass().addAll("card-status-badge", "status-" + auction.getStatus().name());
 
         priceBox.getChildren().addAll(priceLabel, statusLabel);
+
+        ImageView imageView = new ImageView();
+        imageView.setFitHeight(120);
+        imageView.setFitWidth(200);
+        imageView.setPreserveRatio(true);
+        imageView.setImage(ImageUtil.decodeToImage(auction.getItem().getImageBase64()));
 
         card.getChildren().addAll(infoBox, priceBox);
 

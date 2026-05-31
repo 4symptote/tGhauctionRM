@@ -7,6 +7,7 @@ public abstract class Item extends Entity {
     protected String name, desc;
     protected double startingPrice, currentHighestBid;
     protected String sellerId;
+    protected String imageBase64;
 
     public Item(String name, String desc, double startingPrice, String sellerId) {
         super();
@@ -33,6 +34,9 @@ public abstract class Item extends Entity {
 
     public String getSellerId() { return sellerId; }
     public void setSellerId(String sellerId) { this.sellerId = sellerId; }
+
+    public String getImageBase64() { return imageBase64; }
+    public void setImageBase64(String imageBase64) { this.imageBase64 = imageBase64; }
 
     @Override
     public String toString() {

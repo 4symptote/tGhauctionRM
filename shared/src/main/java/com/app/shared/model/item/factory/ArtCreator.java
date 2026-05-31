@@ -19,7 +19,7 @@ public class ArtCreator implements ItemCreator {
         }
 
         // dùng Builder - xem Art
-        return new Art.Builder() // cách dòng nhìn cho đẹp
+        Item item = new Art.Builder() // cách dòng nhìn cho đẹp
                 .name(payload.name())
                 .desc(payload.description())
                 .startingPrice(payload.startingPrice())
@@ -29,6 +29,8 @@ public class ArtCreator implements ItemCreator {
                 .year((int) attrs.getOrDefault("year", 0))
 
                 .build();
+        item.setImageBase64(payload.imageBase64());
+        return item;
         /*
         Thay vì phải căng mắt viết một hàm khởi tạo khổng lồ và dễ truyền nhầm vị trí
         như `new Art("Tên", "Mô tả", 500, "user1", "Da Vinci", "Sơn dầu", 1503, .....)`,
@@ -57,7 +59,7 @@ public class ArtCreator implements ItemCreator {
     // I am insane
     @Override
     public Item createItemFromDocument(Document itemDoc) {
-        return new Art.Builder()
+        Item item = new Art.Builder()
                 .name(itemDoc.getString("name"))
                 .desc(itemDoc.getString("description"))
                 .startingPrice(itemDoc.getDouble("startingPrice"))
@@ -65,5 +67,7 @@ public class ArtCreator implements ItemCreator {
                 .medium(itemDoc.getString("medium"))
                 .year(itemDoc.getInteger("year") != null ? itemDoc.getInteger("year") : 0)
                 .build();
+        item.setImageBase64(itemDoc.getString("imageBase64"));
+        return item;
     }
 }

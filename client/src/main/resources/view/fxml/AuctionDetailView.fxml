@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 
+<?import javafx.scene.image.ImageView?>
 <BorderPane styleClass="root-pane"
             stylesheets="@../css/global.css, @../css/detail-view.css"
             xmlns="http://javafx.com/javafx/21"
@@ -39,7 +40,13 @@
                 <HBox alignment="TOP_CENTER" maxWidth="1200.0" spacing="30.0">
 
                     <!-- LEFT COLUMN: Description, Specs, Chart, History -->
+
                     <VBox maxWidth="900.0" spacing="20.0" styleClass="auction-card" HBox.hgrow="ALWAYS">
+
+                        <VBox alignment="CENTER" spacing="15.0">
+                            <ImageView fx:id="detailImageView" fitHeight="350.0" fitWidth="600.0" preserveRatio="true" style="-fx-effect: dropshadow(THREE_PASS_BOX, rgba(0,0,0,0.15), 10, 0, 0, 0);"/>
+                        </VBox>
+                        <Region styleClass="divider-region"/>
 
                         <Label styleClass="section-header" text="Item Description"/>
                         <Region styleClass="divider-region"/>

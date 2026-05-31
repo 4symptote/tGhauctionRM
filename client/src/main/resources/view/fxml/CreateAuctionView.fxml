@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ScrollPane?>
 
+<?import javafx.scene.image.ImageView?>
 <StackPane xmlns="http://javafx.com/javafx/17.0.12"
            xmlns:fx="http://javafx.com/fxml/1"
            styleClass="root-pane" stylesheets="@../css/global.css, @../css/create-auction.css"
@@ -37,6 +38,11 @@
                 </VBox>
 
                 <Label fx:id="errorLabel" styleClass="error-label" wrapText="true" />
+
+                <VBox alignment="CENTER" spacing="10.0">
+                    <ImageView fx:id="imagePreview" fitHeight="150.0" fitWidth="200.0" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);"/>
+                    <Button text="Upload Image" onAction="#handleUploadImage" styleClass="action-btn" />
+                </VBox>
 
                 <VBox spacing="5.0">
                     <Label styleClass="input-label" text="Item Name" />

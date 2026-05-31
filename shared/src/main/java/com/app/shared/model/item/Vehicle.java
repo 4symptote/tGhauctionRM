@@ -43,7 +43,8 @@ public class Vehicle extends Item {
                 .append("description", getDescription())
                 .append("startingPrice", getStartingPrice())
                 .append("brand", this.brand)
-                .append("model", this.model);
+                .append("model", this.model)
+                .append("imageBase64", this.getImageBase64());
     }
 
     public String getBrand() { return this.brand; }
