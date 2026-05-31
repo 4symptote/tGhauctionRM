@@ -25,6 +25,9 @@
             </VBox>
 
             <Region prefWidth="10" />
+
+            <Button onAction="#openWallet" styleClass="action-btn" text="Wallet" />
+
             <Button onAction="#handleLogout" styleClass="action-btn, logout-btn" text="Logout" />
         </HBox>
     </top>
