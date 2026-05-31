@@ -4,6 +4,7 @@ import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
+import com.app.client.util.ToastUtil;
 import com.app.shared.model.user.Bidder;
 import com.app.shared.model.user.Seller;
 import com.app.shared.model.user.User;
@@ -110,12 +111,31 @@ public class MainLayoutController implements ResponseListener {
         }
     }
 
+    @FXML
+    private void openWallet() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/fxml/WalletView.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("My Wallet");
+            stage.setScene(new javafx.scene.Scene(root));
+
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onResponseReceived(Response response) {
         Platform.runLater(() -> {
             if (response.type() == Response.ResponseType.USER_UPDATED) {
                 if (response.success() && response.payload() instanceof User updatedUser) {
                     updateUserUI(updatedUser);
+                    ToastUtil.showToast(response.message(), ToastUtil.ToastType.INFO);
                 }
             }
         });

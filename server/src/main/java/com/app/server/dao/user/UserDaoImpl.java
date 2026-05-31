@@ -86,12 +86,43 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public boolean lockFunds(String userId, double amount) {
+        if (amount <= 0) return false;
+
+        // kiem tra xem du tien k
+        org.bson.Document query = new org.bson.Document("_id", userId)
+                .append("balance", new org.bson.Document("$gte", amount));
+
+        // subtract from balance, them vao reservedBalance atomically
+        org.bson.Document update = new org.bson.Document("$inc",
+                new org.bson.Document("balance", -amount)
+                        .append("reservedBalance", amount));
+
+        return usersCollection.findOneAndUpdate(query, update) != null;
+    }
+
+    @Override
+    public void unlockFunds(String userId, double amount) {
+        if (amount <= 0) return;
+
+        // tra lai tien vao balance tu reserved
+        usersCollection.updateOne(
+                new Document("_id", userId),
+                com.mongodb.client.model.Updates.combine(
+                        com.mongodb.client.model.Updates.inc("balance", amount),
+                        com.mongodb.client.model.Updates.inc("reservedBalance", -amount)
+                )
+        );
+    }
+
     private User documentToUser(Document doc) {
         String dbId = doc.getString("_id");
         String fetchedUsername = doc.getString("username");
         String passwordHash = doc.getString("passwordHash");
         String email = doc.getString("email");
         String role = doc.getString("role");
+
 
         User user = switch (role) {
             case "ADMIN" -> new Admin(fetchedUsername, passwordHash, email);
@@ -101,7 +132,8 @@ public class UserDaoImpl implements UserDao {
             }
             default -> {
                 double balance = doc.getDouble("balance");
-                yield new Bidder(fetchedUsername, passwordHash, email, balance);
+                double reserved = doc.get("reservedBalance") != null ? doc.getDouble("reservedBalance") : 0.0;
+                yield new Bidder(fetchedUsername, passwordHash, email, balance, reserved);
             }
         };
         user.setId(dbId);
@@ -110,14 +142,20 @@ public class UserDaoImpl implements UserDao {
 
     private Document userToDocument(User user) {
         double balance = 0.0;
-        if (user instanceof Bidder b) balance = b.getBalance();
+        double reserved = 0.0;
+        if (user instanceof Bidder b) {
+            balance = b.getBalance();
+            reserved = b.getReservedBalance();
+        }
         if (user instanceof Seller s) balance = s.getTotalRevenue();
+
         return new Document("_id", user.getId())
                 .append("username", user.getUsername())
                 .append("passwordHash", user.getPassword())
                 .append("email", user.getEmail())
                 .append("role", user.getRole())
-                .append("balance", balance);
+                .append("balance", balance)
+                .append("reservedBalance", reserved);
     }
 
     @Override

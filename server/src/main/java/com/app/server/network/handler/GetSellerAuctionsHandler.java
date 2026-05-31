@@ -18,6 +18,10 @@ public class GetSellerAuctionsHandler implements RequestHandler {
         String sellerId = client.getCurrentUser().getId();
         List<Auction> sellerAuctions = AuctionDaoImpl.getInstance().getAuctionsBySellerId(sellerId);
 
+        for (Auction auction : sellerAuctions) {
+            auction.updateStatus();
+        }
+
         return new Response(Response.ResponseType.SELLER_AUCTION_LIST, true, "Seller auctions retrieved", sellerAuctions);
     }
 }

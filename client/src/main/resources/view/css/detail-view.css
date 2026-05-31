@@ -159,3 +159,25 @@
 .error-message {
     -fx-text-fill: red;
 }
+
+/* Auto-Bid UI Styling */
+.auto-bid-box {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+    -fx-border-width: 1;
+}
+
+.auto-bid-btn {
+    -fx-background-color: #9b59b6; /* Distinct purple to separate from normal bids */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.auto-bid-btn:hover {
+    -fx-background-color: #8e44ad;
+}

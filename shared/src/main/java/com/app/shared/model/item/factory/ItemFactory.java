@@ -24,7 +24,7 @@ public final class ItemFactory {
         return creator.createItem(payload);
     }
 
-    // Factory method de tao item tu document
+    // hoa ra day ko phai factory method trong sgk
     public static Item createItemFromDocument(Document itemDoc) {
         ItemCreator creator = getCreator(itemDoc.getString("type"));
         return creator.createItemFromDocument(itemDoc);

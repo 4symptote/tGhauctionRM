@@ -60,7 +60,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void sendResponse(Response response) {
+    public synchronized void sendResponse(Response response) {
         try {
             out.writeObject(response);
             out.flush();

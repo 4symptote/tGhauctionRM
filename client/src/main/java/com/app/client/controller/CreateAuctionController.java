@@ -3,6 +3,7 @@ package com.app.client.controller;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
+import com.app.client.util.ToastUtil;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.CreateAuctionPayload;
@@ -83,6 +84,7 @@ public class CreateAuctionController implements ResponseListener {
             // validation
             if (name.isEmpty() || type == null || durationField.getText().isEmpty() || startingPriceField.getText().isEmpty()) {
                 errorLabel.setText("Please fill out all fields.");
+                ToastUtil.showToast("Please fill out all fields.", ToastUtil.ToastType.INFO);
                 return;
             }
 
@@ -112,6 +114,7 @@ public class CreateAuctionController implements ResponseListener {
         } catch (NumberFormatException e) {
             errorLabel.setStyle("-fx-text-fill: RED;");
             errorLabel.setText("Error: Price and Duration must be valid numbers.");
+            ToastUtil.showToast("Price and Duration must be valid numbers.", ToastUtil.ToastType.ERROR);
         }
     }
 
@@ -148,6 +151,7 @@ public class CreateAuctionController implements ResponseListener {
             } else {
                 errorLabel.setStyle("-fx-text-fill: RED;");
                 errorLabel.setText(response.message()); // Show server error message
+                ToastUtil.showToast(response.message(), ToastUtil.ToastType.ERROR);
             }
         });
     }
