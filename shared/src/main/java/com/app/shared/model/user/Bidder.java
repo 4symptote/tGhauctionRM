@@ -1,21 +1,23 @@
 package com.app.shared.model.user;
 
-//import com.app.shared.model.auction.BidTransaction;
-import java.util.ArrayList;
-import java.util.List;
-
 public class Bidder extends User {
     private double balance;
-//    private List<BidTransaction> bidHistory; // Lịch sử các lần trả giá
+    private double reservedBalance;
 
-    public Bidder(String username, String password, String email, double initialBalance) {
+    @Override
+    public boolean canBid() { return true; }
+
+    public Bidder(String username, String password, String email, double initialBalance, double reservedBalance) {
         super(username, password, email, "BIDDER");
         this.balance = initialBalance;
-//        this.bidHistory = new ArrayList<>();
+        this.reservedBalance = reservedBalance;
     }
-
 
     public double getBalance() { return balance; }
     public void setBalance(double balance) { this.balance = balance; }
+
+    public double getReservedBalance() { return reservedBalance; }
+    public void setReservedBalance(double reservedBalance) { this.reservedBalance = reservedBalance; }
 }
+
 

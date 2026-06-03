@@ -6,35 +6,25 @@ import com.app.shared.model.user.Bidder;
 import com.app.shared.model.user.Seller;
 import com.app.shared.model.user.User;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
 public class UserDaoImpl implements UserDao {
+    private static final UserDaoImpl instance = new UserDaoImpl();
+
     private final MongoCollection<Document> usersCollection;
 
-    public UserDaoImpl() {
+    private UserDaoImpl() {
         this.usersCollection = DatabaseConnection.getInstance().getDatabase().getCollection("users");
+    }
+
+    public static UserDaoImpl getInstance() {
+        return instance;
     }
 
     @Override
     public void saveUser(User user) {
-
-        String role = "BIDDER";
-        double balance = 0.0;
-
-        if (user instanceof Admin) role = "ADMIN";
-        else if (user instanceof Seller) role = "SELLER";
-        else if (user instanceof Bidder b) {
-            role = "BIDDER";
-            balance = b.getBalance();
-        }
-
-        // object -> document
-        Document doc = new Document("username", user.getUsername())
-                .append("passwordHash", user.getPassword())
-                .append("email", user.getEmail())
-                .append("role", role)
-                .append("balance", balance);
-
+        Document doc = userToDocument(user);
         usersCollection.insertOne(doc);
     }
 
@@ -46,25 +36,136 @@ public class UserDaoImpl implements UserDao {
         if (doc == null) {
             return null;
         }
-
         // MongoDB Document -> Java Object
+        return documentToUser(doc);
+    }
+
+    @Override
+    public User getUserById(String id) {
+        Document query = new Document("_id", id);
+        Document doc = usersCollection.find(query).first();
+        if (doc == null) {
+            return null;
+        }
+
+        return documentToUser(doc);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        Document doc = userToDocument(user);
+        usersCollection.replaceOne(new Document("_id", user.getId()), doc);
+    }
+
+    @Override
+    public void adjustBalance(String userId, double amount) {
+        usersCollection.updateOne(
+                new Document("_id", userId),
+                com.mongodb.client.model.Updates.inc("balance", amount)
+        );
+    }
+
+    public boolean withdraw(String userId, double amount) {
+        if (amount <= 0) return false;
+
+        // $gte (>=) check ensures MongoDB ONLY updates if the balance is high enough
+        org.bson.Document query = new org.bson.Document("_id", userId)
+                .append("balance", new org.bson.Document("$gte", amount));
+
+        org.bson.Document update = new org.bson.Document("$inc", new org.bson.Document("balance", -amount));
+
+        // findOneAndUpdate is atomic
+        org.bson.Document result = usersCollection.findOneAndUpdate(query, update);
+
+        // If result is not null, it found the user AND they had enough money.
+        return result != null;
+    }
+
+    public void deposit(String userId, double amount) {
+        if (amount > 0) {
+            adjustBalance(userId, amount);
+        }
+    }
+
+    @Override
+    public boolean lockFunds(String userId, double amount) {
+        if (amount <= 0) return false;
+
+        // kiem tra xem du tien k
+        org.bson.Document query = new org.bson.Document("_id", userId)
+                .append("balance", new org.bson.Document("$gte", amount));
+
+        // subtract from balance, them vao reservedBalance atomically
+        org.bson.Document update = new org.bson.Document("$inc",
+                new org.bson.Document("balance", -amount)
+                        .append("reservedBalance", amount));
+
+        return usersCollection.findOneAndUpdate(query, update) != null;
+    }
+
+    @Override
+    public void unlockFunds(String userId, double amount) {
+        if (amount <= 0) return;
+
+        // tra lai tien vao balance tu reserved
+        usersCollection.updateOne(
+                new Document("_id", userId),
+                com.mongodb.client.model.Updates.combine(
+                        com.mongodb.client.model.Updates.inc("balance", amount),
+                        com.mongodb.client.model.Updates.inc("reservedBalance", -amount)
+                )
+        );
+    }
+
+    private User documentToUser(Document doc) {
+        String dbId = doc.getString("_id");
         String fetchedUsername = doc.getString("username");
         String passwordHash = doc.getString("passwordHash");
         String email = doc.getString("email");
         String role = doc.getString("role");
 
-        return switch (role) {
+
+        User user = switch (role) {
             case "ADMIN" -> new Admin(fetchedUsername, passwordHash, email);
-            case "SELLER" -> new Seller(fetchedUsername, passwordHash, email);
+            case "SELLER" -> {
+                double revenue = doc.getDouble("balance");
+                yield new Seller(fetchedUsername, passwordHash, email, revenue);
+            }
             default -> {
                 double balance = doc.getDouble("balance");
-                yield new Bidder(fetchedUsername, passwordHash, email, balance);
+                double reserved = doc.get("reservedBalance") != null ? doc.getDouble("reservedBalance") : 0.0;
+                yield new Bidder(fetchedUsername, passwordHash, email, balance, reserved);
             }
         };
+        user.setId(dbId);
+        return user;
+    }
+
+    private Document userToDocument(User user) {
+        double balance = 0.0;
+        double reserved = 0.0;
+        if (user instanceof Bidder b) {
+            balance = b.getBalance();
+            reserved = b.getReservedBalance();
+        }
+        if (user instanceof Seller s) balance = s.getTotalRevenue();
+
+        return new Document("_id", user.getId())
+                .append("username", user.getUsername())
+                .append("passwordHash", user.getPassword())
+                .append("email", user.getEmail())
+                .append("role", user.getRole())
+                .append("balance", balance)
+                .append("reservedBalance", reserved);
     }
 
     @Override
     public boolean userExists(String username) {
         return usersCollection.countDocuments(new Document("username", username)) > 0;
+    }
+
+    @Override
+    public boolean deleteUser(String userId) {
+        return usersCollection.deleteOne(Filters.eq("_id", userId)).getDeletedCount() > 0;
     }
 }

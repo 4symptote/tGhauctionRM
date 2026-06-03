@@ -1,5 +1,6 @@
 package com.app.client.controller;
 
+import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
@@ -57,7 +58,7 @@ public class RegisterController implements ResponseListener {
 
     @FXML
     private void switchToLogin(ActionEvent event) {
-        logger.info("switching to login");
+        //logger.info("switching to login");
         NetworkClient.getInstance().removeListener(this);
         SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
     }
@@ -75,8 +76,10 @@ public class RegisterController implements ResponseListener {
             errorLabel.setStyle("-fx-text-fill: green;");
             errorLabel.setText("Account created! Logging you in...");
 
-            System.out.println("Switching to Dashboard...");
-            SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
+            SessionModel.getInstance().setCurrentUser(newUser);
+
+            NetworkClient.getInstance().removeListener(this);
+            SceneManager.getInstance().switchScene("/view/fxml/MainLayout.fxml");
         }
     }
 }

@@ -30,23 +30,20 @@ public class LoginHandler implements RequestHandler {
             // !!!! ClientHandler now knows who the client actually is
             client.setCurrentUser(authenticatedUser);
 
-            logger.info("{} logged from: {}",
-                    authenticatedUser.getUsername(), client.getInetAddress());
-
             // return success response + tk User
             return new Response(true, "Logged in successfully", authenticatedUser);
 
         } catch (ClassCastException e) {
-            logger.error("Error: Payload casting error");
+            logger.error("Payload casting error");
             return new Response(false, "Loi du lieu", null);
 
         } catch (IllegalArgumentException e) {
             // catch exception khi UserService.login() nem
-            logger.warn("Failed login attempt from IP {}: {}", client.getInetAddress(), e.getMessage());
+            //logger.warn("Failed login attempt from IP {}: {}", client.getInetAddress(), e.getMessage());
             return new Response(false, e.getMessage(), null);
 
         } catch (Exception e) {
-            logger.error("Unexpected error during login: ", e);
+            //logger.error("Unexpected error during login: ", e);
             return new Response(false, "?? Error", null);
         }
     }

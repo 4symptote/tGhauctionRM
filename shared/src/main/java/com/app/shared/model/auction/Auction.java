@@ -14,47 +14,45 @@ public class Auction extends Entity {
 
     private Item item;
     private String sellerId;
+    private String sellerName;
 
     private long startTime;
     private long endTime;
 
     private double currentPrice;
     private Status status;
+
     private String highestBidderId;
-    private final List<BidTransaction> bids;
+    private String highestBidderName;
+    // removed bids cuz bad
 
     public Auction(Item item, long startTime, long endTime) {
         super();
         this.item = item;
         this.currentPrice = item.getStartingPrice();
         this.status = Status.OPEN;
-        this.bids = new ArrayList<>();
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public Auction(Item item, long durationMillis) {
-        super();
-        this.item = item;
-        this.currentPrice = item.getStartingPrice();
-        this.status = Status.OPEN;
-        this.bids = new ArrayList<>();
-        this.startTime = System.currentTimeMillis();
-        this.endTime = this.startTime + durationMillis;
-    }
-
-
+    public String getSellerName() { return sellerName; }
     public String getSellerId() { return sellerId; }
+
     public Item getItem() { return item; } // Returns the actual Item (Electronics, Art, etc.)
     public long getStartTime() { return startTime; }
     public long getEndTimeMillis() { return endTime; }
     public double getCurrentPrice() { return currentPrice; }
+
     public String getHighestBidderId() { return highestBidderId; }
-    public List<BidTransaction> getBids() { return bids; }
+    public String getHighestBidderName() { return highestBidderName; }
 
     public Status getStatus() {
+        return status;
+    }
+
+    public void updateStatus() {
         if (status == Status.PAID || status == Status.CANCELED) {
-            return status;
+            return;
         }
 
         long now = System.currentTimeMillis();
@@ -65,23 +63,25 @@ public class Auction extends Entity {
         } else {
             status = Status.OPEN;
         }
-        return status;
     }
 
 
+    public void setSellerName(String sellerName) { this.sellerName = sellerName; }
+    public void setSellerId(String sellerId) { this.sellerId = sellerId; }
     public void setItem(Item item) { this.item = item; }
     public void setStartTime(long startTime) { this.startTime = startTime; }
     public void setEndTimeMillis(long endTime) { this.endTime = endTime; }
     public void setCurrentPrice(double currentPrice) { this.currentPrice = currentPrice; }
     public void setStatus(Status status) { this.status = status; }
     public void setHighestBidderId(String highestBidderId) { this.highestBidderId = highestBidderId; }
+    public void setHighestBidderName(String highestBidderName) { this.highestBidderName = highestBidderName; }
 
     //
-    public void addBid(BidTransaction bid) {
-        this.bids.add(bid);
-        this.currentPrice = bid.getAmount();
-        this.highestBidderId = bid.getBidderId();
-        this.item.setCurrentHighestBid(bid.getAmount());
+    public void processNewBid(double amount, String bidderId, String bidderName) {
+        this.currentPrice = amount;
+        this.highestBidderId = bidderId;
+        this.highestBidderName = bidderName;
+        this.item.setCurrentHighestBid(amount);
     }
 
     @Override

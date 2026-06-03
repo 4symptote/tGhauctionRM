@@ -1,14 +1,61 @@
 package com.app.server.network.handler;
 
+import com.app.server.network.AuctionServer;
 import com.app.server.network.ClientHandler;
+import com.app.server.service.AuctionManager;
+import com.app.shared.model.auction.Auction;
+import com.app.shared.model.item.Item;
+import com.app.shared.model.item.factory.ItemFactory;
+import com.app.shared.model.user.User;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
+import com.app.shared.network.payload.CreateAuctionPayload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CreateAuctionHandler implements RequestHandler {
+    private static final Logger logger = LoggerFactory.getLogger(CreateAuctionHandler.class);
 
     @Override
     public Response handle(Request request, ClientHandler client) {
-        return null;
-    }
+        try {
+            CreateAuctionPayload payload = (CreateAuctionPayload) request.payload();
 
+            User currentUser = client.getCurrentUser();
+            if (currentUser == null) {
+                return new Response(false, "You must be logged in to create an auction.", null);
+            }
+
+            if (!currentUser.canSell()) {
+                // check hack
+                logger.warn("User {} attempted to illegally create an auction without SELLER clearance", currentUser.getUsername());
+                return new Response(false, "Only sellers can list items", null);
+            }
+            //
+            Item item = ItemFactory.createItem(payload);
+            long endTime = payload.startTime() + payload.durationMillis();
+            Auction auction = new Auction(item, payload.startTime(), endTime);
+
+            auction.setSellerId(currentUser.getId());
+            auction.setSellerName(currentUser.getUsername());
+
+            AuctionManager.getInstance().startAuction(auction);
+
+            logger.info("Successfully created auction {} for user {}", auction.getId(), currentUser.getUsername());
+
+            AuctionServer.broadcast(new Response(Response.ResponseType.AUCTION_LIST,true, "A new Auction Created", AuctionManager.getInstance().getAllActiveAuctionsList()));
+            return null;
+
+
+        } catch (ClassCastException e) {
+            logger.error("Invalid payload type for CREATE_AUCTION request");
+            return new Response(false, "Internal Error: Invalid payload format.", null);
+        } catch (IllegalArgumentException e) {
+            logger.warn("Failed to create item: {}", e.getMessage());
+            return new Response(false, "Failed to create item: " + e.getMessage(), null);
+        } catch (Exception e) {
+            logger.error("Unexpected error creating auction: ", e);
+            return new Response(false, "An unexpected error occurred.", null);
+        }
+    }
 }

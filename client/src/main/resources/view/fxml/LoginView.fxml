@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="350.0" spacing="15.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.LoginController">
-    <padding>
-        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
-    </padding>
+<StackPane xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           styleClass="root-pane" stylesheets="@../css/global.css, @../css/auth.css"
+           fx:controller="com.app.client.controller.LoginController">
 
-    <Label text="Not Enough Login View">
-        <font>
-            <Font name="System Bold" size="24.0" />
-        </font>
-    </Label>
+    <VBox alignment="CENTER" maxHeight="450.0" maxWidth="400.0" spacing="20.0" styleClass="auth-card">
+        <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+        </padding>
 
-    <Label fx:id="errorLabel" textFill="RED" wrapText="true" />
+        <Label styleClass="auth-title" text="Login" />
 
-    <VBox spacing="5.0">
-        <Label text="Username" />
-        <TextField fx:id="usernameField" promptText="Enter username..." />
+        <Label fx:id="errorLabel" styleClass="error-label" wrapText="true" />
+
+        <VBox spacing="5.0">
+            <Label styleClass="input-label" text="Username" />
+            <TextField fx:id="usernameField" promptText="Enter username..." styleClass="auth-input" />
+        </VBox>
+
+        <VBox spacing="5.0">
+            <Label styleClass="input-label" text="Password" />
+            <PasswordField fx:id="passwordField" promptText="Enter password..." styleClass="auth-input" />
+        </VBox>
+
+        <Region prefHeight="10" />
+
+        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" prefWidth="Infinity" styleClass="auth-btn" text="Login" />
+
+        <Hyperlink onAction="#switchToRegister" styleClass="auth-link" text="register..." />
     </VBox>
-
-    <VBox spacing="5.0">
-        <Label text="Password" />
-        <PasswordField fx:id="passwordField" promptText="Enter password..." />
-    </VBox>
-
-    <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" prefWidth="Infinity" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px;" text="Login" />
-
-    <Hyperlink onAction="#switchToRegister" text="register" />
-</VBox>
+</StackPane>

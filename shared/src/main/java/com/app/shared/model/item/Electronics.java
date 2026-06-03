@@ -1,15 +1,48 @@
 package com.app.shared.model.item;
 
+
+import org.bson.Document;
+
 public class Electronics extends Item {
+    // custom Vehicle fields
     private String brand;
 
-    public Electronics(String name, String desc, double startingPrice, String sellerId) {
-        super(name, desc, startingPrice, sellerId);
+    private Electronics(Builder builder) {
+        super(builder.name, builder.desc, builder.startingPrice, builder.sellerId);
+        this.brand = builder.brand;
     }
 
-    public String getBrand() {
-        return brand;
+    public static class Builder {
+        private String name;
+        private String desc;
+        private double startingPrice;
+        private String sellerId;
+
+        private String brand;
+
+        // base field setter
+        public Builder name(String name) { this.name = name; return this; }
+        public Builder desc(String desc) { this.desc = desc; return this; }
+        public Builder startingPrice(double price) { this.startingPrice = price; return this; }
+        public Builder sellerId(String id) { this.sellerId = id; return this; }
+        //
+        public Builder brand(String brand) { this.brand = brand; return this; }
+
+        public Electronics build() { return new Electronics(this); }
+
     }
+
+    @Override
+    public Document toBsonDocument() {
+        return new Document("type", "Electronics")
+                .append("name", getName())
+                .append("description", getDescription())
+                .append("startingPrice", getStartingPrice())
+                .append("brand", this.brand)
+                .append("imageBase64", this.getImageBase64());
+    }
+
+    public String getBrand() { return this.brand; }
 
     public Electronics setBrand(String brand) {
         this.brand = brand;

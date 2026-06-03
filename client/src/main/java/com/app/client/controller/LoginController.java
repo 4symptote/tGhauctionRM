@@ -1,5 +1,6 @@
 package com.app.client.controller;
 
+import com.app.client.model.SessionModel;
 import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 
@@ -45,7 +46,6 @@ public class LoginController implements ResponseListener {
             return;
         }
 
-        System.out.println("Attempting to login with: " + username);
         errorLabel.setText("connecting to server");
 
         LoginPayload payload = new LoginPayload(username, password);
@@ -55,7 +55,7 @@ public class LoginController implements ResponseListener {
 
     @FXML
     private void switchToRegister(ActionEvent event) {
-        logger.info("switching to register");
+        //logger.info("switching to register");
         NetworkClient.getInstance().removeListener(this);
         SceneManager.getInstance().switchScene("/view/fxml/RegisterView.fxml");
     }
@@ -76,11 +76,10 @@ public class LoginController implements ResponseListener {
             errorLabel.setText("Welcome " + loggedInUser.getUsername());
 
             // Clean up? ko can observe nx
-            // NetworkClient.getInstance().removeListener(this);
+            NetworkClient.getInstance().removeListener(this);
 
-            // TODO: Switch to auction list (make da auction list view)
-            SceneManager.getInstance().switchScene("/view/fxml/HellowScreen.fxml");
-            System.out.println("Switching to Dashboard...");
+            SessionModel.getInstance().setCurrentUser(loggedInUser);
+            SceneManager.getInstance().switchScene("/view/fxml/MainLayout.fxml");
         }
     }
 }

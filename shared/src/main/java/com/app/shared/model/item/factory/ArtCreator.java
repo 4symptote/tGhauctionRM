@@ -3,6 +3,7 @@ package com.app.shared.model.item.factory;
 import com.app.shared.model.item.Art;
 import com.app.shared.model.item.Item;
 import com.app.shared.network.payload.CreateAuctionPayload;
+import org.bson.Document;
 
 import java.util.Map;
 
@@ -13,11 +14,23 @@ public class ArtCreator implements ItemCreator {
 
         //Extract custom attributes from the payload - Làm sau
         Map<String, Object> attrs = payload.customAttributes();
+        if (attrs == null) {
+            attrs = Map.of();
+        }
 
         // dùng Builder - xem Art
-        return new Art.Builder() // cách dòng nhìn cho đẹp
-                .name("payload.name()") // name() vì payload là record class
+        Item item = new Art.Builder() // cách dòng nhìn cho đẹp
+                .name(payload.name())
+                .desc(payload.description())
+                .startingPrice(payload.startingPrice())
+
+                .artist((String) attrs.getOrDefault("artist", "Unknown"))
+                .medium((String) attrs.getOrDefault("medium", "Unknown"))
+                .year((int) attrs.getOrDefault("year", 0))
+
                 .build();
+        item.setImageBase64(payload.imageBase64());
+        return item;
         /*
         Thay vì phải căng mắt viết một hàm khởi tạo khổng lồ và dễ truyền nhầm vị trí
         như `new Art("Tên", "Mô tả", 500, "user1", "Da Vinci", "Sơn dầu", 1503, .....)`,
@@ -41,5 +54,20 @@ public class ArtCreator implements ItemCreator {
 
         Repo cũ thậm chí còn đéo dùng mấy cái custom attr đấy.
         */
+    }
+
+    // I am insane
+    @Override
+    public Item createItemFromDocument(Document itemDoc) {
+        Item item = new Art.Builder()
+                .name(itemDoc.getString("name"))
+                .desc(itemDoc.getString("description"))
+                .startingPrice(itemDoc.getDouble("startingPrice"))
+                .artist(itemDoc.getString("artist"))
+                .medium(itemDoc.getString("medium"))
+                .year(itemDoc.getInteger("year") != null ? itemDoc.getInteger("year") : 0)
+                .build();
+        item.setImageBase64(itemDoc.getString("imageBase64"));
+        return item;
     }
 }

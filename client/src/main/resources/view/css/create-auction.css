@@ -1,0 +1,77 @@
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.error-label {
+    -fx-text-fill: red;
+}
+
+.input-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.form-input, .form-combo, .form-area {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4px;
+}
+
+.form-input {
+    -fx-padding: 10px;
+}
+
+.form-combo, .form-area {
+    -fx-padding: 5px;
+}
+
+.form-input:focused, .form-combo:focused, .form-area:focused {
+    -fx-border-color: #3498db;
+    -fx-background-color: white;
+}
+
+.dynamic-container {
+    -fx-padding: 10px;
+    -fx-border-color: #ecf0f1;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+
+.dynamic-info-label {
+    -fx-text-fill: #95a5a6;
+    -fx-font-style: italic;
+}
+
+.cancel-btn {
+    -fx-background-color: #ecf0f1;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+    -fx-padding: 12px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.cancel-btn:hover {
+    -fx-background-color: #d5dbdb;
+}
+
+.submit-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.submit-btn:hover {
+    -fx-background-color: #2980b9;
+}
