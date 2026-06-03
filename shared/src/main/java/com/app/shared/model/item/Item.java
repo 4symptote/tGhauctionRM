@@ -1,11 +1,13 @@
 package com.app.shared.model.item;
 
 import com.app.shared.model.Entity;
+import org.bson.Document;
 
 public abstract class Item extends Entity {
     protected String name, desc;
     protected double startingPrice, currentHighestBid;
     protected String sellerId;
+    protected String imageBase64;
 
     public Item(String name, String desc, double startingPrice, String sellerId) {
         super();
@@ -15,6 +17,8 @@ public abstract class Item extends Entity {
         this.currentHighestBid = startingPrice;
         this.sellerId = sellerId;
     }
+
+    public abstract Document toBsonDocument();
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -30,6 +34,9 @@ public abstract class Item extends Entity {
 
     public String getSellerId() { return sellerId; }
     public void setSellerId(String sellerId) { this.sellerId = sellerId; }
+
+    public String getImageBase64() { return imageBase64; }
+    public void setImageBase64(String imageBase64) { this.imageBase64 = imageBase64; }
 
     @Override
     public String toString() {

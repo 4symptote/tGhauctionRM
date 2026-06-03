@@ -1,0 +1,5 @@
+/* Dashboard-specific layout tweaks go here */
+.dashboard-list-container {
+    -fx-spacing: 15px;
+    -fx-padding: 10px;
+}

@@ -1,0 +1,63 @@
+.auth-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.auth-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.error-label {
+    -fx-text-fill: red;
+}
+
+.input-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.auth-input {
+    -fx-padding: 10px;
+    -fx-background-radius: 4px;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4px;
+    -fx-background-color: #f8f9fa;
+}
+
+.auth-input:focused {
+    -fx-border-color: #3498db;
+    -fx-background-color: white;
+}
+
+.auth-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.auth-btn:hover {
+    -fx-background-color: #2980b9;
+}
+
+.auth-link {
+    -fx-text-fill: #7f8c8d;
+    -fx-border-color: transparent;
+}
+
+.auth-link:hover {
+    -fx-text-fill: #3498db;
+}
+
+.register-btn {
+    -fx-background-color: #27ae60;
+}
+
+.register-btn:hover {
+    -fx-background-color: #2ecc71;
+}

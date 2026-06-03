@@ -3,15 +3,9 @@ package com.app.client;
 import com.app.client.network.NetworkClient;
 import com.app.client.util.SceneManager;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.net.URL;
 
 public class ClientMain extends Application {
 
@@ -20,12 +14,17 @@ public class ClientMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        NetworkClient.getInstance().connect("localhost", port);
-        NetworkClient.getInstance().startListener();
+        NetworkClient networkClient = NetworkClient.getInstance();
+        SceneManager sceneManager = SceneManager.getInstance();
+
+        networkClient.connect("localhost", port);
+        networkClient.startListener();
 
         primaryStage.setTitle("tGhauctionRM");
-        SceneManager.getInstance().setPrimaryStage(primaryStage);
-        SceneManager.getInstance().switchScene("/view/fxml/LoginView.fxml");
+        //primaryStage.setMaximized(true);
+        sceneManager.setPrimaryStage(primaryStage);
+//        sceneManager.switchScene("/view/fxml/LoginView.fxml");
+        sceneManager.switchScene("/view/fxml/LoginView.fxml");
     }
 
     public static void main(String[] args) {

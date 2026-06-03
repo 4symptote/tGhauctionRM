@@ -1,30 +1,24 @@
 package com.app.shared.model.auction;
 
-import com.app.shared.model.Entity;
+import java.io.Serializable;
+import java.util.UUID;
 
-public class BidTransaction extends Entity {
-    private String auctionId;
-    private String bidderId;
-    private double amount;
-    private long timestamp;
+public record BidTransaction(
 
-    public BidTransaction(String auctionId, String bidderId, double amount) {
-        super(); // Generates the UUID
-        this.auctionId = auctionId;
-        this.bidderId = bidderId;
-        this.amount = amount;
-        this.timestamp = System.currentTimeMillis();
+        String id,
+        String auctionId,
+        String bidderId,
+        String bidderName,
+        double amount,
+        long timestamp
+
+) implements Serializable {
+    // constructor for creating a new BidTransaction, with a new randomized unique id
+    public BidTransaction(String auctionId, String bidderId, String bidderName, double amount) {
+        this(UUID.randomUUID().toString(), auctionId, bidderId, bidderName, amount, System.currentTimeMillis());
     }
-
-    // Getters
-    public String getAuctionId() { return auctionId; }
-    public String getBidderId() { return bidderId; }
-    public double getAmount() { return amount; }
-    public long getTimestamp() { return timestamp; }
-
-    // Setters
-    public void setAuctionId(String auctionId) { this.auctionId = auctionId; }
-    public void setBidderId(String bidderId) { this.bidderId = bidderId; }
-    public void setAmount(double amount) { this.amount = amount; }
-    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    // Constructor de tao BidTransaction tu database
+    // BidTransaction(id, auctionId, bidderId, amount, timestamp)
+    // ko can vi day la Record
+    // rat dep <-- Important
 }

@@ -1,11 +1,14 @@
 package com.app.server.network.handler;
 
-import com.app.server.network.AuctionServer;
+import com.app.server.dao.auction.AuctionDao;
+import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.server.network.ClientHandler;
 import com.app.server.service.BidService;
 import com.app.shared.exception.AuctionClosedException;
 import com.app.shared.exception.AuctionNotFoundException;
 import com.app.shared.exception.InvalidBidException;
+import com.app.shared.model.auction.Auction;
+import com.app.shared.model.user.User;
 import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import com.app.shared.network.payload.BidPayload;
@@ -19,31 +22,37 @@ public class PlaceBidHandler implements RequestHandler {
     @Override
     public Response handle(Request request, ClientHandler client) {
         // security check
-        if (client.getCurrentUser() == null) {
-            logger.warn("Unauthorized bid attempt from IP: {}", client.getInetAddress());
-            return new Response(false, "Unauthorized", null);
+        User currentUser = client.getCurrentUser();
+        if (currentUser == null) {
+            return new Response(false, "You must be logged in to place a bid", null);
+        }
+        if (!currentUser.canBid()) {
+            logger.warn("User {} attempted to illegally place a bid without SELLER clearance", currentUser.getUsername());
+            return new Response(Response.ResponseType.PLACED_BID, false, "Only bidder can bid on items", null);
         }
 
         try {
+            AuctionDao auctionDao = AuctionDaoImpl.getInstance();
             BidPayload payload = (BidPayload) request.payload();
 
             String auctionId = payload.auctionId();
             double amount = payload.bidAmount();
 
             // đưa cho BidService cook
-            Response successResponse = BidService.getInstance().placeBid(auctionId, client.getCurrentUser(), amount);
-            AuctionServer.broadcast(successResponse);
+            Auction updatedAuction = BidService.getInstance().placeBid(auctionId, client.getCurrentUser(), amount);
+            // update auction to db
+            auctionDao.updateAuction(updatedAuction);
 
             // null tại vì broadcast ở trên đã gọi sendResponse() rồi, trả về null tránh duplicate...
-            return null;
+            // t nhầm hồi đấy broadcast nguyên cái update, h chỉ thông báo là đã bid thành công cho tk bidder th
+            return new Response(Response.ResponseType.PLACED_BID,true, "Bid placed successfully", updatedAuction);
 
         } catch (InvalidBidException | AuctionClosedException | AuctionNotFoundException e) {
-            return new Response(false, e.getMessage(), null);
+            return new Response(Response.ResponseType.PLACED_BID,false, e.getMessage(), null);
 
         } catch (Exception e) {
-            // Ultimate fallback so the server thread never crashes
             logger.error("Unexpected error in PlaceBidHandler: ", e);
-            return new Response(false, "Internal Error Occurred", null);
+            return new Response(Response.ResponseType.PLACED_BID,false, "Internal Error Occurred", null);
         }
     }
 }

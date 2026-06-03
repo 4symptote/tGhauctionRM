@@ -1,12 +1,14 @@
 package com.app.shared.model.user;
 
-
 public class Seller extends User {
     private double totalRevenue;
 
-    public Seller(String username, String password, String email) {
+    @Override
+    public boolean canSell() { return true; }
+
+    public Seller(String username, String password, String email, double initialBalance) {
         super(username, password, email, "SELLER");
-        this.totalRevenue = 0.0;
+        this.totalRevenue = initialBalance;
     }
 
     public void collectRevenue(double amount) {

@@ -15,6 +15,16 @@ public class RequestRouter {
         handlers.put(Request.RequestType.PLACE_BID, new PlaceBidHandler());
         handlers.put(Request.RequestType.LOGIN, new LoginHandler());
         handlers.put(Request.RequestType.REGISTER, new RegisterHandler());
+        handlers.put(Request.RequestType.GET_AUCTIONS, new GetAuctionsHandler());
+        handlers.put(Request.RequestType.LOGOUT, new LogoutHandler());
+        handlers.put(Request.RequestType.GET_BID_HISTORY, new GetBidHistoryHandler());
+        handlers.put(Request.RequestType.GET_SELLER_AUCTIONS, new GetSellerAuctionsHandler());
+        handlers.put(Request.RequestType.GET_WINNING_AUCTIONS, new GetWinningAuctionsHandler());
+        handlers.put(Request.RequestType.DEPOSIT, new DepositHandler());
+        handlers.put(Request.RequestType.WITHDRAW, new WithdrawHandler());
+        handlers.put(Request.RequestType.SET_AUTO_BID, new SetAutoBidHandler());
+        handlers.put(Request.RequestType.ADMIN_DELETE_AUCTION, new AdminDeleteAuctionHandler());
+        handlers.put(Request.RequestType.ADMIN_DELETE_USER, new AdminDeleteUserHandler());
     }
 
     public Response route(Request request, ClientHandler client) {

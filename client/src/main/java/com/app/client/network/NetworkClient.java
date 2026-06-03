@@ -1,5 +1,6 @@
 package com.app.client.network;
 
+import com.app.shared.network.Request;
 import com.app.shared.network.Response;
 import javafx.application.Platform;
 import org.slf4j.Logger;
@@ -46,12 +47,12 @@ public class NetworkClient {
 
             logger.info("Connected to server");
         } catch (Exception e) {
-            logger.error("Failed to connect to server: {}", e.getMessage());
+            logger.error("Failed to connect to server");
         }
     }
 
 
-    public void sendRequest(com.app.shared.network.Request request) {
+    public void sendRequest(Request request) {
         if (!isConnected()) {
             logger.error("Not connected to server.");
             return;
@@ -72,6 +73,7 @@ public class NetworkClient {
                 try {
                     // Block and wait for a message from the server
                     Response response = (Response) in.readObject();
+                    logger.info("Received {}", response.type());
                     handleResponse(response);
                 } catch (Exception e) {
                     if (!isConnected()) {

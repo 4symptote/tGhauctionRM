@@ -10,9 +10,10 @@ public record CreateAuctionPayload (
         String name,
         String description,
         double startingPrice,
-        String sellerId,
+        long startTime,   // milliseconds
         long durationMillis,
-        Map<String, Object> customAttributes // For extra attributes
+        Map<String, Object> customAttributes, // For extra attributes
+        String imageBase64
 
 ) implements Serializable {
     @Serial

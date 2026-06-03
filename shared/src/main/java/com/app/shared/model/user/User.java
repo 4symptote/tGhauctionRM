@@ -3,10 +3,15 @@ package com.app.shared.model.user;
 import com.app.shared.model.Entity;
 
 public class User extends Entity {
-    protected String username;
+    private String username;
     private String password;
-    protected String email;
-    protected String role;
+    private String email;
+    private String role;
+
+    // finally
+    public boolean canBid() { return false; }
+    public boolean canSell() { return false; }
+    public boolean isAdmin() { return false; }
 
     public User(String username, String password, String email, String role) {
         super();
