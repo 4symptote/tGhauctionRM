@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="600.0" prefWidth="1000.0" styleClass="root-pane" stylesheets="@../css/global.css, @../css/mainlayout.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.MainLayoutController">
+<BorderPane prefHeight="600.0" prefWidth="2300.0" styleClass="root-pane" stylesheets="@../css/global.css, @../css/mainlayout.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.client.controller.MainLayoutController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
@@ -47,6 +47,8 @@
             <Button fx:id="winningBidsBtn" managed="false" maxWidth="Infinity" onAction="#navToWinningBids" styleClass="sidebar-btn" text="Winning Bids" visible="false" />
 
             <Button fx:id="createAuctionBtn" maxWidth="Infinity" onAction="#navToCreate" prefWidth="181.0" styleClass="sidebar-btn, cta-btn" text="Create Auction" />
+
+            <Button fx:id="adminDashboardBtn" managed="false" maxWidth="Infinity" onAction="#navToAdminDashboard" styleClass="sidebar-btn" text="Admin Panel" visible="false" />
 
             <Region VBox.vgrow="ALWAYS" />
         </VBox>

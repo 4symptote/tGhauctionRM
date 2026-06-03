@@ -11,7 +11,7 @@
         <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
     </padding>
 
-    <Label styleClass="wallet-title" text="My Wallet" />
+    <Label styleClass="wallet-title" text="Wallet" />
 
     <VBox alignment="CENTER" spacing="5.0">
         <Label fx:id="currentBalanceLabel" styleClass="wallet-balance" text="Available: $0.00" />

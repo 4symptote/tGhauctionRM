@@ -47,7 +47,7 @@ public class SceneManager {
                 if (primaryStage.getScene() == null) {
                     Scene scene = new Scene(root);
                     primaryStage.setScene(scene);
-                    primaryStage.setMinWidth(1000);
+                    primaryStage.setMinWidth(1300);
                     primaryStage.setMinHeight(700);
                 } else {
                     primaryStage.getScene().setRoot(root);

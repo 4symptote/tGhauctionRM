@@ -23,6 +23,8 @@ public class RequestRouter {
         handlers.put(Request.RequestType.DEPOSIT, new DepositHandler());
         handlers.put(Request.RequestType.WITHDRAW, new WithdrawHandler());
         handlers.put(Request.RequestType.SET_AUTO_BID, new SetAutoBidHandler());
+        handlers.put(Request.RequestType.ADMIN_DELETE_AUCTION, new AdminDeleteAuctionHandler());
+        handlers.put(Request.RequestType.ADMIN_DELETE_USER, new AdminDeleteUserHandler());
     }
 
     public Response route(Request request, ClientHandler client) {

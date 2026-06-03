@@ -109,4 +109,9 @@ public class AuctionDaoImpl implements AuctionDao {
                 .append("startTime", auction.getStartTime())
                 .append("endTime", auction.getEndTimeMillis());
     }
+
+    @Override
+    public void deleteAuction(String auctionId) {
+        collection.deleteOne(com.mongodb.client.model.Filters.eq("_id", auctionId));
+    }
 }

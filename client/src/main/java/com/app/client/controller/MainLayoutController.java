@@ -5,6 +5,7 @@ import com.app.client.network.NetworkClient;
 import com.app.client.network.ResponseListener;
 import com.app.client.util.SceneManager;
 import com.app.client.util.ToastUtil;
+import com.app.shared.model.user.Admin;
 import com.app.shared.model.user.Bidder;
 import com.app.shared.model.user.Seller;
 import com.app.shared.model.user.User;
@@ -27,6 +28,7 @@ public class MainLayoutController implements ResponseListener {
     @FXML private Button myListingsBtn;
     @FXML private Button winningBidsBtn;
     @FXML public Button createAuctionBtn;
+    @FXML private Button adminDashboardBtn;
 
     @FXML
     public void initialize() {
@@ -65,6 +67,20 @@ public class MainLayoutController implements ResponseListener {
             winningBidsBtn.setVisible(canBid);
             winningBidsBtn.setManaged(canBid);
         }
+
+        if (user instanceof Admin) {
+            adminDashboardBtn.setVisible(true);
+            adminDashboardBtn.setManaged(true);
+
+            navToAdminDashboard();
+            SceneManager.getInstance().switchScene("/view/fxml/AdminDashboardView.fxml");
+        }
+    }
+
+    @FXML
+    private void navToAdminDashboard() {
+        setActiveNav(adminDashboardBtn);
+        SceneManager.getInstance().switchScene("/view/fxml/AdminDashboardView.fxml");
     }
 
     @FXML
@@ -105,6 +121,7 @@ public class MainLayoutController implements ResponseListener {
 
         if (myListingsBtn != null) myListingsBtn.getStyleClass().remove("active-btn");
         if (winningBidsBtn != null) winningBidsBtn.getStyleClass().remove("active-btn");
+        if (adminDashboardBtn != null) adminDashboardBtn.getStyleClass().remove("active-btn");
 
         if (clickedButton != null && !clickedButton.getStyleClass().contains("active-btn")) {
             clickedButton.getStyleClass().add("active-btn");

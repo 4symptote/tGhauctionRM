@@ -14,4 +14,6 @@ public interface UserDao {
 
     boolean lockFunds(String userId, double amount);
     void unlockFunds(String userId, double amount);
+
+    boolean deleteUser(String userId);
 }

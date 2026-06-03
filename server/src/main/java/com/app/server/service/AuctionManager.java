@@ -12,6 +12,7 @@ import com.app.server.dao.auction.AuctionDao;
 import com.app.server.dao.auction.AuctionDaoImpl;
 import com.app.server.dao.user.UserDao;
 import com.app.server.dao.user.UserDaoImpl;
+import com.app.server.network.AuctionServer;
 import com.app.shared.model.auction.Auction;
 
 import com.app.shared.model.user.User;
@@ -151,19 +152,40 @@ public class AuctionManager {
         }
     }
 
-    public void addAuction(Auction auction) {
-        activeAuctions.put(auction.getId(), auction);
-    }
-
-    public void removeAuction(String auctionId) {
-        activeAuctions.remove(auctionId);
-    }
-
     public Auction getAuction(String auctionId) {
         return activeAuctions.get(auctionId);
     }
 
     public List<Auction> getAllActiveAuctionsList() {
         return new ArrayList<>(activeAuctions.values());
+    }
+
+    public void forceDeleteAuction(String auctionId) {
+        Auction auction = activeAuctions.remove(auctionId);
+
+        if (auction != null) {
+            auction.setStatus(Auction.Status.CANCELED);
+
+            // reufnd
+            String highestBidderId = auction.getHighestBidderId();
+            if (highestBidderId != null) {
+                // return their locked bid amount to their main balance
+                UserDaoImpl.getInstance().adjustBalance(highestBidderId, auction.getCurrentPrice());
+
+                User updatedBidder = UserDaoImpl.getInstance().getUserById(highestBidderId);
+                if (updatedBidder != null) {
+                    AuctionServer.sendToClient(highestBidderId, new Response(
+                            Response.ResponseType.USER_UPDATED,
+                            true, "An Auction is canceled",
+                            updatedBidder
+                    ));
+                }
+            }
+
+            AutoBidService.getInstance().releaseAllEscrow(auctionId);
+        }
+        auctionDao.deleteAuction(auctionId);
+
+        logger.info("deleted: {}", auctionId);
     }
 }

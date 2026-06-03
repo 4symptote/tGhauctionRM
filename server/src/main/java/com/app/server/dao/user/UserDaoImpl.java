@@ -6,6 +6,7 @@ import com.app.shared.model.user.Bidder;
 import com.app.shared.model.user.Seller;
 import com.app.shared.model.user.User;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
 public class UserDaoImpl implements UserDao {
@@ -161,5 +162,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean userExists(String username) {
         return usersCollection.countDocuments(new Document("username", username)) > 0;
+    }
+
+    @Override
+    public boolean deleteUser(String userId) {
+        return usersCollection.deleteOne(Filters.eq("_id", userId)).getDeletedCount() > 0;
     }
 }

@@ -10,4 +10,5 @@ public interface AuctionDao {
     List<Auction> getAuctionsBySellerId(String sellerId);
     List<Auction> getAuctionsByHighestBidderId(String bidderId);
     List<Auction> getAllActiveAuctions();
+    void deleteAuction(String auctionId);
 }

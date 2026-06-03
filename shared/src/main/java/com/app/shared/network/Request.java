@@ -22,6 +22,8 @@ public record Request(RequestType type, Object payload) implements Serializable 
         GET_WINNING_AUCTIONS,
         WITHDRAW,
         DEPOSIT,
-        SET_AUTO_BID
+        SET_AUTO_BID,
+        ADMIN_DELETE_AUCTION,
+        ADMIN_DELETE_USER
     }
 }
