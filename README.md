@@ -250,5 +250,5 @@ mvn test
 * **Java CI with Maven**: Tự động build source, setup JDK 21, xác nhận bộ unit tests pass trước khi cho phép pull-request/merge code (`.github/workflows/maven.yml`).
 * **Qodana Code Quality**: Quét tự động dự án Java bằng công cụ phân tích tĩnh của JetBrains nhằm phát hiện code smells (`.github/workflows/qodana_code_quality.yml`).
 
-
-
+## 14. File báo cáo và video demo app
+https://drive.google.com/file/d/1uVhwe_RH1aAhKyJubLeIgMlwhcqw7hiA/view
