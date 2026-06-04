@@ -252,3 +252,4 @@ mvn test
 
 ## 14. File báo cáo và video demo app
 https://drive.google.com/file/d/1uVhwe_RH1aAhKyJubLeIgMlwhcqw7hiA/view
+https://docs.google.com/document/d/1DfNwAb0x_qbnwHuo-92Ob3U9lHC0UJhh/edit
