@@ -116,7 +116,11 @@
                     </VBox>
 
                 </HBox>
+                <TextField fx:id="auctionIdField" editable="false" focusTraversable="false"
+                           style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-font-size: 11px; -fx-padding: 15;"
+                           maxWidth="350" alignment="CENTER_RIGHT" />
             </VBox>
         </ScrollPane>
+
     </center>
 </BorderPane>
