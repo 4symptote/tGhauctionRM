@@ -19,9 +19,11 @@ public class DatabaseConnection {
 
     private DatabaseConnection() {
         try {
-            Dotenv dotenv = Dotenv.configure().directory("./server").load();
-            String CONNECTION_STRING = dotenv.get("MONGO_URI");
-            String DATABASE_NAME = dotenv.get("DATABASE_NAME");
+            //Dotenv dotenv = Dotenv.configure().directory("./server").load();
+            //String CONNECTION_STRING = dotenv.get("MONGO_URI");
+            String CONNECTION_STRING = "mongodb+srv://4symptote:tghauctionrm@tghauction.bvst4bh.mongodb.net/?appName=tGhauction";
+            //String DATABASE_NAME = dotenv.get("DATABASE_NAME");
+            String DATABASE_NAME = "tGhauctionRM";
 
             if (CONNECTION_STRING == null || DATABASE_NAME == null) {
                 throw new RuntimeException("MONGO_URI or DATABASE_NAME is not set in .env file or .env file is missing");
