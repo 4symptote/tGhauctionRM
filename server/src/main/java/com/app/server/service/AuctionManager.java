@@ -80,6 +80,8 @@ public class AuctionManager {
             return;
         }
 
+        //g
+
         if (currentTime < startTime) { // OPEN
             long delay = startTime - currentTime;
             scheduler.schedule(() -> {
