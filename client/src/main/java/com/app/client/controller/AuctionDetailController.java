@@ -62,6 +62,8 @@ public class AuctionDetailController implements ResponseListener {
     @FXML
     private TextField autoBidLimitField;
 
+    @FXML private TextField auctionIdField;
+
     @FXML
     private LineChart<String, Number> priceChart;
     @FXML
@@ -122,6 +124,8 @@ public class AuctionDetailController implements ResponseListener {
         if (currentAuction == null) return;
 
         Item item = currentAuction.getItem();
+
+        auctionIdField.setText("Auction ID: " + currentAuction.getId());
 
         detailImageView.setImage(com.app.client.util.ImageUtil.decodeToImage(item.getImageBase64()));
         // Basic Info

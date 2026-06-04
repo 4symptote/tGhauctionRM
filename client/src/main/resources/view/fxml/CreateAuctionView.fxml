@@ -64,7 +64,7 @@
                     </VBox>
 
                     <VBox spacing="5.0" HBox.hgrow="ALWAYS">
-                        <Label styleClass="input-label" text="Duration (Milliseconds)" />
+                        <Label styleClass="input-label" text="Duration (Seconds)" />
                         <TextField fx:id="durationField" promptText="e.g., 24" styleClass="form-input" />
                     </VBox>
                 </HBox>
