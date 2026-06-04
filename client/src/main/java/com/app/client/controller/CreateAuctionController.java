@@ -117,7 +117,8 @@ public class CreateAuctionController implements ResponseListener {
 
             // parsing
             double price = Double.parseDouble(startingPriceField.getText());
-            long durationMillis = Long.parseLong(durationField.getText());
+            long durationSeconds = Long.parseLong(durationField.getText());
+            long durationMillis = durationSeconds * 1000;
 
             long startDelayMillis ;
             if (startDelayMinutesField != null && !startDelayMinutesField.getText().trim().isEmpty()) {
