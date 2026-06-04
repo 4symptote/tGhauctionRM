@@ -21,10 +21,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class BidService {
-    private static BidService instance = new BidService();
-    private final BidDao bidDao = BidDaoImpl.getInstance();
-    private final AuctionDao auctionDao = AuctionDaoImpl.getInstance();
-    private final UserDao userDao = UserDaoImpl.getInstance();
+    private static BidService instance;
+    private final BidDao bidDao;
+    private final AuctionDao auctionDao;
+    private final UserDao userDao;
+    private final AuctionManager auctionManager;
+    private final AutoBidService autoBidService;
     // Lock map (auctionId: lock)
     private final Map<String, ReentrantLock> auctionLocks = new ConcurrentHashMap<>();
 
@@ -32,8 +34,17 @@ public class BidService {
     private static final long ANTI_SNIPE_THRESHOLD = 60*1000 * 5;   // Trigger antisnipe nếu đặt bid khi thời gian còn dưới 5p
     private static final long EXTENSION_TIME = 60*1000 * 5;         // Thời gian thêm vào
 
-    private BidService() {
+    BidService(BidDao bidDao, AuctionDao auctionDao, UserDao userDao, AuctionManager auctionManager, AutoBidService autoBidService) {
+        this.bidDao = bidDao;
+        this.auctionDao = auctionDao;
+        this.userDao = userDao;
+        this.auctionManager = auctionManager;
+        this.autoBidService = autoBidService;
+    }
 
+    private BidService() {
+        this(BidDaoImpl.getInstance(), AuctionDaoImpl.getInstance(), UserDaoImpl.getInstance(),
+                AuctionManager.getInstance(), AutoBidService.getInstance());
     }
 
     public static BidService getInstance() {
@@ -50,8 +61,6 @@ public class BidService {
         // Theem lock vao auctionId nay neu chua co va lock()
         ReentrantLock auctionLock = auctionLocks.computeIfAbsent(auctionId, k -> new ReentrantLock());
         auctionLock.lock();
-
-        AuctionManager auctionManager = AuctionManager.getInstance();
         Auction auction = auctionManager.getAuction(auctionId);
 
 
@@ -127,7 +136,7 @@ public class BidService {
         } finally { // Luon unlock neu co crash hay loi
             auctionLock.unlock();
             // tính toán auto bid mỗi khi có tk đặt bid mới (kể cả fail hay k )
-            AutoBidService.getInstance().evaluate(auctionId);
+            autoBidService.evaluate(auctionId);
         }
     }
 }

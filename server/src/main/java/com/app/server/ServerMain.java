@@ -13,8 +13,8 @@ public class ServerMain {
         Logger logger = LoggerFactory.getLogger(ServerMain.class);
 
         logger.info("Server starting");
-
         DatabaseConnection.getInstance();
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Server shutting down");
             DatabaseConnection.getInstance().close();
@@ -24,7 +24,5 @@ public class ServerMain {
 
         AuctionServer server = new AuctionServer();
         server.startServer(port);
-
-
     }
 }

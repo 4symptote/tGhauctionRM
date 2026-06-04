@@ -1,10 +1,9 @@
 package com.app.shared.model.auction;
 
+import com.app.shared.exception.AuctionClosedException;
+import com.app.shared.exception.InvalidBidException;
 import com.app.shared.model.Entity;
 import com.app.shared.model.item.Item;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Auction extends Entity {
 
@@ -28,6 +27,12 @@ public class Auction extends Entity {
 
     public Auction(Item item, long startTime, long endTime) {
         super();
+        if (item == null) {
+            throw new IllegalArgumentException("Item must not be null");
+        }
+        if (endTime <= startTime) {
+            throw new IllegalArgumentException("End time must be greater than start time");
+        }
         this.item = item;
         this.currentPrice = item.getStartingPrice();
         this.status = Status.OPEN;
@@ -78,6 +83,13 @@ public class Auction extends Entity {
 
     //
     public void processNewBid(double amount, String bidderId, String bidderName) {
+        updateStatus();
+        if (status != Status.RUNNING) {
+            throw new AuctionClosedException("Auction is not open for bidding");
+        }
+        if (amount <= currentPrice || amount <= item.getStartingPrice()) {
+            throw new InvalidBidException("Bid amount must be greater than current price and starting price");
+        }
         this.currentPrice = amount;
         this.highestBidderId = bidderId;
         this.highestBidderName = bidderName;
